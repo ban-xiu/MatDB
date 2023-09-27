@@ -11,7 +11,7 @@
 docker pull mongo:6.0.8
 
 ### 初始化
-docker run -itd --name mongo -v 数据卷文件路径:/data/db -p 27017:27017 mongo --auth
+docker run -itd --name mongo -v 数据卷文件夹路径:/data/db -p 27017:27017 mongo --auth
 
 ### 进入容器并创建root用户
 docker exec -it mongo mongosh admin
@@ -22,6 +22,18 @@ db.createUser({user:”root”,pwd:”root”,roles:[{role:”root”,db:”root
 docker exec -it mongo mongosh admin
 
 db.auth(“root”,”root”)
+
+### 进入admin数据库
+use admin
+
+### 创建mongodata集合
+db.createCollection("mongodata")
+
+### 创建users集合
+db.createCollection("users")
+
+### 创建template集合
+db
 
 ## 2.启动项目
 更新maven依赖后，运行APP.java，访问127.0.0.1:8080即可。
