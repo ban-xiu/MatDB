@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>matDB</title>
+  <link rel="icon" href="imgs/mat32×32.png" type="image/png" sizes="32×32">
+  <link rel="icon" href="imgs/mat16×16.png" type="image/png" sizes="16×16">
+  <script type="text/javascript" src="jsmol/JSmol.min.js"></script>
+  <script src="jquery/jquery.min.js"></script>
+  <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+  <script src="bootstrap/popper.min.js"></script>
+  <script src="bootstrap/bootstrap.min.js"></script>
+  <link href="bootstrap/fileinput.min.css" rel="stylesheet">
+  <script src="bootstrap/fileinput.min.js"></script>
+  <script src="datatables.net/jquery.dataTables.js"></script>
+  <link rel="stylesheet" href="datatables.net/jquery.dataTables.css">
+  <script src="axios/axios.min.js"></script>
+  <script src="xlsx/xlsx.full.min.js"></script>
+</head>
+<style>
+  body {
+    background-color: #EFEDE6;
+    position: relative;
+  }
+
+  /*卡片样式*/
+  .card {
+    width: 1000px;
+    margin: 50px auto 0;
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: 1px solid #999;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .card-body {
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .card-title {
+    font-size: 2.5rem;
+    text-align: center;
+  }
+
+  .card-text {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  /*按钮样式*/
+  .btns {
+    text-align: center;
+  }
+
+  .btn {
+    display: inline-block;
+    background-color: #333333;
+    color: #EFEDE6;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+
+  /*表格样式*/
+  .table {
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
+  }
+
+  .table td,
+  .table th {
+    padding: 10px;
+    border-color: #999;
+  }
+
+  .table thead th {
+    color: #fff;
+    background-color: #333333;
+  }
+
+  .table tbody tr:hover {
+    background: #f5f5f5;
+  }
+
+  .dataTables_paginate {
+    text-align: center;
+  }
+
+  .dataTables_paginate a {
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+
+    .table td,
+    .table th {
+      padding: 10px 5px;
+    }
+
+    .dataTables_paginate {
+      margin-top: 10px;
+    }
+  }
+
+  #myTable {
+    table-layout: fixed;
+    width: 100%;
+    display: block;
+    overflow: auto;
+    max-height: 500px;
+  }
+
+  #myTable th,
+  #myTable td {
+    width: 10%;
+    vertical-align: middle;
+  }
+
+  #myTable td {
+    word-break: break-all;
+    white-space: normal;
+    text-align: center;
+  }
+
+  /*输入区样式*/
+  textarea.form-control {
+    height: 46px;
+    border-radius: 25px;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+  textarea.form-control:hover {
+    background-color: #f5f5f5;
+    border-color: #999;
+  }
+
+  textarea.form-control:focus {
+    border-color: transparent;
+    outline-color: #999;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 0 0 0.2rem rgba(153, 153, 153, 0.25);
+  }
+
+  /*设置弹窗滚动条*/
+  .row_Y {
+    height: 500px;
+    overflow-y: auto;
+  }
+
+  /*Detail弹窗效果*/
+  .infop {
+    display: inline-block;
+    padding: 0.3em 0.6em;
+    background-color: #333;
+    color: #fff;
+    border-radius: 15px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin: 5px;
+  }
+
+  .infop:hover {
+    background-color: #555;
+  }
+
+  .infop:active {
+    background-color: #777;
+  }
+
+  #structureInfo {
+    text-align: center;
+    white-space: pre-wrap;
+    font-weight: bold;
+    font-style: italic;
+    text-decoration: underline;
+    line-height: 1.5;
+    font-size: 16px;
+    letter-spacing: 1px;
+    word-spacing: 2px;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+
+  /*File弹窗效果*/
+  input.file-caption-name.form-control.kv-fileinput-caption:focus {
+    border: 1px solid #ced4da;
+    box-shadow: 0 0 5px 2px #999;
+  }
+
+  #fileText span {
+    display: inline-block;
+    padding: 0.3em 0.6em;
+    background-color: #333;
+    color: #fff;
+    border-radius: 15px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    margin: 5px;
+  }
+
+  #fileText span:hover {
+    background-color: #555;
+  }
+
+  #fileText span:active {
+    background-color: #777;
+  }
+</style>
+
+<script>
+
+  //设置File文本方法
+  function createFile(speciality) {
+    let str = ``;
+    for (let i = 0; i < speciality.length; i++) {
+      str += `<span>${speciality[i]}</span>`;
+    }
+    return str;
+  }
+
+  //设置Detail文本方法
+  function createDetail(speciality) {
+    let str = ``;
+    for (let i = 0; i < speciality.length; i++) {
+      str += `<p class="infop">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+    }
+    return str;
+  }
+
+  //创建Update输入框方法
+  function createUpdate(speciality) {
+    let html = ``;
+    for (let i = 0; i < speciality.length; i++) {
+      html += `<div class="form-group col-6">
+            <label for="update${i}">${speciality[i]}</label>
+            <textarea class="form-control" id="update${i}"></textarea>
+          </div>`;
+    }
+    return html;
+  }
+
+  //创建Add输入框方法
+  function createAdd(speciality) {
+    let html = ``;
+    if (speciality.length > 0) {
+      for (let i = 0; i < speciality.length; i++) {
+        if (speciality[i] != "") {
+          html += `<div class="form-group col-6">
+              <label for="add${i}">${speciality[i]}</label>
+              <textarea class="form-control" id="add${i}"></textarea>
+              </div>`;
+        }
+      }
+    }
+    return html;
+  }
+
+  //创建表头方法
+  function createTr(speciality) {
+    let html = ``;
+    if (speciality.length > 0) {
+      for (let i = 0; i < speciality.length; i++) {
+        if (speciality[i] != "") {
+          html += `<th scope="col">${speciality[i]}</th>`;
+        }
+      }
+    }
+    return html;
+  }
+
+  //设置表格属性长度极限
+  function truncateValues(obj) {
+    for (let prop in obj) {
+      if (obj.hasOwnProperty(prop) && typeof obj[prop] === 'string') {
+        if (obj[prop].length > 60) {
+          obj[prop] = obj[prop].substring(0, 60) + '...';
+        }
+      }
+    }
+    return obj;
+  }
+
+  //创建表格方法
+  function createTable(list, speciality) {
+    let html = '';
+    for (let i = 0; i < list.length; i++) {
+      let obj = truncateValues(list[i]);
+      html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
+      html += `<th scope="row">${obj.id}</th>`;
+      html += `<td>${obj.structure}</td>`;
+      html += `<td>${obj.name}</td>`;
+      html += `<td>${obj.symmetry}</td>`;
+      html += `<td>${obj.metal}</td>`;
+      html += `<td>${obj.bandgappbe}</td>`;
+      html += `<td>${obj.bandgaphse}</td>`;
+      html += `<td>${obj.doi}</td>`;
+      html += `<td>${obj.url}</td>`;
+      html += `<td>${obj.publication}</td>`;
+      if (obj.speciality) {
+        for (let k = 0; k < obj.speciality.length; k++) {
+          html += `<td>${obj.speciality[k]}</td>`;
+        }
+      }
+      else {
+        for (let j = 0; j < speciality.length; j++) {
+          html += `<td>undefined</td>`;
+        }
+      }
+      html += `</tr>`;
+    }
+    return html;
+  }
+
+  //创建介绍卡片方法
+  function createCard(obj) {
+    let html = `
+  <div class="card-body">
+    <h5 class="card-title">${obj.title}</h5>
+    <p class="card-text">
+      ${obj.introduction}
+      </br>
+      <small>${obj.id}: ${obj.type}</small>
+    </p>
+  </div>`;
+    return html;
+  }
+
+  //打开Tip1弹窗方法
+  var msg1;
+  function openTipModal1() {
+    $('#tipModal1').modal('show');
+    $('.tipBody1 p').text(`${msg1}`);
+  }
+
+  //打开Tip2弹窗方法
+  var msg2 = 'The task has been submitted.';
+  function openTipModal2() {
+    $('#tipModal2').modal('show');
+    $('.tipBody2 p').text(`${msg2}`);
+  }
+
+  $(document).ready(function () {
+
+    //初始化数据容器
+    var data;
+    var mat = {};
+    var add = {};
+    var title;
+    var introduction;
+    var speciality;
+    var addSpeciality = [];
+    var requiredHeaders;
+    var rows;
+
+    var uid = $("#uid").text();
+    var username = $("#username").text();
+    var password = $("#password").text();
+
+    //在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
+    $("#tipYes").click(function () {
+      if (msg1 == "Are you sure to add it?") {
+        axios.get("http://127.0.0.1:8080/save", {
+          params: { "matentity": encodeURIComponent(JSON.stringify(add)) }
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+      if (msg1 == "Are you sure to update it?") {
+        axios.get("http://127.0.0.1:8080/update", {
+          params: { "id": encodeURIComponent(mat.id), "matentity": encodeURIComponent(JSON.stringify(mat)) }
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+      if (msg1 == "Are you sure to delete it?") {
+        axios.get("http://127.0.0.1:8080/deleteById", {
+          params: { "id": encodeURIComponent(mat.id) }
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+      if (msg1 == "Are you sure to go back?") {
+        location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
+        return;
+      }
+      if (msg1 == "Are you sure to change it?") {
+        axios.get("http://127.0.0.1:8080/changeDBCard", {
+          params: { "id": encodeURIComponent(uid), "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction) }
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+      if (msg1 == "Are you sure to burn this database all?") {
+        axios.get("http://127.0.0.1:8080/destroy", {
+          params: { "uid": encodeURIComponent(uid) }
+        }).then(res => {
+          console.log(res)
+          location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
+          return;
+        }).catch(err => {
+          console.error(err)
+        })
+      }
+      if (msg1 == "The XLSX file content format meets the requirements.Are you sure you want to upload it") {
+        axios.get("http://127.0.0.1:8080/addFile", {
+          params: { "file": encodeURIComponent(JSON.stringify(rows)) }
+        }).then(res => {
+          console.log(res);
+        }).catch(err => {
+          console.error(err);
+        })
+      }
+      openTipModal2();
+    })
+
+    //Tip2弹窗中的刷新方法
+    $('#tipOk,#tipClose').click(function () {
+      location.reload();
+    });
+
+    //Back提示
+    $("#back").click(function () {
+      msg1 = "Are you sure to go back?";
+      openTipModal1();
+    })
+
+    //Add提示
+    $("#addSubmit").click(function () {
+      msg1 = "Are you sure to add it?";
+      openTipModal1();
+    })
+
+    //Update提示
+    $("#updateSubmit").click(function () {
+      msg1 = "Are you sure to update it?";
+      openTipModal1();
+    })
+
+    //Delete提示
+    $("#delete").click(function () {
+      msg1 = "Are you sure to delete it?";
+      openTipModal1();
+    })
+
+    //Card提示
+    $("#cardSubmit").click(function () {
+      msg1 = "Are you sure to change it?";
+      openTipModal1();
+    })
+
+    //Burn提示
+    $("#burn").click(function () {
+      msg1 = "Are you sure to burn this database all?";
+      openTipModal1();
+    })
+
+    //创建介绍卡片Card,创建表头
+    axios.get("http://127.0.0.1:8080/findDBCard", {
+      params: { "id": encodeURIComponent(uid) }
+    }).then(res1 => {
+
+      //获取相关信息
+      title = res1.data.title;
+      introduction = res1.data.introduction;
+      speciality = res1.data.speciality;
+
+      //创建卡片
+      $('.card').append(createCard(res1.data))
+
+      //创建表头
+      $("#tr").append(createTr(speciality));
+
+      //获取数据库中的所有内容
+      axios.get("http://127.0.0.1:8080/findAll", {
+        params: { "uid": encodeURIComponent(uid) }
+      }).then(res2 => {
+
+        //渲染表格
+        let html = createTable(res2.data.matentityList, speciality)
+        $('#tbody').append(html)
+
+        //分页效果
+        $(function () {
+          $('#myTable').DataTable({
+            "pageLength": 5,
+            "lengthChange": false,
+            "paging": true
+          });
+        })
+
+      }).catch(err => {
+        console.error(err)
+      })
+
+      //创建Add输入框
+      $("#addArea").append(createAdd(speciality))
+
+      //创建Update输入框
+      $("#updateArea").append(createUpdate(speciality))
+
+      //创建Detail文本
+      $("#infos").append(createDetail(speciality))
+
+      //创建File文本
+      $("#fileText").append(createFile(speciality))
+
+      //获取Add输入框内容
+      add.uid = uid;
+
+      const $saveStructure = $('#addStructure');
+      $saveStructure.on('change', function () {
+        add.structure = $saveStructure.val();
+      });
+
+      const $saveName = $('#addName');
+      $saveName.on('change', function () {
+        add.name = $saveName.val();
+      });
+
+      const $saveSymmetry = $('#addSymmetry');
+      $saveSymmetry.on('change', function () {
+        add.symmetry = $saveSymmetry.val();
+      });
+
+      const $saveMetal = $('#addMetal');
+      $saveMetal.on('change', function () {
+        add.metal = $saveMetal.val();
+      });
+
+      const $saveBandgap_PBE = $('#addBandgap-PBE');
+      $saveBandgap_PBE.on('change', function () {
+        add.bandgappbe = $saveBandgap_PBE.val();
+      });
+
+      const $saveBandgap_HSE = $('#addBandgap-HSE');
+      $saveBandgap_HSE.on('change', function () {
+        add.bandgaphse = $saveBandgap_HSE.val();
+      });
+
+      const $saveDOI = $('#addDOI');
+      $saveDOI.on('change', function () {
+        add.doi = $saveDOI.val();
+      });
+
+      const $saveURL = $('#addURL');
+      $saveURL.on('change', function () {
+        add.url = $saveURL.val();
+      });
+      const $savePublication = $('#addPublication');
+      $savePublication.on('change', function () {
+        add.publication = $savePublication.val();
+      });
+
+      for (let j = 0; j < speciality.length; j++) {
+        addSpeciality[j] = undefined;
+        $(`#add${j}`).on('change', function () {
+          let temp = $(`#add${j}`).val();
+          addSpeciality[j] = temp;
+          add.speciality = addSpeciality;
+        });
+      }
+
+      //关闭Add弹窗清空输入内容
+      $(".addClose").click(function () {
+        add = {};
+        add.uid = uid;
+        addSpeciality = [];
+        $saveStructure.val(undefined);
+        $saveName.val(undefined);
+        $saveSymmetry.val(undefined);
+        $saveMetal.val(undefined);
+        $saveBandgap_PBE.val(undefined);
+        $saveBandgap_HSE.val(undefined);
+        $saveDOI.val(undefined);
+        $saveURL.val(undefined);
+        $savePublication.val(undefined);
+        for (let i = 0; i < speciality.length; i++) {
+          $(`#add${i}`).val(undefined);
+        }
+      })
+
+      //获取所点击的表格内容,为Update输入框设置默认值，并获取修改的数据
+      $("#myTable").on("click", "tbody tr", function () {
+
+        //获取所点击的数据信息
+        $(this).find("td, th").first().each(function () {
+          let cid = $(this).text();
+          axios.get("http://127.0.0.1:8080/findByCid", {
+            params: { "cid": encodeURIComponent(cid) }
+          }).then(res => {
+            data = res.data;
+            mat.id = data.id;
+            mat.uid = data.uid;
+            mat.structure = data.structure;
+            mat.name = data.name;
+            mat.symmetry = data.symmetry;
+            mat.metal = data.metal;
+            mat.bandgappbe = data.bandgappbe;
+            mat.bandgaphse = data.bandgaphse;
+            mat.doi = data.doi;
+            mat.url = data.url;
+            mat.publication = data.publication;
+            mat.speciality = data.speciality;
+
+            //设置默认值，获取修改值
+            const $inputStructure = $('#updateStructure');
+            $inputStructure.val(data.structure);
+            $inputStructure.on('change', function () {
+              mat.structure = $inputStructure.val();
+            });
+
+            const $inputName = $('#updateName');
+            $inputName.val(data.name);
+            $inputName.on('change', function () {
+              mat.name = $inputName.val();
+            });
+
+            const $inputSymmetry = $('#updateSymmetry');
+            $inputSymmetry.val(data.symmetry);
+            $inputSymmetry.on('change', function () {
+              mat.symmetry = $inputSymmetry.val();
+            });
+
+            const $inputMetal = $('#updateMetal');
+            $inputMetal.val(data.metal);
+            $inputMetal.on('change', function () {
+              mat.metal = $inputMetal.val();
+            });
+
+            const $inputBandgap_PBE = $('#updateBandgap-PBE');
+            $inputBandgap_PBE.val(data.bandgappbe);
+            $inputBandgap_PBE.on('change', function () {
+              mat.bandgappbe = $inputBandgap_PBE.val();
+            });
+
+            const $inputBandgap_HSE = $('#updateBandgap-HSE');
+            $inputBandgap_HSE.val(data.bandgaphse);
+            $inputBandgap_HSE.on('change', function () {
+              mat.bandgaphse = $inputBandgap_HSE.val();
+            });
+
+            const $inputDOI = $('#updateDOI');
+            $inputDOI.val(data.doi);
+            $inputDOI.on('change', function () {
+              mat.doi = $inputDOI.val();
+            });
+
+            const $inputURL = $('#updateURL');
+            $inputURL.val(data.url);
+            $inputURL.on('change', function () {
+              mat.url = $inputURL.val();
+            });
+
+            const $inputPublication = $('#updatePublication');
+            $inputPublication.val(data.publication);
+            $inputPublication.on('change', function () {
+              mat.publication = $inputPublication.val();
+            })
+
+            if (!mat.speciality) {
+              let ls = [];
+              for (let i = 0; i < speciality.length; i++) {
+                ls.push("undefined");
+              }
+              mat.speciality = ls;
+            }
+
+            for (let i = 0; i < mat.speciality.length; i++) {
+              if (mat.speciality[i] !== "undefined") {
+                $(`#update${i}`).val(mat.speciality[i]);
+              }
+              $(`#update${i}`).on("change", function () {
+                let temp = $(`#update${i}`).val();
+                mat.speciality[i] = temp;
+              })
+            }
+
+            //关闭Update弹窗清空输入内容
+            $(".updateClose").click(function () {
+              $inputStructure.val(undefined);
+              $inputName.val(undefined);
+              $inputSymmetry.val(undefined);
+              $inputMetal.val(undefined);
+              $inputBandgap_PBE.val(undefined);
+              $inputBandgap_HSE.val(undefined);
+              $inputDOI.val(undefined);
+              $inputURL.val(undefined);
+              $inputPublication.val(undefined);
+              for (let i = 0; i < mat.speciality.length; i++) {
+                $(`#update${i}`).val(undefined);
+              }
+              mat = {};
+            })
+
+          }).catch(err => {
+            console.error(err);
+          });
+
+        })
+
+      });
+
+    }).catch(err => {
+      console.error(err)
+    })
+
+    $(".card").click(function () {
+
+      //打开卡片弹窗
+      $("#cardModal").modal('show');
+
+      //修改标题与介绍的默认值
+      const $newTitle = $('#title');
+      $newTitle.val(title);
+      $newTitle.on('change', function () {
+        title = $newTitle.val();
+      });
+
+      const $newIntro = $('#intro');
+      $newIntro.val(introduction);
+      $newIntro.on('change', function () {
+        introduction = $newIntro.val();
+      });
+
+    })
+
+    //jsmol交互图像相关
+    $('#detailModal').on('shown.bs.modal', function () {
+
+      Jmol._isAsync = false;
+
+      var jmolApplet0;
+
+      var s = document.location.search;
+
+      Jmol._debugCode = (s.indexOf("debugcode") >= 0);
+
+      var Info = {
+        width: 460,
+        height: 460,
+        debug: false,
+        color: "0xFFFFF1",
+        use: "HTML5",
+        j2sPath: "jsmol/j2s",
+        //serverURL: "https://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php",
+        isSigned: true,
+        script: "set zoomlarge false;set antialiasDisplay;load DATA 'model' vasp " + mat.structure + "\nEND 'model'",
+        disableJ2SLoadMonitor: true,
+        disableInitialConsole: true,
+        allowJavaScript: true
+      }
+
+      $("#appdiv").html(Jmol.getAppletHtml("jmolApplet0", Info))
+
+      //Detail文本内容
+      $("#structureInfo").text(mat.structure ? mat.structure : "Null")
+      $("#nameInfo").text(mat.name ? mat.name : "Null")
+      $("#symmetryInfo").text(mat.symmetry ? mat.symmetry : "Null")
+      $("#metalInfo").text(mat.metal ? mat.metal : "Null")
+      $("#PBEInfo").text(mat.bandgappbe ? mat.bandgappbe : "Null")
+      $("#HSEInfo").text(mat.bandgaphse ? mat.bandgaphse : "Null")
+      $("#doiInfo").text(mat.doi ? mat.doi : "Null")
+      $("#urlInfo").text(mat.url ? mat.url : "Null")
+      $("#publicationInfo").text(mat.publication ? mat.publication : "Null")
+
+      for (let i = 0; i < mat.speciality.length; i++) {
+        $(`#Info${i}`).text(mat.speciality[i] && mat.speciality[i] !== "undefined" ? mat.speciality[i] : "Null")
+      }
+
+      //关闭Detail弹窗清空内容
+      $(".detailClose").click(function () {
+        $("#structureInfo").text(`Structure:&emsp;`)
+        for (let i = 0; i < mat.speciality.length; i++) {
+          $(`#Info${i}`).text(undefined)
+        }
+      })
+
+    })
+
+
+    // 初始化文件上传组件
+    $("#file").fileinput({ showUpload: false });
+
+    //关闭File弹窗清除上传文件
+    $(".fileClose").click(function () {
+      $('#file').fileinput('clear');
+    })
+
+    $("#file").on("change", function () {
+
+      let file = this.files[0];
+
+      console.log('选中文件:', file);
+
+      readExcelAsJSON(file);
+
+    });
+
+    function readExcelAsJSON(file) {
+
+      let reader = new FileReader();
+
+      reader.onload = function (e) {
+
+        let data = e.target.result;
+
+        console.log('文件数据:', data);
+
+        let workbook = XLSX.read(data, { type: 'binary' });
+
+        let sheetName = workbook.SheetNames[0];
+        let sheet = workbook.Sheets[sheetName];
+
+        console.log('工作表:', sheet);
+
+        // 获取第一行作为表头
+        let headers = [];
+
+        for (let c in sheet) {
+          let cell = sheet[c];
+
+          // 判断是否是第一行
+          if (c.indexOf('1') !== -1) {
+            headers.push(cell.v);
+          }
+        }
+
+        console.log('表头数据：', headers)
+
+        rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+
+        console.log('表格数据:', rows);
+
+        // 将表格数据转换为JSON数组
+        checkHeaders(headers, rows);
+
+        // 遍历数组中的每个对象
+        rows.forEach(function (obj) {
+
+          // 创建一个新的对象来存储修改后的键值对
+          let newObj = {};
+
+          //专有属性按表头规定顺序排列
+          let result = Object.keys(obj)
+            .filter(key => speciality.includes(key))
+            .sort((a, b) => speciality.indexOf(a) - speciality.indexOf(b))
+            .map(key => obj[key]);
+
+          if (result.length < speciality.length) {
+            result = result.concat(Array(speciality.length - result.length).fill("undefined"));
+          }
+
+          // 遍历对象的键
+          Object.keys(obj).forEach(function (key) {
+
+            // 修改键名并存储到新的对象中
+            if (key === "Structure" || key === "Name" || key === "Symmetry" || key === "Metal" || key === "DOI" || key === "URL" || key === "Publication") {
+              newObj[key.toLocaleLowerCase()] = obj[key];
+            }
+            if (key === "Bandgap-PBE(ev)") {
+              newObj["bandgappbe"] = obj[key];
+            }
+            if (key === "Bandgap-HSE(ev)") {
+              newObj["bandgaphse"] = obj[key];
+            }
+          });
+
+          // 用修改后的对象替换原始对象
+          newObj.speciality = result;
+          newObj.uid = uid;
+          Object.assign(obj, newObj);
+
+        });
+
+      }
+
+      reader.readAsArrayBuffer(file);
+
+    }
+
+    function checkHeaders(headers, rows) {
+
+      $("#fileSubmit").off("click")
+
+      // 检查表头是否包含需要的字段
+      if (checkFields(headers)) {
+
+        // 上传成功处理
+        $("#fileSubmit").click(function () {
+          msg1 = "The XLSX file content format meets the requirements.Are you sure you want to upload it";
+          msg2 = 'The task has been submitted.';
+          openTipModal1();
+        });
+
+
+      } else {
+
+        // 表头错误提示
+        $("#fileSubmit").click(function () {
+          msg2 = "The header of the uploaded XLSX file does not meet the requirements.";
+          openTipModal2();
+        })
+
+      }
+
+    }
+
+    function checkFields(headers) {
+
+      // 判断headers包含需要的字段
+      requiredHeaders = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
+
+      let isValid = true;
+      requiredHeaders.forEach(header => {
+        if (!headers.includes(header)) {
+          isValid = false;
+        }
+      });
+      return isValid;
+
+    }
+
+  })
+
+</script>
+
+<body>
+
+<i class="fa" th:text="${uid}" id="uid" hidden></i>
+<i class="fa" th:text="${username}" id="username" hidden></i>
+<i class="fa" th:text="${password}" id="password" hidden></i>
+
+<!--卡片弹窗-->
+<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalLabel">Card</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="title">New title</label>
+          <textarea class="form-control" id="title"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="intro">New introduction</label>
+          <textarea class="form-control" id="intro"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-dismiss="modal"
+                id="cardSubmit">Submit</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Add弹窗-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add</h5>
+        <button type="button" class="close addClose" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row_Y">
+        <div class="form-row" id="addArea">
+          <div class="form-group col-6">
+            <label for="addStructure">Structure</label>
+            <textarea class="form-control" id="addStructure"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addName">Name</label>
+            <textarea class="form-control" id="addName"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addSymmetry">Symmetry</label>
+            <textarea class="form-control" id="addSymmetry"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addMetal">Metal</label>
+            <textarea class="form-control" id="addMetal"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addBandgap-PBE">Bandgap-PBE(ev)</label>
+            <textarea class="form-control" id="addBandgap-PBE"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addBandgap-HSE">Bandgap-HSE(ev)</label>
+            <textarea class="form-control" id="addBandgap-HSE"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addDOI">DOI</label>
+            <textarea class="form-control" id="addDOI"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addURL">URL</label>
+            <textarea class="form-control" id="addURL"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addPublication">Publication</label>
+            <textarea class="form-control" id="addPublication"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal"
+                data-dismiss="modal">File</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+                id="addSubmit">Submit</button>
+        <button type="button" class="btn btn-secondary addClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--File弹窗-->
+<div class="modal" id="fileModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">File</h4>
+        <button type="button" class="close fileClose" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body row_Y">
+        <div id="fileText">
+          <P>Only XLSX file containing the following table headers can be accepted:</P>
+          <span>Structure</span>
+          <span>Name</span>
+          <span>Symmetry</span>
+          <span>Metal</span>
+          <span>Bandgap-PBE(ev)</span>
+          <span>Bandgap-HSE(ev)</span>
+          <span>DOI</span>
+          <span>URL</span>
+          <span>Publication</span>
+        </div>
+        </br>
+        <div class="file-loading">
+          <input id="file" type="file" accept=".xlsx" title="">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="fileSubmit">Submit</button>
+        <button class="btn btn-secondary fileClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--表格弹窗-->
+<div class="modal fade" id="rowModal" tabindex="-1" role="dialog" aria-labelledby="rowModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rowModalLabel">Operations</h5>
+        <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal"
+                data-dismiss="modal">Detail</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal"
+                data-dismiss="modal">Update</button>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
+                id="delete">Delete</button>
+        <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Detail弹窗-->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="detailModalLabel">Detail</h4>
+        <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body row_Y">
+        <!--渲染jsmol图像-->
+        <div id="appdiv"></div>
+        <div id="infos">
+          </br>
+          <strong>Structure:</strong>
+          <p id="structureInfo"></p>
+          </br>
+          <p class="infop">Name:&emsp;<span id="nameInfo"></span></p>
+          <p class="infop">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
+          <p class="infop">Metal:&emsp;<span id="metalInfo"></span></p>
+          <p class="infop">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
+          <p class="infop">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
+          <p class="infop">DOI:&emsp;<span id="doiInfo"></span></p>
+          <p class="infop">URL:&emsp;<span id="urlInfo"></span></p>
+          <p class="infop">Publication:&emsp;<span id="publicationInfo"></span></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Update弹窗-->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Update</h5>
+        <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body row_Y">
+
+        <div class="form-row" id="updateArea">
+          <div class="form-group col-6">
+            <label for="updateStructure">Structure</label>
+            <textarea class="form-control" id="updateStructure"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateName">Name</label>
+            <textarea class="form-control" id="updateName"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateSymmetry">Symmetry</label>
+            <textarea class="form-control" id="updateSymmetry"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateMetal">Metal</label>
+            <textarea class="form-control" id="updateMetal"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateBandgap-PBE">Bandgap-PBE(ev)</label>
+            <textarea class="form-control" id="updateBandgap-PBE"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateBandgap-HSE">Bandgap-HSE(ev)</label>
+            <textarea class="form-control" id="updateBandgap-HSE"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateDOI">DOI</label>
+            <textarea class="form-control" id="updateDOI"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateURL">URL</label>
+            <textarea class="form-control" id="updateURL"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updatePublication">Publication</label>
+            <textarea class="form-control" id="updatePublication"></textarea>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+                id="updateSubmit">Submit</button>
+        <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Tip1弹窗-->
+<div class="modal" id="tipModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tip</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body tipBody1">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipYes">Yes</button>
+        <button class="btn btn-secondary" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Tip2弹窗-->
+<div class="modal" id="tipModal2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tip</h4>
+        <button type="button" class="close" data-dismiss="modal" id="tipClose">&times;</button>
+      </div>
+      <div class="modal-body tipBody2">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipOk">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--介绍卡片-->
+<div class="card">
+
+</div>
+
+<div class="container">
+  <!--按钮-->
+  </br></br>
+  <div class="col-md-12 btns">
+    <button class="btn btn-primary" type="button" data-toggle="modal" id="back">Back</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal">Add</button>
+    <button class="btn btn-danger" type="button" data-toggle="modal" id="burn">Burn</button>
+  </div>
+  <!--表格-->
+  <div class="row">
+    <div class="col-md-12 mt-2">
+      <table id="myTable" class="table table-striped">
+        <thead>
+        <tr id="tr">
+          <th scope="col">ID</th>
+          <th scope="col">Structure</th>
+          <th scope="col">Name</th>
+          <th scope="col">Symmetry</th>
+          <th scope="col">Metal</th>
+          <th scope="col">Bandgap-PBE(ev)</th>
+          <th scope="col">Bandgap-HSE(ev)</th>
+          <th scope="col">DOI</th>
+          <th scope="col">URL</th>
+          <th scope="col">Publication</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+
+</html>
+

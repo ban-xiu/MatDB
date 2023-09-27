@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin</title>
+    <link rel="icon" href="imgs/mat32×32.png" type="image/png" sizes="32×32">
+    <link rel="icon" href="imgs/mat16×16.png" type="image/png" sizes="16×16">
+    <link href="admin/bootstrap.min.css" rel="stylesheet">
+    <link href="admin/animate.css" rel="stylesheet">
+    <link href="admin/style.css" rel="stylesheet">
+    <script src="admin/jquery-2.1.1.js"></script>
+    <script src="admin/bootstrap.min.js"></script>
+    <script src="admin/jquery.metisMenu.js"></script>
+    <script src="admin/jquery.slimscroll.min.js"></script>
+    <script src="admin/inspinia.js"></script>
+    <script src="admin/jquery-ui.min.js"></script>
+    <script src="axios/axios.min.js"></script>
+</head>
+
+<style>
+    body {
+        background-color: #333333;
+    }
+
+    #page-wrapper {
+        background-color: #EFEDE6;
+    }
+
+    .navbar {
+        background-color: #EFEDE6;
+    }
+
+    .nav-header {
+        background: #333333;
+    }
+
+    .menu-item:hover {
+        background: #999 !important;
+    }
+
+    p {
+        max-width: 1000px;
+    }
+
+    h2 {
+        word-wrap: break-word;
+    }
+
+    /*设置弹窗滚动条*/
+    .row_Y {
+        height: 500px;
+        overflow-y: auto;
+    }
+
+    /*Search输入框样式*/
+    li {
+        display: flex;
+        align-items: center;
+    }
+
+    li label {
+        margin-right: 10px;
+        font-weight: bold;
+    }
+
+    li input[type="text"] {
+        padding: 8px 12px;
+        border: 2px solid #ccc;
+        border-radius: 25px;
+        font-size: 14px;
+        height: 36px;
+        width: 1000px;
+        background-color: #f2f2f2;
+        color: #333;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+    li input[type="text"]:focus,
+    li input[type="text"]:hover {
+        outline: none;
+        border-color: #999;
+        box-shadow: 0 0 0 3px rgba(153, 153, 153, 0.3);
+    }
+
+    /*按钮样式*/
+    .btn {
+        display: inline-block;
+        background-color: #333333;
+        color: #EFEDE6;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+
+    /*输入框样式*/
+    input.form-control {
+        height: 35px;
+        border-radius: 25px;
+        width: 100%;
+        padding: 10px;
+        border-color: #999;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    input.form-control:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+    }
+
+    input.form-control:focus {
+        border-color: transparent !important;
+        outline-color: #999;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 0 0 0.2rem rgba(153, 153, 153, 0.25);
+    }
+
+    textarea.form-control {
+        height: 50px;
+        border-radius: 25px;
+        width: 100%;
+        padding: 10px;
+        border-color: #999;
+        border: 1px solid #ccc;
+        transition: background-color 0.3s, border-color 0.3s;
+    }
+
+    textarea.form-control:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+    }
+
+    textarea.form-control:focus {
+        border-color: transparent !important;
+        outline-color: #999;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 0 0 0.2rem rgba(153, 153, 153, 0.25);
+    }
+
+    /*下拉选框样式*/
+    #dbType {
+        border-radius: 25px;
+        border-color: #999;
+        transition: border-color 0.3s;
+    }
+
+    #dbType:hover {
+        background-color: #f5f5f5;
+        border-color: #999;
+    }
+
+    #dbType:focus {
+        outline: none;
+        border-color: #ccc !important;
+        box-shadow: none !important;
+    }
+
+    /*Inof弹窗效果*/
+    #userInof p {
+        display: inline-block;
+        padding: 0.3em 0.6em;
+        background-color: #333;
+        color: #fff;
+        border-radius: 15px;
+        transition: background-color 0.3s ease;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 14px;
+    }
+
+    #userInof p:hover {
+        background-color: #555;
+    }
+
+    #userInof p:active {
+        background-color: #777;
+    }
+
+    /*About样式*/
+    #aboutText{
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        color: #333;
+        line-height: 1.5;
+        text-align: justify;
+        letter-spacing: 1px;
+        word-spacing: 2px;
+        font-weight: bold;
+        font-style: italic;
+    }
+
+</style>
+
+<body>
+
+<div id="wrapper">
+
+    <nav class="navbar-default navbar-static-side" role="navigation">
+        <div class="sidebar-collapse">
+            <ul class="nav metismenu" id="side-menu">
+                <li class="nav-header">
+                    <div class="dropdown profile-element">
+                        <a><i class="fa" th:text="${username}"></i></a>
+                    </div>
+                </li>
+
+                <li id="info">
+                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">user information</span></a>
+                </li>
+
+                <li id="change">
+                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">change password</span></a>
+                </li>
+                <li id="new">
+                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">new database</span></a>
+                </li>
+                <li id="about">
+                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">about</span></a>
+                </li>
+
+            </ul>
+
+        </div>
+    </nav>
+
+    <div id="page-wrapper" class="gray-bg">
+        <div class="row border-bottom">
+            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                <ul class="nav navbar-top-links navbar-right">
+                    <li>
+                        <label for="search">Search:&emsp;</label>
+                        <input type="text" id="search" class="form-control-lg">
+                    </li>
+                    <li>
+                        <span class="m-r-sm text-muted welcome-message">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Welcome to the admin.</span>
+                    </li>
+                    <li>
+                        <a href="/">
+                            <i class="fa"></i> Log out
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="row wrapper border-bottom white-bg page-heading">
+            <div class="col-lg-10">
+                <h1>My databases</h1>
+            </div>
+        </div>
+        <div class="wrapper wrapper-content  animated fadeInRight">
+            <div class="row" id="sortable-view">
+
+            </div>
+        </div>
+        <div class="footer">
+            <div class="pull-right">
+                A tool for quickly building template databases.
+            </div>
+            <div>
+                <strong>MatDB</strong>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--Inof弹窗-->
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title">
+                    Info
+                </h4>
+            </div>
+            <div class="modal-body" id="userInof">
+                <p>username:&emsp;<span th:text="${username}" id="username"></span></p>
+                <p>password:&emsp;<span th:text="${password}" id="password"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Change弹窗-->
+<div class="modal fade" id="changeModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                                                                                                  id="changeClose1">&times;</span></button>
+                <h4 class="modal-title">Change</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="newPassword1" class="control-label">New Password:</label>
+                        <input type="password" class="form-control" id="newPassword1">
+                        <label for="newPassword1" class="control-label">New Password Again:</label>
+                        <input type="password" class="form-control" id="newPassword2">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="changeSubmit">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="changeClose2">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--About弹窗-->
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">MatDB</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="aboutText"> A database built with materials science
+                    data sourced from available datasets & research papers.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--New弹窗-->
+<div class="modal fade" id="newModal" tabindex="-1" role="dialog">
+
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">New</h4>
+                <button type="button" class="close" data-dismiss="modal" id="newClose1">&times;</button>
+            </div>
+
+            <div class="modal-body row_Y">
+
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" class="form-control" id="title">
+                </div>
+
+                <div class="form-group">
+                    <label for="intro">Introduction</label>
+                    <textarea class="form-control" id="intro"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="dbType">Type</label>
+                    <select class="form-control" id="dbType">
+                        <option value="2D FEM">2D FEM</option>
+                        <option value="2D NPB">2D NPB</option>
+                        <option value="BMS">BMS</option>
+                        <option value="Penta">Penta</option>
+                        <option value="2D-Carbon">2D-Carbon</option>
+                        <option value="Self-defined">Self-defined</option>
+                    </select>
+
+                </div>
+
+                <div id="typeInput" style="display:none;">
+                    <label for="typeName">Type name</label>
+                    <input type="text" class="form-control" id="typeName">
+                </div>
+
+                <label>Proprietary attribute</label>
+                <div id="dbInfo"></div>
+                </br>
+                <button class="btn btn-primary" id="add">Add</button>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="create">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="newClose2">Close</button>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--Add弹窗-->
+<div class="modal" id="addModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add</h4>
+                <button type="button" class="close" data-dismiss="modal" id="addClose1">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="addInput">
+                    <label for="addOne">New proprietary attribute</label>
+                    <input type="text" class="form-control" id="addOne">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="addSubmit" data-dismiss="modal">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="addClose2">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Edit弹窗-->
+<div class="modal" id="editModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit</h4>
+                <button type="button" class="close" data-dismiss="modal" id="editClose1">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="editInput">
+                    <label for="addOne">proprietary attribute</label>
+                    <input type="text" class="form-control" id="editOne">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="editSubmit" data-dismiss="modal">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="editClose2">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Tip弹窗-->
+<div class="modal" id="tipModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tip</h4>
+                <button type="button" class="close" data-dismiss="modal" id="tipClose">&times;</button>
+            </div>
+            <div class="modal-body tipBody">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+        var newPassword1;
+        var newPassword2;
+        var username = $("#username").text();
+        var password = $("#password").text();
+        var msg;
+        var title;
+        var type = "2D FEM";
+        var introduction;
+        var speciality = ["ETB(ev/atom)"];
+        var add;
+        var edit;
+
+        //卡片内容处理方法
+        function deal(i) {
+            const id = $(`#card${i}`).find('.toIndex').text();
+            const type = $(`#card${i}`).find('small').text();
+            const title = $(`#card${i}`).find('strong').text();
+            const introduction = $(`#card${i}`).find('p').text();
+            const result = id + type + title + introduction;
+            return result.toLowerCase();
+        }
+
+        //编辑数据库专有属性
+        function editCard(el) {
+            $('#editModal').modal('show');
+            const e = el.parentNode.previousElementSibling.children[0].innerHTML;
+            $("#editSubmit").click(function () {
+                if (!edit) {
+                    msg = "Null value cannot be entered."
+                    openTipModal()
+                    return;
+                }
+                if (edit.includes(",")) {
+                    msg = 'The value cannot contain ",".'
+                    openTipModal();
+                    return;
+                }
+                for (var i = 0; i < speciality.length; i++) {
+                    if (speciality[i] == e) {
+                        speciality[i] = edit;
+                        $("#dbInfo").empty();
+                        $("#dbInfo").append(createCard(speciality));
+                        edit = undefined;
+                        return;
+                    }
+                }
+            })
+        }
+
+        //删除数据库专有属性
+        function deleteCard(el) {
+            const e = el.parentNode.previousElementSibling.children[0].innerHTML;
+            for (var i = 0; i < speciality.length; i++) {
+                if (speciality[i] == e) {
+                    speciality.splice(i, 1);
+                    $("#dbInfo").empty();
+                    $("#dbInfo").append(createCard(speciality));
+                    return;
+                }
+            }
+        }
+
+
+        //创建数据库信息卡片
+        function createDBCard(list) {
+            let html = ``;
+            for (let i = 0; i < list.length; i++) {
+                let obj = list[i];
+                html += ` <div class="col-lg-6 card" id="card${i}">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5><a class="toIndex">${obj.id}</a>: <small>${obj.type}</small></h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h2>
+                               <strong>${obj.title}</strong>
+                            </h2>
+                            <p>${obj.introduction}</p>
+                        </div>
+                    </div>
+                </div>`
+            }
+            return html;
+        }
+
+        //创建数据库专有属性
+        function createCard(list) {
+            let html = ``;
+            if (list.length == 0) {
+                html += `<p>Null</p>`
+                return html;
+            }
+            for (let i = 0; i < list.length; i++) {
+                let obj = list[i];
+                html += `<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">${obj}</h5>
+  </div>
+  <div class="card-footer">
+    <button class="btn btn-primary" onclick="editCard(this)">Edit</button>
+    <button class="btn btn-danger" onclick="deleteCard(this)">Delete</button>
+  </div>
+</div>`;
+            }
+            return html;
+        }
+
+        //刷新页面
+        $("#ok,#tipClose").click(function () {
+            if (msg == "The new password has been submitted.") {
+                location.replace("http://127.0.0.1:8080");
+            }
+            if (msg == "The new database has been submitted.") {
+                location.reload();
+            }
+        })
+
+        //关闭Change弹窗恢复初始状态
+        $("#changeClose1,#changeClose2").click(function () {
+            newPassword1 = undefined;
+            newPassword2 = undefined;
+            $("#newPassword1").val(undefined);
+            $("#newPassword2").val(undefined);
+        })
+
+        //关闭Add弹窗恢复初始状态
+        $("#addClose1,#addClose2").click(function () {
+            add = undefined;
+            $("#addOne").val(undefined);
+        })
+        $("#addSubmit").click(function () {
+            $("#addOne").val(undefined);
+        })
+
+        //关闭Edit弹窗恢复初始状态
+        $("#editClose1,#editClose2").click(function () {
+            edit = undefined;
+            $("#editOne").val(undefined);
+        })
+        $("#editSubmit").click(function () {
+            $("#editOne").val(undefined);
+        })
+
+        //关闭New弹窗恢复初始状态
+        $("#newClose1,#newClose2").click(function () {
+            title = undefined;
+            $("#title").val(undefined);
+            introduction = undefined;
+            $("#intro").val(undefined);
+            $("#typeName").val(undefined);
+            $("#typeInput").hide();
+            type = "2D FEM";
+            $("#dbType").val("2D FEM")
+            edit = undefined;
+            speciality = ["ETB(ev/atom)"];
+            $("#dbInfo").empty();
+            $("#dbInfo").append(createCard(speciality));
+        })
+
+        /*打开Tip弹窗*/
+        function openTipModal() {
+            $('#tipModal').modal('show');
+            $('.tipBody p').text(`${msg}`);
+        }
+
+        /*密码必须大于等于6位*/
+        function passwordLength(password) {
+            return password.length >= 6;
+        }
+        /*密码必须包含字母和数字*/
+        function passwordFormat(password) {
+            const reg = /(?=.*[A-Za-z])(?=.*\d)/;
+            return reg.test(password);
+        }
+
+        $(document).ready(function () {
+
+            //页面效果初始化
+            WinMove();
+
+            //渲染数据库信息卡片
+            axios.get("http://127.0.0.1:8080/findDBInof", {
+                params: { "username": encodeURIComponent(username) }
+            }).then(res => {
+                console.log(res)
+                let html = createDBCard(res.data.dbentityList)
+                $("#sortable-view").append(html);
+                $(".toIndex").click(function () {
+                    const uid = $(this).text();
+                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}&username=${username}&password=${password}`);
+                })
+
+                //获取每张卡片的信息并拼接为长字符串
+                let sl = [];
+                for (let i = 0; i < res.data.dbentityList.length; i++) {
+                    sl.push(deal(i))
+                }
+
+                //监听Search输入框，匹配指定的卡片
+                let str;
+                const $search = $("#search");
+                $search.on("input", function () {
+                    $(".card").show();
+                    str = $search.val().toLowerCase();
+                    for (let j = 0; j < sl.length; j++) {
+                        if (!sl[j].includes(str)) {
+                            $(`#card${j}`).css("display", "none")
+                        }
+                    }
+                })
+
+            }).catch(err => {
+                console.err(err)
+            })
+
+            //获取新密码
+            $('#newPassword1').change(function () {
+                newPassword1 = $(this).val();
+            });
+            $('#newPassword2').change(function () {
+                newPassword2 = $(this).val();
+            });
+
+            //获取各输入框内容
+            $('#intro').change(function () {
+                introduction = $(this).val();
+            });
+            $('#title').change(function () {
+                title = $(this).val();
+            });
+            $("#addOne").change(function () {
+                add = $(this).val();
+            });
+            $("#editOne").change(function () {
+                edit = $(this).val();
+            });
+
+            //打开各弹窗
+            $('#info').click(function () {
+                $('#infoModal').modal('show');
+            });
+            $('#change').click(function () {
+                $('#changeModal').modal('show');
+            });
+            $('#about').click(function () {
+                $('#aboutModal').modal('show');
+
+            });
+            $('#new').click(function () {
+                $('#newModal').modal('show');
+            });
+
+            //Add弹窗相关
+            $('#add').click(function () {
+                $('#addModal').modal('show');
+            });
+            $('#addSubmit').click(function () {
+                if (!add) {
+                    msg = "Null value cannot be entered."
+                    openTipModal();
+                    return;
+                }
+                if (add.includes(",")) {
+                    msg = 'The value cannot contain ",".'
+                    openTipModal();
+                    return;
+                }
+                speciality.push(add);
+                $("#dbInfo").empty();
+                $("#dbInfo").append(createCard(speciality));
+            });
+
+            //New弹窗相关
+            $("#dbInfo").append(createCard(speciality));
+
+            $("#dbType").change(function () {
+
+                $("#dbInfo").empty();
+
+                if ($(this).val() === "Self-defined") {
+                    speciality = [];
+                    type = undefined;
+                    $("#typeInput").show();
+                    $("#dbInfo").append(createCard(speciality));
+                    $('#typeName').change(function () {
+                        type = $(this).val();
+                    });
+
+                } else {
+                    $("#typeInput").hide();
+                    $("#typeName").val(undefined);
+                }
+
+                if ($(this).val() === "2D FEM") {
+                    type = "2D FEM";
+                    speciality = [];
+                    speciality.push("ETB(ev/atom)");
+                    $("#dbInfo").append(createCard(speciality));
+
+                } else if ($(this).val() === "2D NPB") {
+                    type = "2D NPB";
+                    speciality = [];
+                    speciality.push("NPR");
+                    $("#dbInfo").append(createCard(speciality));
+
+
+                } else if ($(this).val() === "BMS") {
+                    type = "BMS";
+                    speciality = [];
+                    speciality.push("Delta1(ev)");
+                    speciality.push("Delta2(ev)");
+                    speciality.push("Delta3(ev)");
+                    $("#dbInfo").append(createCard(speciality));
+
+                } else if ($(this).val() === "Penta") {
+                    type = "Penta";
+                    speciality = [];
+                    $("#dbInfo").append(createCard(speciality));
+
+                } else if ($(this).val() === "2D-Carbon") {
+                    type = "2D-Carbon";
+                    speciality = [];
+                    $("#dbInfo").append(createCard(speciality));
+                }
+            });
+
+            $("#create").click(function () {
+                if (!title || !introduction || !type) {
+                    msg = "Null value cannot be entered."
+                    openTipModal();
+                    return;
+                }
+                axios.get("http://127.0.0.1:8080/templateSave", {
+                    params: { "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction), "type": encodeURIComponent(type), "username": encodeURIComponent(username), "speciality": encodeURIComponent(speciality) }
+                })
+                    .then(res => {
+                        console.log(res)
+                        msg = "The new database has been submitted."
+                        openTipModal();
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        msg = "Error."
+                        openTipModal();
+                    })
+            })
+
+            //修改密码
+            $("#changeSubmit").click(function () {
+
+                //开始校验
+                if (!newPassword1 || !newPassword2) {
+                    msg = "Null value cannot be entered."
+                    openTipModal();
+                    return;
+                }
+
+                if (newPassword1 != newPassword2) {
+                    msg = "The two passwords are different."
+                    openTipModal();
+                    return;
+                }
+
+                if (!passwordLength(newPassword1)) {
+                    msg = "The password must be greater than or equal to 6 characters."
+                    openTipModal();
+                    return;
+                }
+
+                if (!passwordFormat(newPassword1)) {
+                    msg = "The password must contain both letters and numbers."
+                    openTipModal();
+                    return;
+                }
+
+                axios.get("http://127.0.0.1:8080/changePassword", {
+                    params: { "username": encodeURIComponent(username), "newPassword": encodeURIComponent(newPassword1) }
+                })
+                    .then(res => {
+                        console.log(res)
+                        msg = "The new password has been submitted."
+                        openTipModal();
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        msg = "Error."
+                        openTipModal();
+                    })
+
+
+            })
+
+        });
+    </script>
+
+</body>
+
+</html>

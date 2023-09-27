@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="icon" href="imgs/mat32×32.png" type="image/png" sizes="32×32">
+    <link rel="icon" href="imgs/mat16×16.png" type="image/png" sizes="16×16">
+    <script src="jquery/jquery.min.js"></script>
+    <script src="axios/axios.min.js"></script>
+    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="bootstrap/popper.min.js"></script>
+    <script src="bootstrap/bootstrap.min.js"></script>
+</head>
+<style>
+  :root {
+    --theme-color: #067ae6;
+    --text-color: #666666;
+    --title-color: #333333;
+    --white-color: #ffffff;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  ul,
+  ol {
+    padding: 0;
+    margin: 0;
+  }
+
+  body,
+  html {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+      Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .wrapper-full {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .wrapper {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  @media (min-width: 576px) {
+    .wrapper {
+      max-width: 540px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .wrapper {
+      max-width: 720px;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .wrapper {
+      max-width: 960px;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .wrapper {
+      max-width: 1140px;
+    }
+  }
+
+  .clear {
+    clear: both;
+  }
+
+  .d-grid {
+    display: grid;
+  }
+
+  .d-flex {
+    display: flex;
+    display: -webkit-flex;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  button,
+  select {
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  button,
+  .btn,
+  select {
+    cursor: pointer;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  }
+
+  .btn {
+    display: inline-block;
+    background-color: #333333;
+    color: #EFEDE6;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: all 0.3s;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  iframe {
+    border: none;
+  }
+
+  ul {
+    margin: 0;
+    padding: 0
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p {
+    margin: 0;
+    padding: 0
+  }
+
+  .p-relative {
+    position: relative;
+  }
+
+  .p-absolute {
+    position: absolute;
+  }
+
+  .p-fixed {
+    position: fixed;
+  }
+
+  .p-sticky {
+    position: sticky;
+  }
+
+  .overlay {
+    background-color: rgb(239, 237, 230);
+    padding: 4rem 0;
+  }
+
+  a.brand-logo {
+    color: var(--white-color);
+    font-weight: bold;
+    font-size: 38px;
+    text-transform: uppercase;
+  }
+
+  .top-bottom-gap {
+    padding: 0 0 2rem 0;
+  }
+
+  .form34 {
+    margin: 0 auto;
+    max-width: 420px;
+    border: 1px solid #eee;
+    padding: 2rem;
+    background: var(--white-color);
+  }
+
+  .signin {
+    box-sizing: border-box;
+    padding: 10px;
+    margin-bottom: 27px;
+    color: var(--white-color);
+    display: flex;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    border-radius: 3px;
+  }
+
+  .signin span {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+
+  .form-head {
+    font-size: 35px;
+    color: var(--title-color);
+    line-height: 40px;
+  }
+
+  .mat {
+    font-size: 50px;
+    color: var(--title-color);
+    line-height: 55px;
+  }
+
+  .form-para {
+    font-style: normal;
+    font-weight: normal;
+    margin-bottom: 20px;
+    margin-top: 10px;
+    color: var(--text-color);
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  .checkbox {
+    width: 16px;
+    height: 16px;
+    color: #F5F9FC;
+    background: #304659;
+    float: left;
+  }
+
+  .input {
+    margin-bottom: 10px;
+    margin-top: 5px;
+    outline: none;
+    width: 100%;
+    height: 45px;
+    background: var(--white-color);
+    color: #000000;
+    border: 1px solid #d4d4d4;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 45px;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+
+  .input:focus {
+    outline: none;
+    border: 1px solid var(--theme-color);
+  }
+
+  .text-head {
+    margin-top: 15px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 20px;
+    color: var(--title-color);
+  }
+
+  .signinbutton {
+    background: var(--title-color);
+    color: var(--white-color);
+    font-size: 16px;
+    text-transform: capitalize;
+    margin-top: 30px;
+    padding: 15px 25px;
+    border: none;
+    display: block;
+    width: 100%;
+    transition: 0.3s ease-in;
+  }
+
+  .signinbutton:hover {
+    background: var(--theme-color);
+    transition: 0.3s ease-in;
+  }
+
+  .signup {
+    margin-top: 33px;
+    color: var(--text-color);
+    font-style: normal;
+    font-weight: normal;
+    font-size: 17px;
+    line-height: 25px;
+  }
+
+  .signuplink {
+    color: var(--theme-color);
+    margin-left: 5px;
+    font-size: 17px;
+    line-height: 25px;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .signuplink:hover {
+    text-decoration: underline;
+  }
+
+  .form-34or span.pros {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 15px;
+    line-height: 20px;
+    margin-bottom: -8.4px;
+    display: inherit;
+  }
+
+  span.pros span {
+    background: #fff;
+    padding: 0 8px;
+    display: inline-block;
+    color: #d4d4d4;
+    text-transform: uppercase;
+  }
+
+  .form-34or {
+    margin-bottom: 27px;
+    text-align: center;
+    border-bottom: 1px solid #d4d4d4;
+  }
+
+  .remember {
+    display: block;
+    position: relative;
+    padding-left: 25px;
+    margin: 16px 0;
+    cursor: pointer;
+    font-size: 16px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: var(--text-color);
+  }
+
+  .remember input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+
+  .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+  }
+
+  .remember:hover input~.checkmark {
+    background-color: #ccc;
+  }
+
+  .remember input:checked~.checkmark {
+    background: var(--theme-color);
+  }
+
+  .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+  }
+
+  .remember input:checked~.checkmark:after {
+    display: block;
+  }
+
+  .remember .checkmark:after {
+    left: 8px;
+    top: 3px;
+    width: 3px;
+    height: 9px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .copyright p {
+    font-size: 15px;
+    color: #ccc;
+    line-height: 20px;
+    margin-top: 2rem;
+  }
+
+  .copyright p a {
+    color: var(--white-color);
+  }
+
+  .copyright p a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 992px) {
+    .grid-column-2 {
+      grid-template-columns: 1fr 1fr;
+      grid-row-gap: 40px;
+    }
+
+    .input,
+    .signinbutton {
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 736px) {
+    a.brand-logo {
+      font-size: 35px;
+    }
+
+    .overlay {
+      padding: 2.5rem 0;
+    }
+
+    .form-head {
+      font-size: 30px;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .grid-column-2 {
+      grid-template-columns: 1fr;
+      grid-row-gap: 30px;
+    }
+
+    .column1 {
+      align-self: center;
+      order: 2;
+    }
+
+    .column2 {
+      order: 1;
+    }
+
+    .form34 {
+      padding: 1rem;
+    }
+
+    .overlay {
+      padding: 2rem 0;
+    }
+
+    a.brand-logo {
+      font-size: 30px;
+    }
+
+    .top-bottom-gap {
+      padding: 0 0 1rem 0;
+    }
+
+    .form-head {
+      font-size: 28px;
+    }
+  }
+
+  .show {
+    opacity: 0;
+    animation: showText 2s forwards, moveShadow 2s forwards;
+
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+  }
+
+  @keyframes moveShadow {
+    0% {
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    }
+
+    50% {
+      text-shadow: 3px 3px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    100% {
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.7);
+    }
+  }
+
+  @keyframes showText {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+
+  var username;
+  var password1;
+  var password2;
+  var msg;
+
+  /*打开Tip弹窗*/
+  function openTipModal() {
+    $('#tipModal').modal('show');
+    $('.modal-body p').text(`${msg}`);
+  }
+  /*用户名长度必须在6-16位之间*/
+  function usernameLength(username) {
+    return username.length >= 6 && username.length <= 16;
+  }
+  /*"用户名只能包含字母、数字和下划线*/
+  function usernameFormat(username) {
+    const reg = /^[a-zA-Z0-9_]+$/;
+    return reg.test(username);
+  }
+  /*密码必须大于等于6位*/
+  function passwordLength(password) {
+    return password.length >= 6;
+  }
+  /*密码必须包含字母和数字*/
+  function passwordFormat(password) {
+    const reg = /(?=.*[A-Za-z])(?=.*\d)/;
+    return reg.test(password);
+  }
+
+  $(document).ready(function () {
+    //前往登录
+    $("#a").click(function () {
+      location.replace('http://127.0.0.1:8080/');
+    })
+
+    /*刷新页面*/
+    $("#ok,.close").click(function () {
+      if (msg == "The task has been submitted.") {
+        location.reload();
+      }
+    })
+    /*获取输入框内容*/
+    $('input[name="username"]').change(function () {
+      username = $(this).val();
+    });
+
+    $('input[name="password1"]').change(function () {
+      password1 = $(this).val();
+    });
+
+    $('input[name="password2"]').change(function () {
+      password2 = $(this).val();
+    });
+
+    /*开始注册*/
+    $("#sign").click(function (e) {
+      e.preventDefault();
+      if (username && password1 && password2) {
+
+        /*开始校验*/
+        if (!usernameLength(username)) {
+          msg = "The username length must be between 6 and 16 characters."
+          openTipModal();
+          return;
+        }
+
+        if (!usernameFormat(username)) {
+          msg = "Usernames can only contain letters, numbers, and underscores."
+          openTipModal();
+          return;
+        }
+
+        if (!passwordLength(password1)) {
+          msg = "The password must be greater than or equal to 6 characters."
+          openTipModal();
+          return;
+        }
+
+        if (!passwordFormat(password1)) {
+          msg = "The password must contain both letters and numbers."
+          openTipModal();
+          return;
+        }
+        /*提交注册请求*/
+        if (password1 == password2) {
+          axios.get("http://127.0.0.1:8080/signUp", {
+            params: { "username": encodeURIComponent(username), "password": encodeURIComponent(password1) }
+          })
+            .then(function (res) {
+              console.log(res)
+              msg = res.data
+              openTipModal();
+            })
+            .catch(function (err) {
+              console.error(err)
+              msg = "Error."
+              openTipModal();
+            })
+        }
+        else {
+          msg = "The two passwords are different."
+          openTipModal();
+        }
+      }
+      else {
+        msg = "Null value cannot be entered."
+        openTipModal();
+        return;
+      }
+    })
+
+  })
+
+
+</script>
+
+<body>
+<section class="signin-form">
+    <div class="overlay">
+        <div class="wrapper">
+
+            <div class="form34">
+                <h4 class="form-head">Register</h4>
+                <p class="form-para">Create an account</p>
+
+                <div class="form-34or">
+            <span class="pros">
+              <span>input</span>
+            </span>
+                </div>
+                <form>
+                    <div>
+                        <p class="text-head">Your username</p>
+                        <input type="text" name="username" class="input" placeholder="" required="" />
+                    </div>
+                    <div>
+                        <p class="text-head">Your password</p>
+                        <input type="password" name="password1" class="input" placeholder="" required="" />
+                    </div>
+                    <div>
+                        <p class="text-head">Your password again</p>
+                        <input type="password" name="password2" class="input" placeholder="" required="" />
+                    </div>
+
+                    <button type="submit" class="signinbutton btn" id="sign">register</button>
+                    <p class="signup">Go to use now?<a id="a" class="signuplink">Login</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+
+        <div class="copyright text-center">
+            <p>A tool for quickly building template databases.</p>
+        </div>
+
+    </div>
+</section>
+
+<div class="modal" id="tipModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Tip</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="ok">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
