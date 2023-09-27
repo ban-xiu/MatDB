@@ -29,11 +29,11 @@ use admin
 ### 创建mongodata集合
 db.createCollection("mongodata")
 
-### 创建users集合
-db.createCollection("users")
+### 创建matusers集合
+db.createCollection("matusers")
 
-### 创建template集合
-db
+### 创建templatedata集合
+db.createCollection("templatedata")
 
 ## 2.启动项目
 更新maven依赖后，运行APP.java，访问127.0.0.1:8080即可。
