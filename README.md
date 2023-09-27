@@ -24,6 +24,6 @@ docker exec -it mongo mongosh admin
 db.auth(“root”,”root”)
 
 ## 2.启动项目
-更新maven依赖后，运行APP.java,访问127.0.0.1:8080即可。
+更新maven依赖后，运行APP.java，访问127.0.0.1:8080即可。
 
 
