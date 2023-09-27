@@ -7,7 +7,7 @@
 
 ## 1.创建数据库
 
-### 创建mongodb的docker容器
+### 拉取镜像
 docker pull mongo:6.0.8
 
 ### 初始化
