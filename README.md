@@ -13,13 +13,12 @@ docker pull mongo:6.0.8
 ### 初始化
 docker run -itd --name mongo -v 数据卷文件路径:/data/db -p 27017:27017 mongo --auth
 
-### 进入容器
+### 进入容器并创建root用户
 docker exec -it mongo mongosh admin
 
-### 创建root用户
 db.createUser({user:”root”,pwd:”root”,roles:[{role:”root”,db:”root”}]})
 
-### 连接数据库
+### 进入容器并连接数据库
 docker exec -it mongo mongosh admin
 
 db.auth(“root”,”root”)
