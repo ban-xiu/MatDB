@@ -25,7 +25,7 @@ db
 show users
 
 ### 创建root用户
-进入容器的admin数据库后，如果没有root用户：db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"root"}]})
+进入容器的admin数据库后，如果没有root用户：db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"admin"}]})
 
 ### 登录
 进入容器的admin数据库后：db.auth("root","root")
