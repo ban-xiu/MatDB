@@ -22,7 +22,7 @@ docker exec -it mongo mongosh admin
 查看当前是否位于admin数据库：db
 
 ### 查看用户信息
-，查看admin数据库中是否有root用户：show users
+查看admin数据库中是否有root用户：show users
 
 ### 创建root用户
 进入容器的admin数据库后，如果没有root用户：db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"admin"}]})
