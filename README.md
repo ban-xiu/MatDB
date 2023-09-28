@@ -19,23 +19,23 @@ docker exec -it mongo mongosh admin
 ### 查看当前数据库
 db
 
-### 查看当前数据库下的所有集合
-show collections
-
 ### 创建root用户
 进入容器的admin数据库后：db.createUser({user:”root”,pwd:”root”,roles:[{role:”root”,db:”root”}]})
 
-### 连接数据库
+### 登录
 进入容器的admin数据库后：db.auth(“root”,”root”)
 
+### 查看当前数据库下的所有集合
+登录成功后：show collections
+
 ### 创建mongodata集合
-db.createCollection("mongodata")
+如果不存在mongodata集合：db.createCollection("mongodata")
 
 ### 创建matusers集合
-db.createCollection("matusers")
+如果不存在matusers集合：db.createCollection("matusers")
 
 ### 创建templatedata集合
-db.createCollection("templatedata")
+如果不存在templatedata集合：db.createCollection("templatedata")
 
 ## 2.启动项目
 更新maven依赖后，运行APP.java，访问127.0.0.1:8080即可。
