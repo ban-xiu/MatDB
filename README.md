@@ -21,7 +21,7 @@ docker exec -it mongo mongosh admin
 ### 查看当前数据库
 db
 
-### 查看用户
+### 查看用户信息
 show users
 
 ### 创建root用户
