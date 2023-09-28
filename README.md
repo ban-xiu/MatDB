@@ -22,10 +22,10 @@ docker exec -it mongo mongosh admin
 db
 
 ### 创建root用户
-进入容器的admin数据库后：db.createUser({user:”root”,pwd:”root”,roles:[{role:”root”,db:”root”}]})
+进入容器的admin数据库后：db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"root"}]})
 
 ### 登录
-进入容器的admin数据库后：db.auth(“root”,”root”)
+进入容器的admin数据库后：db.auth("root","root")
 
 ### 查看当前数据库下的所有集合
 登录成功后：show collections
