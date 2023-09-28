@@ -38,6 +38,6 @@ db
 如果不存在templatedata集合：db.createCollection("templatedata")
 
 ## 2.启动项目
-更新maven依赖后，运行APP.java，访问127.0.0.1:8080即可。
+通过pox.xml文件更新maven依赖后，运行APP.java，访问127.0.0.1:8080即可。
 
 
