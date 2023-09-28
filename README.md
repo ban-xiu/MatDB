@@ -19,12 +19,10 @@ docker run -itd --name mongo -v 数据卷文件夹路径:/data/db -p 27017:27017
 docker exec -it mongo mongosh admin
 
 ### 查看当前数据库
-db
-查看当前是否位于admin数据库
+db，查看当前是否位于admin数据库
 
 ### 查看用户信息
-show users
-查看admin数据库中是否有root用户
+show users，查看admin数据库中是否有root用户
 
 ### 创建root用户
 进入容器的admin数据库后，如果没有root用户：db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"admin"}]})
