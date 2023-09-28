@@ -13,7 +13,7 @@ docker pull mongo:6.0.8
 ### 初始化
 docker run -itd --name mongo -v 数据卷文件夹路径:/data/db -p 27017:27017 mongo --auth
 
-名字为：mongo，配置了数据卷实现数据持久化，端口为：27017
+容器名字为：mongo，同时配置了数据卷实现数据持久化，容器端口为：27017
 
 ### 进入容器的admin数据库
 docker exec -it mongo mongosh admin
