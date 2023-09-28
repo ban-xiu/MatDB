@@ -2,8 +2,8 @@
 
 ## 一个快速构建的材料模板数据库。
 
-### 前端基于：jquery,bootstrap,axios,jsmol等。
-### 后端基于：springboot,mogodb等。
+### 前端基于：jquery bootstrap axios jsmol等。
+### 后端基于：springboot mogodb等。
 
 ## 1.创建数据库
 
@@ -13,18 +13,20 @@ docker pull mongo:6.0.8
 ### 初始化
 docker run -itd --name mongo -v 数据卷文件夹路径:/data/db -p 27017:27017 mongo --auth
 
-### 进入容器并创建root用户
+### 进入容器的admin数据库
 docker exec -it mongo mongosh admin
 
-db.createUser({user:”root”,pwd:”root”,roles:[{role:”root”,db:”root”}]})
+### 查看当前数据库
+db
 
-### 进入容器并连接数据库
-docker exec -it mongo mongosh admin
+### 查看当前数据库下的所有集合
+show collections
 
-db.auth(“root”,”root”)
+### 创建root用户
+进入容器的admin数据库后：db.createUser({user:”root”,pwd:”root”,roles:[{role:”root”,db:”root”}]})
 
-### 进入admin数据库
-use admin
+### 连接数据库
+进入容器的admin数据库后：db.auth(“root”,”root”)
 
 ### 创建mongodata集合
 db.createCollection("mongodata")
