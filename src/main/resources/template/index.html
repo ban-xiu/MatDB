@@ -385,6 +385,8 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
+          msg2="Error."
+          openTipModal2();
           console.error(err)
         })
       }
@@ -394,6 +396,8 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
+          msg2="Error."
+          openTipModal2();
           console.error(err)
         })
       }
@@ -403,6 +407,8 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
+          msg2="Error."
+          openTipModal2();
           console.error(err)
         })
       }
@@ -416,6 +422,8 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
+          msg2="Error."
+          openTipModal2();
           console.error(err)
         })
       }
@@ -427,6 +435,8 @@
           location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
           return;
         }).catch(err => {
+          msg2="Error."
+          openTipModal2();
           console.error(err)
         })
       }
@@ -436,6 +446,8 @@
         }).then(res => {
           console.log(res);
         }).catch(err => {
+          msg2="Error."
+          openTipModal2();
           console.error(err);
         })
       }
@@ -486,15 +498,15 @@
     //创建介绍卡片Card,创建表头
     axios.get("http://127.0.0.1:8080/findDBCard", {
       params: { "id": encodeURIComponent(uid) }
-    }).then(res1 => {
+    }).then(res => {
 
       //获取相关信息
-      title = res1.data.title;
-      introduction = res1.data.introduction;
-      speciality = res1.data.speciality;
+      title = res.data.title;
+      introduction = res.data.introduction;
+      speciality = res.data.speciality;
 
       //创建卡片
-      $('.card').append(createCard(res1.data))
+      $('.card').append(createCard(res.data))
 
       //创建表头
       $("#tr").append(createTr(speciality));
@@ -502,10 +514,10 @@
       //获取数据库中的所有内容
       axios.get("http://127.0.0.1:8080/findAll", {
         params: { "uid": encodeURIComponent(uid) }
-      }).then(res2 => {
+      }).then(res => {
 
         //渲染表格
-        let html = createTable(res2.data.matentityList, speciality)
+        let html = createTable(res.data.matentityList, speciality)
         $('#tbody').append(html)
 
         //分页效果
@@ -518,6 +530,8 @@
         })
 
       }).catch(err => {
+        msg2="Error."
+        openTipModal2();
         console.error(err)
       })
 
@@ -722,6 +736,8 @@
             })
 
           }).catch(err => {
+            msg2="Error."
+            openTipModal2();
             console.error(err);
           });
 
@@ -730,6 +746,8 @@
       });
 
     }).catch(err => {
+      msg2="Error."
+      openTipModal2();
       console.error(err)
     })
 
