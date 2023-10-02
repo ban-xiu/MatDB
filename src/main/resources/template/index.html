@@ -369,6 +369,14 @@
     var username = $("#username").text();
     var password = $("#password").text();
 
+    //user用户不能操作数据库
+    if(username=="user"){
+      $("#add").css("display","none");
+      $("#burn").css("display","none");
+      $("#update").css("display","none");
+      $("#delete").css("display","none");
+    }
+
     //在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
@@ -728,7 +736,9 @@
     $(".card").click(function () {
 
       //打开卡片弹窗
-      $("#cardModal").modal('show');
+      if(username != "user"){
+        $("#cardModal").modal('show');
+      }
 
       //修改标题与介绍的默认值
       const $newTitle = $('#title');
@@ -1088,9 +1098,9 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal"
-                data-dismiss="modal">Detail</button>
+                data-dismiss="modal" id="detail">Detail</button>
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal"
-                data-dismiss="modal">Update</button>
+                data-dismiss="modal" id="update">Update</button>
         <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
                 id="delete">Delete</button>
         <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
@@ -1251,7 +1261,7 @@
   </br></br>
   <div class="col-md-12 btns">
     <button class="btn btn-primary" type="button" data-toggle="modal" id="back">Back</button>
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal">Add</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal" id="add">Add</button>
     <button class="btn btn-danger" type="button" data-toggle="modal" id="burn">Burn</button>
   </div>
   <!--表格-->

@@ -641,7 +641,7 @@
 
             //渲染数据库信息卡片
             axios.get("http://127.0.0.1:8080/findDBInof", {
-                params: { "username": encodeURIComponent(username) }
+                params: { "username": encodeURIComponent(username==="user"?"root":username) }
             }).then(res => {
                 console.log(res)
                 let html = createDBCard(res.data.dbentityList)
@@ -701,13 +701,22 @@
                 $('#infoModal').modal('show');
             });
             $('#change').click(function () {
+                if( username=="user" && password == "user"){
+                    msg = "Cannot change the password."
+                    openTipModal();
+                    return;
+                }
                 $('#changeModal').modal('show');
             });
             $('#about').click(function () {
                 $('#aboutModal').modal('show');
-
             });
             $('#new').click(function () {
+                if( username=="user" && password == "user"){
+                    msg = "Cannot create new databases."
+                    openTipModal();
+                    return;
+                }
                 $('#newModal').modal('show');
             });
 

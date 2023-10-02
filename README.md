@@ -15,7 +15,7 @@ docker run -itd --name mongo -v 数据卷文件夹路径:/data/db -p 27017:27017
 
 容器名字为：mongo，同时配置了数据卷实现数据持久化，容器端口为：27017
 
-### 进入容器的admin数据库
+### 进入容器中的admin数据库
 docker exec -it mongo mongosh admin
 
 ### 查看当前数据库
@@ -30,17 +30,26 @@ show users
 ### 登录
 进入容器的admin数据库后：db.auth("root","root")
 
-### 查看当前数据库下的所有集合
+### 查看当前数据库中的所有集合
 登录成功后：show collections
 
 ### 创建mongodata集合
-如果不存在mongodata集合：db.createCollection("mongodata")
-
-### 创建matusers集合
-如果不存在matusers集合：db.createCollection("matusers")
+如果admin数据库中不存在mongodata集合：db.createCollection("mongodata")
 
 ### 创建templatedata集合
-如果不存在templatedata集合：db.createCollection("templatedata")
+如果admin数据库中不存在templatedata集合：db.createCollection("templatedata")
+
+### 创建matusers集合
+如果admin数据库中不存在matusers集合：db.createCollection("matusers")
+
+### 查看matusers集合中的所有内容
+db.matusers.find()
+
+### 创建root账户
+如果matusers集合中不存在root账户：db.matusers.insertOne({username:"root", password:"root"})
+
+### 创建user账户
+如果matusers集合中不存在user账户：db.matusers.insertOne({username:"user", password:"user"})
 
 ## 2.启动项目
 保证数据库正常连接，通过maven更新pox.xml文件中的依赖后，运行APP.java，访问127.0.0.1:8080即可。
