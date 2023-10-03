@@ -491,8 +491,8 @@
                     openTipModal()
                     return;
                 }
-                if (edit.includes(",")) {
-                    msg = 'The value cannot contain ",".'
+                if (edit.includes(",") || edit.includes(" ")) {
+                    msg = 'The value cannot contain ","and" ".'
                     openTipModal();
                     return;
                 }
@@ -730,8 +730,8 @@
                     openTipModal();
                     return;
                 }
-                if (add.includes(",")) {
-                    msg = 'The value cannot contain ",".'
+                if (add.includes(",") || add.includes(" ")) {
+                    msg = 'The value cannot contain ","and" ".'
                     openTipModal();
                     return;
                 }
