@@ -226,7 +226,9 @@
   function createFile(speciality) {
     let str = ``;
     for (let i = 0; i < speciality.length; i++) {
-      str += `<span>${speciality[i]}</span>`;
+      if (speciality[i] != "") {
+        str += `<span>${speciality[i]}</span>`;
+      }
     }
     return str;
   }
@@ -235,7 +237,9 @@
   function createDetail(speciality) {
     let str = ``;
     for (let i = 0; i < speciality.length; i++) {
-      str += `<p class="infop">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+      if (speciality[i] != "") {
+        str += `<p class="infop">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+      }
     }
     return str;
   }
@@ -244,10 +248,12 @@
   function createUpdate(speciality) {
     let html = ``;
     for (let i = 0; i < speciality.length; i++) {
-      html += `<div class="form-group col-6">
+      if (speciality[i] != "") {
+        html += `<div class="form-group col-6">
             <label for="update${i}">${speciality[i]}</label>
             <textarea class="form-control" id="update${i}"></textarea>
           </div>`;
+      }
     }
     return html;
   }
@@ -255,14 +261,12 @@
   //创建Add输入框方法
   function createAdd(speciality) {
     let html = ``;
-    if (speciality.length > 0) {
-      for (let i = 0; i < speciality.length; i++) {
-        if (speciality[i] != "") {
-          html += `<div class="form-group col-6">
+    for (let i = 0; i < speciality.length; i++) {
+      if (speciality[i] != "") {
+        html += `<div class="form-group col-6">
               <label for="add${i}">${speciality[i]}</label>
               <textarea class="form-control" id="add${i}"></textarea>
               </div>`;
-        }
       }
     }
     return html;
@@ -271,11 +275,9 @@
   //创建表头方法
   function createTr(speciality) {
     let html = ``;
-    if (speciality.length > 0) {
-      for (let i = 0; i < speciality.length; i++) {
-        if (speciality[i] != "") {
-          html += `<th scope="col">${speciality[i]}</th>`;
-        }
+    for (let i = 0; i < speciality.length; i++) {
+      if (speciality[i] != "") {
+        html += `<th scope="col">${speciality[i]}</th>`;
       }
     }
     return html;
@@ -299,24 +301,26 @@
     for (let i = 0; i < list.length; i++) {
       let obj = truncateValues(list[i]);
       html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
-      html += `<th scope="row">${obj.id}</th>`;
-      html += `<td>${obj.structure}</td>`;
-      html += `<td>${obj.name}</td>`;
-      html += `<td>${obj.symmetry}</td>`;
-      html += `<td>${obj.metal}</td>`;
-      html += `<td>${obj.bandgappbe}</td>`;
-      html += `<td>${obj.bandgaphse}</td>`;
-      html += `<td>${obj.doi}</td>`;
-      html += `<td>${obj.url}</td>`;
-      html += `<td>${obj.publication}</td>`;
+      html += `<th scope="row" col="0">${obj.id}</th>`;
+      html += `<td col="1">${obj.structure}</td>`;
+      html += `<td col="2">${obj.name}</td>`;
+      html += `<td col="3">${obj.symmetry}</td>`;
+      html += `<td col="4">${obj.metal}</td>`;
+      html += `<td col="5">${obj.bandgappbe}</td>`;
+      html += `<td col="6">${obj.bandgaphse}</td>`;
+      html += `<td col="7">${obj.doi}</td>`;
+      html += `<td col="8">${obj.url}</td>`;
+      html += `<td col="9">${obj.publication}</td>`;
       if (obj.speciality) {
-        for (let k = 0; k < obj.speciality.length; k++) {
-          html += `<td>${obj.speciality[k]}</td>`;
+        for (let j = 0; j < obj.speciality.length; j++) {
+          html += `<td col="${10 + j}">${obj.speciality[j]}</td>`;
         }
       }
       else {
-        for (let j = 0; j < speciality.length; j++) {
-          html += `<td>undefined</td>`;
+        if (JSON.stringify(speciality) != '[""]') {
+          for (let j = 0; j < speciality.length; j++) {
+            html += `<td col="${10 + j}">undefined</td>`;
+          }
         }
       }
       html += `</tr>`;
@@ -338,6 +342,25 @@
     return html;
   }
 
+  //创建Show弹窗选项方法
+  function createShow(speciality) {
+    let group = ["ID", "Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
+    let html = ``;
+    for (let i = 0; i < group.length; i++) {
+      if (group[i] != "") {
+        html += `<div class="form-group col-md-4">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="option" value="${i}" id="show${i}" checked>
+                <label class="form-check-label" for="show${i}">
+                  ${group[i]}
+                </label>
+              </div>
+            </div>`;
+      }
+    }
+    return html;
+  }
+
   //打开Tip1弹窗方法
   var msg1;
   function openTipModal1() {
@@ -355,14 +378,11 @@
   $(document).ready(function () {
 
     //初始化数据容器
-    var data;
     var mat = {};
     var add = {};
     var title;
     var introduction;
     var speciality;
-    var addSpeciality = [];
-    var requiredHeaders;
     var rows;
 
     var uid = $("#uid").text();
@@ -370,11 +390,11 @@
     var password = $("#password").text();
 
     //user用户不能操作数据库
-    if(username=="user"){
-      $("#add").css("display","none");
-      $("#burn").css("display","none");
-      $("#update").css("display","none");
-      $("#delete").css("display","none");
+    if (username == "user") {
+      $("#add").css("display", "none");
+      $("#burn").css("display", "none");
+      $("#update").css("display", "none");
+      $("#delete").css("display", "none");
     }
 
     //在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
@@ -385,7 +405,7 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
-          msg2="Error."
+          msg2 = "Error."
           openTipModal2();
           console.error(err)
         })
@@ -396,7 +416,7 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
-          msg2="Error."
+          msg2 = "Error."
           openTipModal2();
           console.error(err)
         })
@@ -407,7 +427,7 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
-          msg2="Error."
+          msg2 = "Error."
           openTipModal2();
           console.error(err)
         })
@@ -422,7 +442,7 @@
         }).then(res => {
           console.log(res)
         }).catch(err => {
-          msg2="Error."
+          msg2 = "Error."
           openTipModal2();
           console.error(err)
         })
@@ -435,7 +455,7 @@
           location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
           return;
         }).catch(err => {
-          msg2="Error."
+          msg2 = "Error."
           openTipModal2();
           console.error(err)
         })
@@ -446,7 +466,7 @@
         }).then(res => {
           console.log(res);
         }).catch(err => {
-          msg2="Error."
+          msg2 = "Error."
           openTipModal2();
           console.error(err);
         })
@@ -517,23 +537,95 @@
       }).then(res => {
 
         //渲染表格
-        let html = createTable(res.data.matentityList, speciality)
-        $('#tbody').append(html)
+        $('#tbody').append(createTable(res.data.matentityList, speciality))
 
         //分页效果
         $(function () {
           $('#myTable').DataTable({
             "pageLength": 5,
             "lengthChange": false,
-            "paging": true
+            "paging": true,
+            //分页时也按需求展示
+            "drawCallback": function () {
+              $("#myTable_paginate").off("click").on("click", function () {
+                hideOrShowChildElements(showOptions);
+              });
+            }
           });
         })
 
       }).catch(err => {
-        msg2="Error."
+        msg2 = "Error."
         openTipModal2();
         console.error(err)
       })
+
+      //创建Show选项
+      $("#showChoose").append(createShow(speciality));
+      // 创建一个空数组用于存储选中的值
+      var showOptions = [];
+
+      // 获取所有多选框元素
+      const checkboxes = $('input[type="checkbox"]');
+
+      // 遍历每个多选框元素
+      checkboxes.each(function () {
+        //默认情况下都展示
+        showOptions.push($(this).val());
+        // 添加事件监听器，当多选框状态改变时触发
+        $(this).on('change', function () {
+          // 检查多选框是否被选中
+          if ($(this).prop('checked')) {
+            // 将选中的值添加到数组中
+            showOptions.push($(this).val());
+          } else {
+            // 如果多选框被取消选中，则从数组中移除该值
+            let index = showOptions.indexOf($(this).val());
+            if (index > -1) {
+              showOptions.splice(index, 1);
+            }
+          }
+          // 打印当前选中的值
+          console.log('当前选中的值: ' + showOptions);
+          // 显示或隐藏子元素
+          hideOrShowChildElements(showOptions);
+        });
+
+      });
+
+      // 显示或隐藏子元素方法
+      function hideOrShowChildElements(showOptions) {
+        // 获取 tr 元素下的所有子元素
+        const trChildElements = $('#tr').children();
+        // 获取 tbody 元素下的所有子元素
+        const tElementsToHide = $('th[col], td[col]');
+        // 遍历子元素
+        trChildElements.each(function (index) {
+          // 检查当前子元素的索引是否在 showOptions 数组中
+          if (showOptions.includes(index + "")) {
+            // 如果在数组中，则显示该子元素
+            $(this).show();
+          } else {
+            // 如果不在数组中，则隐藏该子元素
+            $(this).hide();
+          }
+
+        });
+
+        // 遍历子元素
+        tElementsToHide.each(function () {
+          let colValue = $(this).attr('col');
+
+          // 检查当前元素的 col 值是否在 showOptions 数组中
+          if (showOptions.includes(colValue)) {
+            // 如果在数组中，则显示该元素
+            $(this).show();
+          } else {
+            // 如果不在数组中，则隐藏该元素
+            $(this).hide();
+          }
+        });
+      }
 
       //创建Add输入框
       $("#addArea").append(createAdd(speciality))
@@ -549,6 +641,7 @@
 
       //获取Add输入框内容
       add.uid = uid;
+      add.speciality = [];
 
       const $saveStructure = $('#addStructure');
       $saveStructure.on('change', function () {
@@ -595,11 +688,10 @@
       });
 
       for (let j = 0; j < speciality.length; j++) {
-        addSpeciality[j] = undefined;
+        add.speciality = undefined;
         $(`#add${j}`).on('change', function () {
           let temp = $(`#add${j}`).val();
-          addSpeciality[j] = temp;
-          add.speciality = addSpeciality;
+          add.speciality = temp;
         });
       }
 
@@ -607,7 +699,7 @@
       $(".addClose").click(function () {
         add = {};
         add.uid = uid;
-        addSpeciality = [];
+        add.speciality = [];
         $saveStructure.val(undefined);
         $saveName.val(undefined);
         $saveSymmetry.val(undefined);
@@ -631,71 +723,70 @@
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": encodeURIComponent(cid) }
           }).then(res => {
-            data = res.data;
-            mat.id = data.id;
-            mat.uid = data.uid;
-            mat.structure = data.structure;
-            mat.name = data.name;
-            mat.symmetry = data.symmetry;
-            mat.metal = data.metal;
-            mat.bandgappbe = data.bandgappbe;
-            mat.bandgaphse = data.bandgaphse;
-            mat.doi = data.doi;
-            mat.url = data.url;
-            mat.publication = data.publication;
-            mat.speciality = data.speciality;
+            mat.id = res.data.id;
+            mat.uid = res.data.uid;
+            mat.structure = res.data.structure;
+            mat.name = res.data.name;
+            mat.symmetry = res.data.symmetry;
+            mat.metal = res.data.metal;
+            mat.bandgappbe = res.data.bandgappbe;
+            mat.bandgaphse = res.data.bandgaphse;
+            mat.doi = res.data.doi;
+            mat.url = res.data.url;
+            mat.publication = res.data.publication;
+            mat.speciality = res.data.speciality;
 
             //设置默认值，获取修改值
             const $inputStructure = $('#updateStructure');
-            $inputStructure.val(data.structure);
+            $inputStructure.val(res.data.structure);
             $inputStructure.on('change', function () {
               mat.structure = $inputStructure.val();
             });
 
             const $inputName = $('#updateName');
-            $inputName.val(data.name);
+            $inputName.val(res.data.name);
             $inputName.on('change', function () {
               mat.name = $inputName.val();
             });
 
             const $inputSymmetry = $('#updateSymmetry');
-            $inputSymmetry.val(data.symmetry);
+            $inputSymmetry.val(res.data.symmetry);
             $inputSymmetry.on('change', function () {
               mat.symmetry = $inputSymmetry.val();
             });
 
             const $inputMetal = $('#updateMetal');
-            $inputMetal.val(data.metal);
+            $inputMetal.val(res.data.metal);
             $inputMetal.on('change', function () {
               mat.metal = $inputMetal.val();
             });
 
             const $inputBandgap_PBE = $('#updateBandgap-PBE');
-            $inputBandgap_PBE.val(data.bandgappbe);
+            $inputBandgap_PBE.val(res.data.bandgappbe);
             $inputBandgap_PBE.on('change', function () {
               mat.bandgappbe = $inputBandgap_PBE.val();
             });
 
             const $inputBandgap_HSE = $('#updateBandgap-HSE');
-            $inputBandgap_HSE.val(data.bandgaphse);
+            $inputBandgap_HSE.val(res.data.bandgaphse);
             $inputBandgap_HSE.on('change', function () {
               mat.bandgaphse = $inputBandgap_HSE.val();
             });
 
             const $inputDOI = $('#updateDOI');
-            $inputDOI.val(data.doi);
+            $inputDOI.val(res.data.doi);
             $inputDOI.on('change', function () {
               mat.doi = $inputDOI.val();
             });
 
             const $inputURL = $('#updateURL');
-            $inputURL.val(data.url);
+            $inputURL.val(res.data.url);
             $inputURL.on('change', function () {
               mat.url = $inputURL.val();
             });
 
             const $inputPublication = $('#updatePublication');
-            $inputPublication.val(data.publication);
+            $inputPublication.val(res.data.publication);
             $inputPublication.on('change', function () {
               mat.publication = $inputPublication.val();
             })
@@ -736,7 +827,7 @@
             })
 
           }).catch(err => {
-            msg2="Error."
+            msg2 = "Error."
             openTipModal2();
             console.error(err);
           });
@@ -746,7 +837,7 @@
       });
 
     }).catch(err => {
-      msg2="Error."
+      msg2 = "Error."
       openTipModal2();
       console.error(err)
     })
@@ -754,7 +845,7 @@
     $(".card").click(function () {
 
       //打开卡片弹窗
-      if(username != "user"){
+      if (username != "user") {
         $("#cardModal").modal('show');
       }
 
@@ -957,7 +1048,7 @@
     function checkFields(headers) {
 
       // 判断headers包含需要的字段
-      requiredHeaders = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
+      let requiredHeaders = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
 
       let isValid = true;
       requiredHeaders.forEach(header => {
@@ -1099,6 +1190,31 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="fileSubmit">Submit</button>
         <button class="btn btn-secondary fileClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Show弹窗-->
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showModalLabel">Show</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+        <form>
+          <div class="form-row" id="showChoose">
+
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -1280,6 +1396,7 @@
   <div class="col-md-12 btns">
     <button class="btn btn-primary" type="button" data-toggle="modal" id="back">Back</button>
     <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal" id="add">Add</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showModal" id="show">Show</button>
     <button class="btn btn-danger" type="button" data-toggle="modal" id="burn">Burn</button>
   </div>
   <!--表格-->
@@ -1310,4 +1427,3 @@
 </body>
 
 </html>
-
