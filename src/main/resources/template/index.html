@@ -545,6 +545,7 @@
             "pageLength": 5,
             "lengthChange": false,
             "paging": true,
+            "responsive":true,
             //分页时也按需求展示
             "drawCallback": function () {
               $("#myTable_paginate").off("click").on("click", function () {
@@ -608,6 +609,7 @@
           } else {
             // 如果不在数组中，则隐藏该子元素
             $(this).hide();
+            $('#myTable').DataTable().columns.adjust().draw();
           }
 
         });
@@ -623,6 +625,7 @@
           } else {
             // 如果不在数组中，则隐藏该元素
             $(this).hide();
+            $('#myTable').DataTable().columns.adjust().draw();
           }
         });
       }
