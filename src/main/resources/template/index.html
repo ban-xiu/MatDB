@@ -590,9 +590,11 @@
           console.log('当前选中的值: ' + showOptions);
           // 显示或隐藏子元素
           hideOrShowChildElements(showOptions);
-          // 获取当前滚动条位置和滚动容器高度
-          var scrollPos = $('#myTable').scrollTop();
-          var containerHeight = $('#myTable').parent().height();
+          // 获取当前滚动条位置和滚动容器尺寸
+          let scrollLeft = $('#myTable').scrollLeft();
+          let scrollTop = $('#myTable').scrollTop();
+          let containerHeight = $('#myTable').parent().height();
+          let containerWidth = $('#myTable').parent().width();
 
           // 调整列宽度并重新绘制表格
           $('#myTable').columns.adjust().draw("page");
@@ -600,8 +602,10 @@
           // 延迟一段时间执行恢复滚动条状态的代码
           setTimeout(function() {
           // 恢复滚动条位置和滚动容器高度
-              $('#myTable').scrollTop(scrollPos);
+              $('#myTable').scrollLeft(scrollLeft);
+              $('#myTable').scrollTop(scrollTop);
               $('#myTable').parent().height(containerHeight);
+              $('#myTable').parent().width(containerWidth);
           }, 100);
 
         });
