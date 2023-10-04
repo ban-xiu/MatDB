@@ -545,6 +545,8 @@
             "pageLength": 5,
             "lengthChange": false,
             "paging": true,
+            //"scrollX": "100%",
+            //"scrollY": "50%",
             //分页时也按需求展示
             "drawCallback": function () {
               $("#myTable_paginate").on("click", function () {
@@ -585,11 +587,25 @@
               showOptions.splice(index, 1);
             }
           }
+
           // 打印当前选中的值
           console.log('当前选中的值: ' + showOptions);
           // 显示或隐藏子元素
           hideOrShowChildElements(showOptions);
-          $('#myTable').DataTable().columns.adjust().draw('page');
+          // 获取当前滚动条位置和滚动容器高度
+          var scrollPos = $('#myTable').scrollTop();
+          var containerHeight = $('#myTable').parent().height();
+
+          // 调整列宽度并重新绘制表格
+          $('#myTable').columns.adjust().draw("page");
+
+          // 延迟一段时间执行恢复滚动条状态的代码
+          setTimeout(function() {
+          // 恢复滚动条位置和滚动容器高度
+              $('#myTable').scrollTop(scrollPos);
+              $('#myTable').parent().height(containerHeight);
+          }, 100);
+
         });
 
       });
