@@ -173,7 +173,6 @@
     margin: 5px;
   }
 
-
   .infop:hover {
     background-color: #555;
   }
@@ -303,25 +302,25 @@
     for (let i = 0; i < list.length; i++) {
       let obj = truncateValues(list[i]);
       html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
-      html += `<th scope="row" col="0">${obj.id}</th>`;
-      html += `<td col="1">${obj.structure}</td>`;
-      html += `<td col="2">${obj.name}</td>`;
-      html += `<td col="3">${obj.symmetry}</td>`;
-      html += `<td col="4">${obj.metal}</td>`;
-      html += `<td col="5">${obj.bandgappbe}</td>`;
-      html += `<td col="6">${obj.bandgaphse}</td>`;
-      html += `<td col="7">${obj.doi}</td>`;
-      html += `<td col="8">${obj.url}</td>`;
-      html += `<td col="9">${obj.publication}</td>`;
+      html += `<th scope="row">${obj.id}</th>`;
+      html += `<td col="0">${obj.structure}</td>`;
+      html += `<td col="1">${obj.name}</td>`;
+      html += `<td col="2">${obj.symmetry}</td>`;
+      html += `<td col="3">${obj.metal}</td>`;
+      html += `<td col="4">${obj.bandgappbe}</td>`;
+      html += `<td col="5">${obj.bandgaphse}</td>`;
+      html += `<td col="6">${obj.doi}</td>`;
+      html += `<td col="7">${obj.url}</td>`;
+      html += `<td col="8">${obj.publication}</td>`;
       if (obj.speciality) {
         for (let j = 0; j < obj.speciality.length; j++) {
-          html += `<td col="${10 + j}">${obj.speciality[j]}</td>`;
+          html += `<td col="${9 + j}">${obj.speciality[j]}</td>`;
         }
       }
       else {
         if (JSON.stringify(speciality) != '[""]') {
           for (let j = 0; j < speciality.length; j++) {
-            html += `<td col="${10 + j}">undefined</td>`;
+            html += `<td col="${9 + j}">undefined</td>`;
           }
         }
       }
@@ -346,7 +345,7 @@
 
   //创建Show弹窗选项方法
   function createShow(speciality) {
-    let group = ["ID", "Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
+    let group = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
     let html = ``;
     for (let i = 0; i < group.length; i++) {
       if (group[i] != "") {
@@ -386,6 +385,7 @@
     var introduction;
     var speciality;
     var rows;
+    var table;
 
     var uid = $("#uid").text();
     var username = $("#username").text();
@@ -542,10 +542,10 @@
         $('#tbody').append(createTable(res.data.matentityList, speciality))
 
         //分页效果
-        $(function () {
-          $('#myTable').DataTable({
+          table = $('#myTable').DataTable({
             "pageLength": 5,
-            "lengthChange": false,
+            "lengthMenu": [5,10,25,50,100],
+            "lengthChange": true,
             "paging": true,
             //分页时也按需求展示
             "drawCallback": function () {
@@ -554,7 +554,6 @@
               });
             }
           });
-        })
 
       }).catch(err => {
         msg2 = "Error."
@@ -592,23 +591,6 @@
           console.log('当前选中的值: ' + showOptions);
           // 显示或隐藏子元素
           hideOrShowChildElements(showOptions);
-          // 获取当前滚动条位置和滚动容器尺寸
-          let scrollLeft = $('#myTable').scrollLeft();
-          let scrollTop = $('#myTable').scrollTop();
-          let containerHeight = $('#myTable').parent().height();
-          let containerWidth = $('#myTable').parent().width();
-
-          // 调整列宽度并重新绘制表格
-          $('#myTable').columns.adjust().draw("page");
-
-          // 延迟一段时间执行恢复滚动条状态的代码
-          setTimeout(function() {
-          // 恢复滚动条位置和滚动容器高度
-              $('#myTable').scrollLeft(scrollLeft);
-              $('#myTable').scrollTop(scrollTop);
-              $('#myTable').parent().height(containerHeight);
-              $('#myTable').parent().width(containerWidth);
-          }, 100);
 
         });
 
@@ -616,10 +598,12 @@
 
       // 显示或隐藏子元素方法
       function hideOrShowChildElements(showOptions) {
-        // 获取 tr 元素下的所有子元素
-        const trChildElements = $('#tr').children();
+
+        // 获取 tr 元素下的除了ID以外的所有子元素
+        const trChildElements = $('#tr').children().slice(1);
         // 获取 tbody 元素下的所有子元素
         const tElementsToHide = $('th[col], td[col]');
+
         // 遍历子元素
         trChildElements.each(function (index) {
           // 检查当前子元素的索引是否在 showOptions 数组中
@@ -927,20 +911,19 @@
       for (let i = 0; i < mat.speciality.length; i++) {
         $(`#Info${i}`).text(mat.speciality[i] && mat.speciality[i] !== "undefined" ? mat.speciality[i] : "Null")
       }
-      // 导出功能实现
-      document.getElementById("exportButton").addEventListener("click", function () {
-        // 获取要导出的节点内容
-        const content = mat.structure;
-        const nodeName = mat.name;
-        // 创建一个Blob对象，将内容存储为.vasp文件
-        const blob = new Blob([content], {type: "text/plain"});
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(blob);
-        a.download =nodeName + '.vasp'; // 设置文件名
-        a.style.display = "none";
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+
+      // 导出VASP文件功能
+      $("#exportVASP").click(function() {
+          const content = mat.structure;
+          const nodeName = mat.name;
+          const blob = new Blob([content], {type: "text/plain"});
+          const a = $("<a>")
+            .attr("href", URL.createObjectURL(blob))
+            .attr("download", nodeName + ".vasp")
+            .css("display", "none");
+          $("body").append(a);
+          a[0].click();
+          a.remove();
       });
 
       //关闭Detail弹窗清空内容
@@ -1097,7 +1080,6 @@
     }
 
   })
-
 
 </script>
 
@@ -1284,7 +1266,7 @@
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
      aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content"  style="position: absolute;left: -100%;width: 1500px;height: 900px">
+    <div class="modal-content" style="position: absolute; left: -100%; width: 1500px; height: 900px">
       <div class="modal-header">
         <h4 class="modal-title" id="detailModalLabel">Detail</h4>
         <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
@@ -1308,8 +1290,8 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="exportVASP">Export VASP</button>
         <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-secondary" id="exportButton" data-dismiss="modal">导出VASP文件</button>
       </div>
     </div>
   </div>
