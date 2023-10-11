@@ -181,20 +181,6 @@
     background-color: #777;
   }
 
-  #structureInfo {
-    text-align: center;
-    white-space: pre-wrap;
-    font-weight: bold;
-    font-style: italic;
-    text-decoration: underline;
-    line-height: 1.5;
-    font-size: 16px;
-    letter-spacing: 1px;
-    word-spacing: 2px;
-    font-family: Arial, sans-serif;
-    color: #333;
-  }
-
   /*File弹窗效果*/
   input.file-caption-name.form-control.kv-fileinput-caption:focus {
     border: 1px solid #ced4da;
@@ -229,17 +215,6 @@
     for (let i = 0; i < speciality.length; i++) {
       if (speciality[i] != "") {
         str += `<span>${speciality[i]}</span>`;
-      }
-    }
-    return str;
-  }
-
-  //设置Detail文本方法
-  function createDetail(speciality) {
-    let str = ``;
-    for (let i = 0; i < speciality.length; i++) {
-      if (speciality[i] != "") {
-        str += `<p class="infop">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
       }
     }
     return str;
@@ -384,6 +359,7 @@
     var title;
     var introduction;
     var speciality;
+    var specialityType;
     var rows;
     var table;
 
@@ -523,9 +499,11 @@
     }).then(res => {
 
       //获取相关信息
+      console.log(res.data)
       title = res.data.title;
       introduction = res.data.introduction;
       speciality = res.data.speciality;
+      specialityType = res.data.specialityType;
 
       //创建卡片
       $('.card').append(createCard(res.data))
@@ -639,7 +617,32 @@
       $("#updateArea").append(createUpdate(speciality))
 
       //创建Detail文本
-      $("#infos").append(createDetail(speciality))
+      for (let i = 0; i < speciality.length; i++) {
+          if (speciality[i] != "") {
+            let str = `<p class="infop">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            if(specialityType[i] == "Scalar"){
+                $("#scalar").next("hr").after($(str))
+            }
+            if(specialityType[i] == "Vector"){
+                let isNull = $("#vector").next("hr").next("p").text();
+                if(isNull == "Null"){
+                   $("#vector").next("hr").next("p").replaceWith($(str))
+                }
+                else{
+                   $("#vector").next("hr").after($(str))
+                }
+            }
+            if(specialityType[i] == "Tensor"){
+                let isNull = $("#tensor").next("hr").next("p").text();
+                if(isNull == "Null"){
+                   $("#tensor").next("hr").next("p").replaceWith($(str))
+                }
+                else{
+                   $("#tensor").next("hr").after($(str))
+                }
+            }
+          }
+      }
 
       //创建File文本
       $("#fileText").append(createFile(speciality))
@@ -880,9 +883,12 @@
 
       Jmol._debugCode = (s.indexOf("debugcode") >= 0);
 
+      let vh = 65*window.innerHeight/100;
+      let vw = 42.5*window.innerWidth/100;
+
       var Info = {
-        width: 460,
-        height: 460,
+        width: vw,
+        height: vh,
         debug: false,
         color: "0xFFFFF1",
         use: "HTML5",
@@ -895,7 +901,10 @@
         allowJavaScript: true
       }
 
-      $("#appdiv").html(Jmol.getAppletHtml("jmolApplet0", Info))
+      // 创建并初始化 Jmol applet 对象
+      jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+
+      $("#appdiv").html(Jmol.getAppletHtml("jmolApplet0", Info));
 
       //Detail文本内容
       $("#structureInfo").text(mat.structure ? mat.structure : "Null")
@@ -935,7 +944,6 @@
       })
 
     })
-
 
     // 初始化文件上传组件
     $("#file").fileinput({ showUpload: false });
@@ -1266,19 +1274,16 @@
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
      aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content" style="position: absolute; left: -100%; width: 1500px; height: 900px">
+    <div class="modal-content" style="position: absolute; left: -90%; width: 85vw; height: 90vh;">
       <div class="modal-header">
         <h4 class="modal-title" id="detailModalLabel">Detail</h4>
         <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
       </div>
-      <div class="modal-body row_Y">
+      <div class="modal-body row_Y" style="position: relative;">
         <!--渲染jsmol图像-->
-        <div id="appdiv"></div>
-        <div id="infos">
-          </br>
-          <strong>Structure:</strong>
-          <p id="structureInfo"></p>
-          </br>
+        <div id="appdiv" style="position: absolute; width: 42.5vw; height: 65vh;"></div>
+        <div id="infos" style="position: absolute; left: 45vw;">
+          <small id="scalar">Scalar</small><hr/>
           <p class="infop">Name:&emsp;<span id="nameInfo"></span></p>
           <p class="infop">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
           <p class="infop">Metal:&emsp;<span id="metalInfo"></span></p>
@@ -1287,6 +1292,10 @@
           <p class="infop">DOI:&emsp;<span id="doiInfo"></span></p>
           <p class="infop">URL:&emsp;<span id="urlInfo"></span></p>
           <p class="infop">Publication:&emsp;<span id="publicationInfo"></span></p>
+          <br/><hr/><small id="vector">Vector</small><hr/>
+          <p class="infop">Null</p>
+          <br/><hr/><small id="tensor">Tensor</small><hr/>
+          <p class="infop">Null</p>
         </div>
       </div>
       <div class="modal-footer">

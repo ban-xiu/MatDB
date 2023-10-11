@@ -21,14 +21,32 @@ public class DBentity {
     private String username;
     @Field("speciality")
     private String[] speciality;
+
+    @Field("specialityType")
+    private String[] specialityType;
     public DBentity(){};
-    public DBentity(String id, String title, String introduction, String type, String username, String[] speciality) {
+
+    public DBentity(String id, String title, String introduction, String type, String username, String[] speciality, String[] specialityType) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.type = type;
         this.username = username;
         this.speciality = speciality;
+        this.specialityType = specialityType;
+    }
+
+    @Override
+    public String toString() {
+        return "DBentity{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", type='" + type + '\'' +
+                ", username='" + username + '\'' +
+                ", speciality=" + Arrays.toString(speciality) +
+                ", specialityType=" + Arrays.toString(specialityType) +
+                '}';
     }
 
     public String toJson(){
@@ -84,4 +102,13 @@ public class DBentity {
     public void setSpeciality(String[] speciality) {
         this.speciality = speciality;
     }
+
+    public String[] getSpecialityType() {
+        return specialityType;
+    }
+
+    public void setSpecialityType(String[] specialityType) {
+        this.specialityType = specialityType;
+    }
+
 }

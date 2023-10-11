@@ -22,15 +22,17 @@ public class DBcontroller {
     @Autowired
     Matrepository matrepository;
     @RequestMapping("/templateSave")
-    public void templateSave(@RequestParam("title") String title,@RequestParam("introduction") String introduction,@RequestParam("type") String type,@RequestParam("username") String username ,@RequestParam("speciality") String speciality){
+    public void templateSave(@RequestParam("title") String title,@RequestParam("introduction") String introduction,@RequestParam("type") String type,@RequestParam("username") String username ,@RequestParam("speciality") String speciality,@RequestParam("specialityType") String specialityType){
         try {
             String dtitle = URLDecoder.decode(title, "UTF-8");
             String dintroduction=URLDecoder.decode(introduction, "UTF-8");
             String dtype=URLDecoder.decode(type, "UTF-8");
             String dusername=URLDecoder.decode(username, "UTF-8");
             String dspeciality=URLDecoder.decode(speciality, "UTF-8");
+            String dspecialityType=URLDecoder.decode(specialityType,"UTF-8");
             String[] specialityArray = dspeciality.split(",");
-            DBentity db=new DBentity(null,dtitle,dintroduction,dtype,dusername,specialityArray);
+            String[] specialityTypeArray = dspecialityType.split(",");
+            DBentity db=new DBentity(null,dtitle,dintroduction,dtype,dusername,specialityArray,specialityTypeArray);
             dbrepository.save(db);
         } catch (Exception e) {
             e.printStackTrace();
