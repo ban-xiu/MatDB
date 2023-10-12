@@ -4,9 +4,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>matDB</title>
-  <link rel="icon" href="imgs/mat32×32.png" type="image/png" sizes="32×32">
-  <link rel="icon" href="imgs/mat16×16.png" type="image/png" sizes="16×16">
+  <title>MatDB</title>
+  <link rel="icon" href="imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
+  <link rel="icon" href="imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
   <script type="text/javascript" src="jsmol/JSmol.min.js"></script>
   <script src="jquery/jquery.min.js"></script>
   <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -165,7 +165,6 @@
   .infop {
     display: inline-block;
     padding: 0.3em 0.6em;
-    background-color: #333;
     color: #fff;
     border-radius: 15px;
     transition: background-color 0.3s ease;
@@ -173,12 +172,40 @@
     margin: 5px;
   }
 
-  .infop:hover {
-    background-color: #555;
+  .infop.scalar {
+    background-color: #0069D9;
   }
 
-  .infop:active {
-    background-color: #777;
+  .infop.vector {
+    background-color: #BD2130;
+  }
+
+  .infop.tensor {
+    background-color: #18A689;
+  }
+
+  .infop.scalar:hover {
+    background-color: #1057B3;
+  }
+
+  .infop.vector:hover {
+    background-color: #9C111F;
+  }
+
+  .infop.tensor:hover {
+    background-color: #14896F;
+  }
+
+  .infop.scalar:active {
+    background-color: #004FAB;
+  }
+
+  .infop.vector:active {
+    background-color: #8C0F1D;
+  }
+
+  .infop.tensor:active {
+    background-color: #117A5D;
   }
 
   /*File弹窗效果*/
@@ -520,18 +547,18 @@
         $('#tbody').append(createTable(res.data.matentityList, speciality))
 
         //分页效果
-          table = $('#myTable').DataTable({
-            "pageLength": 5,
-            "lengthMenu": [5,10,25,50,100],
-            "lengthChange": true,
-            "paging": true,
-            //分页时也按需求展示
-            "drawCallback": function () {
-              $("#myTable_paginate").on("click", function () {
-                hideOrShowChildElements(showOptions);
-              });
-            }
-          });
+        table = $('#myTable').DataTable({
+          "pageLength": 5,
+          "lengthMenu": [5, 10, 25, 50, 100],
+          "lengthChange": true,
+          "paging": true,
+          //分页时也按需求展示
+          "drawCallback": function () {
+            $("#myTable_paginate").on("click", function () {
+              hideOrShowChildElements(showOptions);
+            });
+          }
+        });
 
       }).catch(err => {
         msg2 = "Error."
@@ -613,39 +640,43 @@
       //创建Add输入框
       $("#addArea").append(createAdd(speciality))
 
+      //创建File文本
+      $("#fileText").append(createFile(speciality))
+
       //创建Update输入框
       $("#updateArea").append(createUpdate(speciality))
 
       //创建Detail文本
       for (let i = 0; i < speciality.length; i++) {
-          if (speciality[i] != "") {
-            let str = `<p class="infop">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
-            if(specialityType[i] == "Scalar"){
-                $("#scalar").next("hr").after($(str))
+        if (speciality[i] != "") {
+          let str;
+          let isNull;
+          if (specialityType[i] == "Scalar") {
+            str = `<p class="infop scalar">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            $("#scalar").next("hr").after($(str))
+          }
+          if (specialityType[i] == "Vector") {
+            str = `<p class="infop vector">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            isNull = $("#vector").next("hr").next("p").text();
+            if (isNull == "Null") {
+              $("#vector").next("hr").next("p").replaceWith($(str))
             }
-            if(specialityType[i] == "Vector"){
-                let isNull = $("#vector").next("hr").next("p").text();
-                if(isNull == "Null"){
-                   $("#vector").next("hr").next("p").replaceWith($(str))
-                }
-                else{
-                   $("#vector").next("hr").after($(str))
-                }
-            }
-            if(specialityType[i] == "Tensor"){
-                let isNull = $("#tensor").next("hr").next("p").text();
-                if(isNull == "Null"){
-                   $("#tensor").next("hr").next("p").replaceWith($(str))
-                }
-                else{
-                   $("#tensor").next("hr").after($(str))
-                }
+            else {
+              $("#vector").next("hr").after($(str))
             }
           }
+          if (specialityType[i] == "Tensor") {
+            str = `<p class="infop tensor">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            isNull = $("#tensor").next("hr").next("p").text();
+            if (isNull == "Null") {
+              $("#tensor").next("hr").next("p").replaceWith($(str))
+            }
+            else {
+              $("#tensor").next("hr").after($(str))
+            }
+          }
+        }
       }
-
-      //创建File文本
-      $("#fileText").append(createFile(speciality))
 
       //获取Add输入框内容
       add.uid = uid;
@@ -728,6 +759,9 @@
         //获取所点击的数据信息
         $(this).find("td, th").first().each(function () {
           let cid = $(this).text();
+          if (cid === "No data available in table") {
+            return;
+          }
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": encodeURIComponent(cid) }
           }).then(res => {
@@ -883,8 +917,8 @@
 
       Jmol._debugCode = (s.indexOf("debugcode") >= 0);
 
-      let vh = 65*window.innerHeight/100;
-      let vw = 42.5*window.innerWidth/100;
+      let vh = 65 * window.innerHeight / 100;
+      let vw = 42.5 * window.innerWidth / 100;
 
       var Info = {
         width: vw,
@@ -921,18 +955,48 @@
         $(`#Info${i}`).text(mat.speciality[i] && mat.speciality[i] !== "undefined" ? mat.speciality[i] : "Null")
       }
 
+      // 导出JSON文件功能
+      $("#exportJSON").click(function () {
+        const specialityData = (mat.speciality === undefined || mat.speciality[0] === "undefined") ? undefined : mat.speciality;
+        const data = {
+          "Structure": mat.structure,
+          "Name": mat.name,
+          "Symmetry": mat.symmetry,
+          "Metal": mat.metal,
+          "Bandgap-PBE(ev)": mat.bandgappbe,
+          "Bandgap-HSE(ev)": mat.bandgaphse,
+          "DOI": mat.doi,
+          "URL": mat.url,
+          "Publication": mat.publication,
+          "Speciality": specialityData,
+          "SpecialityType": mat.specialityType
+        };
+
+        const jsonData = JSON.stringify(data, null, 2);
+        const nodeName = mat.name;
+        const blob = new Blob([jsonData], { type: "application/json" });
+        const a = $("<a>")
+          .attr("href", URL.createObjectURL(blob))
+          .attr("download", nodeName + ".json")
+          .css("display", "none");
+        $("body").append(a);
+        a[0].click();
+        a.remove();
+      });
+
+
       // 导出VASP文件功能
-      $("#exportVASP").click(function() {
-          const content = mat.structure;
-          const nodeName = mat.name;
-          const blob = new Blob([content], {type: "text/plain"});
-          const a = $("<a>")
-            .attr("href", URL.createObjectURL(blob))
-            .attr("download", nodeName + ".vasp")
-            .css("display", "none");
-          $("body").append(a);
-          a[0].click();
-          a.remove();
+      $("#exportVASP").click(function () {
+        const content = mat.structure;
+        const nodeName = mat.name;
+        const blob = new Blob([content], { type: "text/plain" });
+        const a = $("<a>")
+          .attr("href", URL.createObjectURL(blob))
+          .attr("download", nodeName + ".vasp")
+          .css("display", "none");
+        $("body").append(a);
+        a[0].click();
+        a.remove();
       });
 
       //关闭Detail弹窗清空内容
@@ -1283,23 +1347,29 @@
         <!--渲染jsmol图像-->
         <div id="appdiv" style="position: absolute; width: 42.5vw; height: 65vh;"></div>
         <div id="infos" style="position: absolute; left: 45vw;">
-          <small id="scalar">Scalar</small><hr/>
-          <p class="infop">Name:&emsp;<span id="nameInfo"></span></p>
-          <p class="infop">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
-          <p class="infop">Metal:&emsp;<span id="metalInfo"></span></p>
-          <p class="infop">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
-          <p class="infop">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
-          <p class="infop">DOI:&emsp;<span id="doiInfo"></span></p>
-          <p class="infop">URL:&emsp;<span id="urlInfo"></span></p>
-          <p class="infop">Publication:&emsp;<span id="publicationInfo"></span></p>
-          <br/><hr/><small id="vector">Vector</small><hr/>
-          <p class="infop">Null</p>
-          <br/><hr/><small id="tensor">Tensor</small><hr/>
-          <p class="infop">Null</p>
+          <small id="scalar">Scalar</small>
+          <hr />
+          <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
+          <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
+          <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
+          <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
+          <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
+          <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
+          <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
+          <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
+          <br />
+          <hr /><small id="vector">Vector</small>
+          <hr />
+          <p class="infop vector">Null</p>
+          <br />
+          <hr /><small id="tensor">Tensor</small>
+          <hr />
+          <p class="infop tensor">Null</p>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" id="exportVASP">Export VASP</button>
+        <button type="button" class="btn btn-primary" id="exportJSON">Export JSON</button>
+        <button type="button" class="btn btn-primary" id="exportVASP">Export VASP</button>
         <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
       </div>
     </div>
