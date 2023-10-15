@@ -4,9 +4,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin</title>
-    <link rel="icon" href="imgs/mat32×32.png" type="image/png" sizes="32×32">
-    <link rel="icon" href="imgs/mat16×16.png" type="image/png" sizes="16×16">
+    <title>MatDB</title>
+    <link rel="icon" href="imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
+    <link rel="icon" href="imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
     <link href="admin/bootstrap.min.css" rel="stylesheet">
     <link href="admin/animate.css" rel="stylesheet">
     <link href="admin/style.css" rel="stylesheet">
@@ -139,18 +139,18 @@
     }
 
     /*下拉选框样式*/
-    #dbType {
+    .selectType {
         border-radius: 25px;
         border-color: #999;
         transition: border-color 0.3s;
     }
 
-    #dbType:hover {
+    .selectType:hover {
         background-color: #f5f5f5;
         border-color: #999;
     }
 
-    #dbType:focus {
+    .selectType:focus {
         outline: none;
         border-color: #ccc !important;
         box-shadow: none !important;
@@ -177,42 +177,17 @@
         background-color: #777;
     }
 
-    /*About样式*/
-    #aboutText{
-        font-family: Arial, sans-serif;
-        font-size: 16px;
-        color: #333;
-        line-height: 1.5;
-        text-align: justify;
-        letter-spacing: 1px;
-        word-spacing: 2px;
-        font-weight: bold;
-        font-style: italic;
-    }
     .col-lg-6.card {
-        background-color: rgba(255, 255, 255, 0.5); /* 设置背景颜色的透明度为0.8 */
-
+        background-color: rgba(255, 255, 255, 0.5);
+        width: 49.5%;
+        border-radius: 5px; /* 添加圆角 */
+        margin: 0.25%;  /* 添加边距 */
     }
 
     .col-lg-6.card .ibox {
-        background-color: rgba(255, 255, 255, 0.5); /* 设置背景颜色的透明度为0.8 */
-
+       opacity: 0.7; /* 透明度 */
     }
 
-    .col-lg-6.card .ibox-title, .col-lg-6.card .ibox-content {
-        background-color: rgba(255, 255, 255, 0.5); /* 设置背景颜色的透明度为0.8 */
-    }
-
-    .col-lg-6.card h5, .col-lg-6.card h2, .col-lg-6.card p {
-        opacity: 0.8; /* 设置文本元素的透明度为0.8 */
-    }
-
-    .col-lg-6.card {
-        width: 49.5%;
-        border-radius: 5px; /* 添加圆角 */
-         /* 添加边距 */
-        margin: 0.25%;
-    }
 
 </style>
 
@@ -385,7 +360,7 @@
 
                 <div class="form-group">
                     <label for="dbType">Type</label>
-                    <select class="form-control" id="dbType">
+                    <select class="form-control selectType" id="dbType">
                         <option value="2D FEM">2D FEM</option>
                         <option value="2D NPB">2D NPB</option>
                         <option value="BMS">BMS</option>
@@ -432,6 +407,14 @@
                     <label for="addOne">New proprietary attribute</label>
                     <input type="text" class="form-control" id="addOne">
                 </div>
+                <div class="form-group">
+                    <label for="addType">New proprietary attribute type</label>
+                    <select class="form-control selectType" id="addType">
+                        <option value="Scalar">Scalar</option>
+                        <option value="Vector">Vector</option>
+                        <option value="Tensor">Tensor</option>
+                    </select>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="addSubmit" data-dismiss="modal">Add</button>
@@ -453,6 +436,14 @@
                 <div id="editInput">
                     <label for="addOne">proprietary attribute</label>
                     <input type="text" class="form-control" id="editOne">
+                </div>
+                <div class="form-group">
+                    <label for="editType">proprietary attribute type</label>
+                    <select class="form-control selectType" id="editType">
+                        <option value="Scalar">Scalar</option>
+                        <option value="Vector">Vector</option>
+                        <option value="Tensor">Tensor</option>
+                    </select>
                 </div>
             </div>
             <div class="modal-footer">
@@ -492,6 +483,7 @@
         var type = "2D FEM";
         var introduction;
         var speciality = ["ETB(ev/atom)"];
+        var specialityType = ["Scalar"];
         var add;
         var edit;
 
@@ -509,6 +501,7 @@
         function editCard(el) {
             $('#editModal').modal('show');
             const e = el.parentNode.previousElementSibling.children[0].innerHTML;
+
             $("#editSubmit").click(function () {
                 if (!edit) {
                     msg = "Null value cannot be entered."
@@ -520,12 +513,16 @@
                     openTipModal();
                     return;
                 }
-                for (var i = 0; i < speciality.length; i++) {
+
+                for (let i = 0; i < speciality.length; i++) {
                     if (speciality[i] == e) {
                         speciality[i] = edit;
-                        $("#dbInfo").empty();
-                        $("#dbInfo").append(createCard(speciality));
+                        let editType = $("#editType").val();
+                        specialityType[i] = editType;
                         edit = undefined;
+                        $("#dbInfo").empty();
+                        $("#dbInfo").append(createCard(speciality,specialityType));
+                        $("#editType").val("Scalar");
                         return;
                     }
                 }
@@ -535,62 +532,16 @@
         //删除数据库专有属性
         function deleteCard(el) {
             const e = el.parentNode.previousElementSibling.children[0].innerHTML;
-            for (var i = 0; i < speciality.length; i++) {
+            for (let i = 0; i < speciality.length; i++) {
                 if (speciality[i] == e) {
                     speciality.splice(i, 1);
                     $("#dbInfo").empty();
-                    $("#dbInfo").append(createCard(speciality));
+                    $("#dbInfo").append(createCard(speciality,specialityType));
                     return;
                 }
             }
         }
 
-
-        //创建数据库信息卡片
-        // function createDBCard(list) {
-        //     let html = ``;
-        //     for (let i = 0; i < list.length; i++) {
-        //         let obj = list[i];
-        //         html += ` <div class="col-lg-6 card" id="card${i}">
-        //             <div class="ibox">
-        //                 <div class="ibox-title">
-        //                     <h5><a class="toIndex">${obj.id}</a>: <small>${obj.type}</small></h5>
-        //                 </div>
-        //                 <div class="ibox-content">
-        //                     <h2>
-        //                        <strong>${obj.title}</strong>
-        //                     </h2>
-        //                     <p>${obj.introduction}</p>
-        //                 </div>
-        //             </div>
-        //         </div>`
-        //     }
-        //     return html;
-        // }
-        function createDBCard(list) {
-            let backgrounds = ["../imgs/image1.jpg", "../imgs/image2.jpg", "../imgs/image3.jpg", "../imgs/image4.jpg", "../imgs/image5.jpg", "../imgs/image6.jpg", "../imgs/image7.jpg", "../imgs/image8.jpg", "../imgs/image9.jpg"]; // 替换为你的背景图片文件名列表
-            let html = ``;
-            for (let i = 0; i < list.length; i++) {
-                let obj = list[i];
-                let randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-                shuffleArray(backgrounds);
-                html += `<div class="col-lg-6 card" id="card${i}" style="background-image: url('${randomBackground}')">
-            <div class="ibox">
-                <div class="ibox-title">
-                    <h5><a class="toIndex">${obj.id}</a>: <small>${obj.type}</small></h5>
-                </div>
-                <div class="ibox-content">
-                    <h2>
-                       <strong>${obj.title}</strong>
-                    </h2>
-                    <p>${obj.introduction}</p>
-                </div>
-            </div>
-        </div>`;
-                console.log(randomBackground);
-            }
-            return html;
-        }
         // backgrounds数组进行随机打乱，以确保下一个随机索引不会重复
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -599,21 +550,44 @@
             }
         }
 
-
-
+        //创建数据库信息卡片
+        function createDBCard(list) {
+            let html = ``;
+            let backgrounds = ["imgs/jpg/image1.jpg", "imgs/jpg/image2.jpg", "imgs/jpg/image3.jpg", "imgs/jpg/image4.jpg", "imgs/jpg/image5.jpg", "imgs/jpg/image6.jpg", "imgs/jpg/image7.jpg", "imgs/jpg/image8.jpg", "imgs/jpg/image9.jpg"];
+            shuffleArray(backgrounds);
+            let randomBackground;
+            for (let i = 0; i < list.length; i++) {
+                let obj = list[i];
+                randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+                html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('${randomBackground}')">
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5><a class="toIndex">${obj.id}</a>: <small>${obj.type}</small></h5>
+                        </div>
+                        <div class="ibox-content">
+                            <h2>
+                               <strong>${obj.title}</strong>
+                            </h2>
+                            <p>${obj.introduction}</p>
+                        </div>
+                    </div>
+                </div>`
+            }
+            return html;
+        }
 
         //创建数据库专有属性
-        function createCard(list) {
+        function createCard(speciality,specialityType) {
             let html = ``;
-            if (list.length == 0) {
+            if (speciality.length == 0) {
                 html += `<p>Null</p>`
                 return html;
             }
-            for (let i = 0; i < list.length; i++) {
-                let obj = list[i];
+            for (let i = 0; i < speciality.length; i++) {
                 html += `<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">${obj}</h5>
+  <div class="card-body" style=" display: flex; align-items: center;">
+    <h5 class="card-title" style="margin-right: 5px; vertical-align: middle;">${speciality[i]}</h5>
+    <h5 class="card-type" style="margin-left: 5px; vertical-align: middle;"><small>${specialityType[i]}</small></h5>
   </div>
   <div class="card-footer">
     <button class="btn btn-primary" onclick="editCard(this)">Edit</button>
@@ -646,6 +620,7 @@
         $("#addClose1,#addClose2").click(function () {
             add = undefined;
             $("#addOne").val(undefined);
+            $("#addType").val("Scalar");
         })
         $("#addSubmit").click(function () {
             $("#addOne").val(undefined);
@@ -655,6 +630,7 @@
         $("#editClose1,#editClose2").click(function () {
             edit = undefined;
             $("#editOne").val(undefined);
+            $("#editType").val("Scalar");
         })
         $("#editSubmit").click(function () {
             $("#editOne").val(undefined);
@@ -669,24 +645,24 @@
             $("#typeName").val(undefined);
             $("#typeInput").hide();
             type = "2D FEM";
-            $("#dbType").val("2D FEM")
-            edit = undefined;
+            $("#dbType").val("2D FEM");
             speciality = ["ETB(ev/atom)"];
+            specialityType = ["Scalar"];
             $("#dbInfo").empty();
-            $("#dbInfo").append(createCard(speciality));
+            $("#dbInfo").append(createCard(speciality,specialityType));
         })
 
-        /*打开Tip弹窗*/
+        //打开Tip弹窗
         function openTipModal() {
             $('#tipModal').modal('show');
             $('.tipBody p').text(`${msg}`);
         }
 
-        /*密码必须大于等于6位*/
+        //密码必须大于等于6位
         function passwordLength(password) {
             return password.length >= 6;
         }
-        /*密码必须包含字母和数字*/
+        //密码必须包含字母和数字
         function passwordFormat(password) {
             const reg = /(?=.*[A-Za-z])(?=.*\d)/;
             return reg.test(password);
@@ -729,7 +705,7 @@
                 })
 
             }).catch(err => {
-                console.err(err)
+                console.error(err)
             })
 
             //获取新密码
@@ -782,6 +758,7 @@
             $('#add').click(function () {
                 $('#addModal').modal('show');
             });
+
             $('#addSubmit').click(function () {
                 if (!add) {
                     msg = "Null value cannot be entered."
@@ -794,12 +771,16 @@
                     return;
                 }
                 speciality.push(add);
+                let addType = $("#addType").val();
+                specialityType.push(addType);
+                add = undefined;
                 $("#dbInfo").empty();
-                $("#dbInfo").append(createCard(speciality));
+                $("#dbInfo").append(createCard(speciality,specialityType));
+                $("#editType").val("Scalar");
             });
 
             //New弹窗相关
-            $("#dbInfo").append(createCard(speciality));
+            $("#dbInfo").append(createCard(speciality,specialityType));
 
             $("#dbType").change(function () {
 
@@ -807,9 +788,10 @@
 
                 if ($(this).val() === "Self-defined") {
                     speciality = [];
+                    specialityType = [];
                     type = undefined;
                     $("#typeInput").show();
-                    $("#dbInfo").append(createCard(speciality));
+                    $("#dbInfo").append(createCard(speciality,specialityType));
                     $('#typeName').change(function () {
                         type = $(this).val();
                     });
@@ -823,13 +805,17 @@
                     type = "2D FEM";
                     speciality = [];
                     speciality.push("ETB(ev/atom)");
-                    $("#dbInfo").append(createCard(speciality));
+                    specialityType = [];
+                    specialityType.push("Scalar");
+                    $("#dbInfo").append(createCard(speciality,specialityType));
 
                 } else if ($(this).val() === "2D NPB") {
                     type = "2D NPB";
                     speciality = [];
                     speciality.push("NPR");
-                    $("#dbInfo").append(createCard(speciality));
+                    specialityType = [];
+                    specialityType.push("Scalar");
+                    $("#dbInfo").append(createCard(speciality,specialityType));
 
 
                 } else if ($(this).val() === "BMS") {
@@ -838,17 +824,23 @@
                     speciality.push("Delta1(ev)");
                     speciality.push("Delta2(ev)");
                     speciality.push("Delta3(ev)");
-                    $("#dbInfo").append(createCard(speciality));
+                    specialityType = [];
+                    specialityType.push("Scalar");
+                    specialityType.push("Scalar");
+                    specialityType.push("Scalar");
+                    $("#dbInfo").append(createCard(speciality,specialityType));
 
                 } else if ($(this).val() === "Penta") {
                     type = "Penta";
                     speciality = [];
-                    $("#dbInfo").append(createCard(speciality));
+                    specialityType = [];
+                    $("#dbInfo").append(createCard(speciality,specialityType));
 
                 } else if ($(this).val() === "2D-Carbon") {
                     type = "2D-Carbon";
                     speciality = [];
-                    $("#dbInfo").append(createCard(speciality));
+                    specialityType = [];
+                    $("#dbInfo").append(createCard(speciality,specialityType));
                 }
             });
 
@@ -859,7 +851,7 @@
                     return;
                 }
                 axios.get("http://127.0.0.1:8080/templateSave", {
-                    params: { "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction), "type": encodeURIComponent(type), "username": encodeURIComponent(username), "speciality": encodeURIComponent(speciality) }
+                    params: { "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction), "type": encodeURIComponent(type), "username": encodeURIComponent(username), "speciality": encodeURIComponent(speciality),"specialityType":encodeURIComponent(specialityType)}
                 })
                     .then(res => {
                         console.log(res)

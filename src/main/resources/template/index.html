@@ -164,7 +164,7 @@
 
   /*Detail弹窗效果*/
 
-  //取消jsmol右键菜单
+  /*取消jsmol右键菜单*/
   [id^='jmolApplet0_popupMenu'] {
     display: none !important;
   }
@@ -858,7 +858,7 @@
               $inputDOI.val(undefined);
               $inputURL.val(undefined);
               $inputPublication.val(undefined);
-              for (let i = 0; i < mat.speciality.length; i++) {
+              for (let i = 0; i < speciality.length; i++) {
                 $(`#update${i}`).val(undefined);
               }
               mat = {};
