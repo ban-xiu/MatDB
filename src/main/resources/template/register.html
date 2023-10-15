@@ -512,43 +512,43 @@
   var password2;
   var msg;
 
-  /*打开Tip弹窗*/
+  // 打开Tip弹窗
   function openTipModal() {
     $('#tipModal').modal('show');
     $('.modal-body p').text(`${msg}`);
   }
-  /*用户名长度必须在6-16位之间*/
+  // 用户名长度必须在6-16位之间
   function usernameLength(username) {
     return username.length >= 6 && username.length <= 16;
   }
-  /*"用户名只能包含字母、数字和下划线*/
+  // 用户名只能包含字母、数字和下划线
   function usernameFormat(username) {
     const reg = /^[a-zA-Z0-9_]+$/;
     return reg.test(username);
   }
-  /*密码必须大于等于6位*/
+  // 密码必须大于等于6位
   function passwordLength(password) {
     return password.length >= 6;
   }
-  /*密码必须包含字母和数字*/
+  // 密码必须包含字母和数字
   function passwordFormat(password) {
     const reg = /(?=.*[A-Za-z])(?=.*\d)/;
     return reg.test(password);
   }
 
   $(document).ready(function () {
-    //前往登录
+    // 前往登录
     $("#a").click(function () {
       location.replace('http://127.0.0.1:8080/');
     })
 
-    /*刷新页面*/
+    // 刷新页面
     $("#ok,.close").click(function () {
       if (msg == "The task has been submitted.") {
         location.reload();
       }
     })
-    /*获取输入框内容*/
+    // 获取输入框内容
     $('input[name="username"]').change(function () {
       username = $(this).val();
     });
@@ -561,12 +561,12 @@
       password2 = $(this).val();
     });
 
-    /*开始注册*/
+    // 开始注册
     $("#sign").click(function (e) {
       e.preventDefault();
       if (username && password1 && password2) {
 
-        /*开始校验*/
+        // 开始校验
         if (!usernameLength(username)) {
           msg = "The username length must be between 6 and 16 characters."
           openTipModal();
@@ -590,7 +590,7 @@
           openTipModal();
           return;
         }
-        /*提交注册请求*/
+        // 提交注册请求
         if (password1 == password2) {
           axios.get("http://127.0.0.1:8080/signUp", {
             params: { "username": encodeURIComponent(username), "password": encodeURIComponent(password1) }

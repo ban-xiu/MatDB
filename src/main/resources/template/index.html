@@ -19,6 +19,7 @@
   <script src="axios/axios.min.js"></script>
   <script src="xlsx/xlsx.full.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
 </head>
 <style>
   body {
@@ -162,9 +163,16 @@
   }
 
   /*Detail弹窗效果*/
+
+  //取消jsmol右键菜单
+  [id^='jmolApplet0_popupMenu'] {
+    display: none !important;
+  }
+
   .infop {
     display: inline-block;
     padding: 0.3em 0.6em;
+    background-color: #333333;
     color: #fff;
     border-radius: 15px;
     transition: background-color 0.3s ease;
@@ -172,40 +180,28 @@
     margin: 5px;
   }
 
-  .infop.scalar {
+  .infop.scalar:hover {
     background-color: #0069D9;
   }
 
-  .infop.vector {
+  .infop.vector:hover {
     background-color: #BD2130;
   }
 
-  .infop.tensor {
+  .infop.tensor:hover {
     background-color: #18A689;
   }
 
-  .infop.scalar:hover {
+  .infop.scalar:active {
     background-color: #1057B3;
   }
 
-  .infop.vector:hover {
+  .infop.vector:active {
     background-color: #9C111F;
   }
 
-  .infop.tensor:hover {
-    background-color: #14896F;
-  }
-
-  .infop.scalar:active {
-    background-color: #004FAB;
-  }
-
-  .infop.vector:active {
-    background-color: #8C0F1D;
-  }
-
   .infop.tensor:active {
-    background-color: #117A5D;
+    background-color: #14896F;
   }
 
   /*File弹窗效果*/
@@ -1001,7 +997,6 @@
 
       //关闭Detail弹窗清空内容
       $(".detailClose").click(function () {
-        $("#structureInfo").text(`Structure:&emsp;`)
         for (let i = 0; i < mat.speciality.length; i++) {
           $(`#Info${i}`).text(undefined)
         }

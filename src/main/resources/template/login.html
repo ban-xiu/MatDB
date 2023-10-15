@@ -511,19 +511,19 @@
   var msg;
   var user;
 
-  /*打开Tip弹窗*/
+  // 打开Tip弹窗
   function openTipModal() {
     $('#tipModal').modal('show');
     $('.modal-body p').text(`${msg}`);
   }
 
   $(document).ready(function () {
-    //前往注册
+    // 前往注册
     $("#a").click(function () {
       location.replace('http://127.0.0.1:8080/register');
     })
 
-    /*获取输入框内容*/
+    // 获取输入框内容
     $('input[name="username"]').change(function () {
       username = $(this).val();
     });
@@ -532,14 +532,14 @@
       password = $(this).val();
     });
 
-    /*前往当前用户工作区*/
+    // 前往当前用户工作区
     $("#ok,.close").click(function () {
       if (msg == "Login succeeded.") {
         location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`);
       }
     })
 
-    /*开始登录*/
+    // 开始登录
     $("#sign").click(function (e) {
       e.preventDefault();
       if (username && password) {
