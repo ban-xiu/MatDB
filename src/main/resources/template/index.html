@@ -311,8 +311,15 @@
       html += `<td col="7">${obj.url}</td>`;
       html += `<td col="8">${obj.publication}</td>`;
       if (obj.speciality) {
-        for (let j = 0; j < obj.speciality.length; j++) {
-          html += `<td col="${9 + j}">${obj.speciality[j]}</td>`;
+        if (JSON.stringify(speciality) != '[""]') {
+          for (let j = 0; j < obj.speciality.length; j++) {
+            if (obj.speciality[j]) {
+              html += `<td col="${9 + j}">${obj.speciality[j]}</td>`;
+            }
+            else {
+              html += `<td col="${9 + j}">undefined</td>`;
+            }
+          }
         }
       }
       else {
@@ -360,6 +367,47 @@
     return html;
   }
 
+  // 矢量校验
+  function validateVector(input) {
+    const vector = tf.tensor(input);
+    const shape = vector.shape;
+    const rank = shape.length;
+    // 不能是数字或字符串
+    if (rank === 0 && JSON.stringify(shape) === "[]") {
+      return false;
+    }
+    // 不能是 []
+    if (rank === 1 && JSON.stringify(shape) === "[0]") {
+      return false;
+    }
+    if (rank === 1) {
+      return shape[0];
+
+    } else {
+      return false;
+    }
+
+  }
+
+  // 张量校验
+  function validateTensor(input) {
+    const tensor = tf.tensor(input);
+    const shape = tensor.shape;
+    const rank = shape.length;
+    // 不能是数字或字符串
+    if (rank === 0 && JSON.stringify(shape) === "[]") {
+      return false;
+    }
+    // 不能是 []
+    if (rank === 1 && JSON.stringify(shape) === "[0]") {
+      return false;
+    }
+    return {
+      rank: rank,
+      shape: shape
+    };
+  }
+
   //打开Tip1弹窗方法
   var msg1;
   function openTipModal1() {
@@ -378,7 +426,9 @@
 
     //初始化数据容器
     var mat = {};
+    var matFlag = true;
     var add = {};
+    var addFlag = true;
     var title;
     var introduction;
     var speciality;
@@ -461,7 +511,7 @@
           console.error(err)
         })
       }
-      if (msg1 == "The XLSX file content format meets the requirements.Are you sure you want to upload it") {
+      if (msg1 == "The file content format meets the requirements.Are you sure you want to upload it") {
         axios.get("http://127.0.0.1:8080/addFile", {
           params: { "file": encodeURIComponent(JSON.stringify(rows)) }
         }).then(res => {
@@ -475,8 +525,8 @@
       openTipModal2();
     })
 
-    //Tip2弹窗中的刷新方法
-    $('#tipOk,#tipClose').click(function () {
+    //页面刷新方法
+    $('#tipOk,#tipNo,.tipClose').click(function () {
       location.reload();
     });
 
@@ -488,14 +538,26 @@
 
     //Add提示
     $("#addSubmit").click(function () {
-      msg1 = "Are you sure to add it?";
-      openTipModal1();
+      if (addFlag) {
+        msg1 = "Are you sure to add it?";
+        openTipModal1();
+      }
+      else {
+        msg2 = "Invalid format for the custom attribute input."
+        openTipModal2();
+      }
     })
 
     //Update提示
     $("#updateSubmit").click(function () {
-      msg1 = "Are you sure to update it?";
-      openTipModal1();
+      if (matFlag) {
+        msg1 = "Are you sure to update it?";
+        openTipModal1();
+      }
+      else {
+        msg2 = "Invalid format for the custom attribute input."
+        openTipModal2();
+      }
     })
 
     //Delete提示
@@ -722,11 +784,27 @@
         add.publication = $savePublication.val();
       });
 
-      for (let j = 0; j < speciality.length; j++) {
-        add.speciality = undefined;
-        $(`#add${j}`).on('change', function () {
-          let temp = $(`#add${j}`).val();
-          add.speciality = temp;
+      for (let i = 0; i < speciality.length; i++) {
+        add.speciality[i] = undefined;
+        $(`#add${i}`).on('change', function () {
+          let temp = $(`#add${i}`).val();
+          add.speciality[i] = temp;
+          try {
+            let test = JSON.parse(temp);
+            if (specialityType[i] == "Vector") {
+              if (!validateVector(test)) {
+                addFlag = false;
+              }
+            }
+            if (specialityType[i] == "Tensor") {
+              if (!validateTensor(test)) {
+                addFlag = false;
+              }
+            }
+          } catch (e) {
+            console.error(e);
+            addFlag = false;
+          }
         });
       }
 
@@ -735,6 +813,7 @@
         add = {};
         add.uid = uid;
         add.speciality = [];
+        addFlag = true;
         $saveStructure.val(undefined);
         $saveName.val(undefined);
         $saveSymmetry.val(undefined);
@@ -844,11 +923,29 @@
               $(`#update${i}`).on("change", function () {
                 let temp = $(`#update${i}`).val();
                 mat.speciality[i] = temp;
+                try {
+                  let test = JSON.parse(temp);
+                  if (specialityType[i] == "Vector") {
+                    if (!validateVector(test)) {
+                      matFlag = false;
+                    }
+                  }
+                  if (specialityType[i] == "Tensor") {
+                    if (!validateTensor(test)) {
+                      matFlag = false;
+                    }
+                  }
+                } catch (e) {
+                  console.error(e);
+                  matFlag = false;
+                }
               })
             }
 
             //关闭Update弹窗清空输入内容
             $(".updateClose").click(function () {
+              mat = {};
+              matFlag = true;
               $inputStructure.val(undefined);
               $inputName.val(undefined);
               $inputSymmetry.val(undefined);
@@ -861,7 +958,6 @@
               for (let i = 0; i < speciality.length; i++) {
                 $(`#update${i}`).val(undefined);
               }
-              mat = {};
             })
 
           }).catch(err => {
@@ -953,8 +1049,23 @@
 
       // 导出JSON文件功能
       $("#exportJSON").click(function () {
+        function formatSpeciality(keys, values) {
+          if (keys.length !== values.length) {
+            throw new Error('The number of keys and values must be the same.');
+          }
+
+          let keyValuePairs = {};
+
+          for (var i = 0; i < keys.length; i++) {
+            let key = keys[i];
+            let value = values[i];
+            keyValuePairs[key] = value;
+          }
+
+          return keyValuePairs;
+        }
         const specialityData = (mat.speciality === undefined || mat.speciality[0] === "undefined") ? undefined : mat.speciality;
-        const data = {
+        const defVal = {
           "Structure": mat.structure,
           "Name": mat.name,
           "Symmetry": mat.symmetry,
@@ -965,7 +1076,15 @@
           "URL": mat.url,
           "Publication": mat.publication,
           "Speciality": specialityData,
-          "SpecialityType": mat.specialityType
+          "SpecialityType": specialityType
+        };
+        let mutVal = {};
+        if (specialityData) {
+          mutVal = formatSpeciality(speciality, specialityData);
+        }
+        const data = {
+          ...defVal,
+          ...mutVal,
         };
 
         const jsonData = JSON.stringify(data, null, 2);
@@ -1005,7 +1124,7 @@
     })
 
     // 初始化文件上传组件
-    $("#file").fileinput({ showUpload: false });
+    $("#file").fileinput({ showUpload: false, showCancel: false });
 
     //关闭File弹窗清除上传文件
     $(".fileClose").click(function () {
@@ -1015,12 +1134,50 @@
     $("#file").on("change", function () {
 
       let file = this.files[0];
+      console.log('file:', file);
 
-      console.log('选中文件:', file);
+      let fileName = file.name;
+      let fileExtension = fileName.split('.').pop().toLowerCase();
 
-      readExcelAsJSON(file);
+      if (fileExtension === "xlsx") {
+        readExcelAsJSON(file);
+      }
+      if (fileExtension === "json") {
+        readJSON(file);
+      }
 
     });
+
+    function readJSON(file) {
+      let reader = new FileReader();
+
+      reader.onload = function (e) {
+
+        let data = e.target.result;
+
+        // 检查开头第一个字符是否是 '['，结尾最后一个字符是否是 ']'
+        if (data.charAt(0) !== '[' || data.charAt(data.length - 1) !== ']') {
+          // 如果不是，则在开头添加 '['，在结尾添加 ']'
+          data = '[' + data + ']';
+        }
+
+        rows = JSON.parse(data);
+
+        console.log('rows:', rows);
+
+        // 表头设置为json
+        let headers = "json";
+
+        // 检查并绑定上传点击事件
+        checksAndSubmit(headers, rows);
+
+        formatRows(rows);
+
+      }
+
+      reader.readAsText(file);
+
+    }
 
     function readExcelAsJSON(file) {
 
@@ -1030,14 +1187,14 @@
 
         let data = e.target.result;
 
-        console.log('文件数据:', data);
+        console.log('data:', data);
 
         let workbook = XLSX.read(data, { type: 'binary' });
 
         let sheetName = workbook.SheetNames[0];
         let sheet = workbook.Sheets[sheetName];
 
-        console.log('工作表:', sheet);
+        console.log('sheet:', sheet);
 
         // 获取第一行作为表头
         let headers = [];
@@ -1051,52 +1208,17 @@
           }
         }
 
-        console.log('表头数据：', headers)
-
-        rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-        console.log('表格数据:', rows);
+        console.log('headers:', headers)
 
         // 将表格数据转换为JSON数组
-        checkHeaders(headers, rows);
+        rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
-        // 遍历数组中的每个对象
-        rows.forEach(function (obj) {
+        console.log('rows:', rows);
 
-          // 创建一个新的对象来存储修改后的键值对
-          let newObj = {};
+        // 检查并绑定上传点击事件
+        checksAndSubmit(headers, rows);
 
-          //专有属性按表头规定顺序排列
-          let result = Object.keys(obj)
-            .filter(key => speciality.includes(key))
-            .sort((a, b) => speciality.indexOf(a) - speciality.indexOf(b))
-            .map(key => obj[key]);
-
-          if (result.length < speciality.length) {
-            result = result.concat(Array(speciality.length - result.length).fill("undefined"));
-          }
-
-          // 遍历对象的键
-          Object.keys(obj).forEach(function (key) {
-
-            // 修改键名并存储到新的对象中
-            if (key === "Structure" || key === "Name" || key === "Symmetry" || key === "Metal" || key === "DOI" || key === "URL" || key === "Publication") {
-              newObj[key.toLocaleLowerCase()] = obj[key];
-            }
-            if (key === "Bandgap-PBE(ev)") {
-              newObj["bandgappbe"] = obj[key];
-            }
-            if (key === "Bandgap-HSE(ev)") {
-              newObj["bandgaphse"] = obj[key];
-            }
-          });
-
-          // 用修改后的对象替换原始对象
-          newObj.speciality = result;
-          newObj.uid = uid;
-          Object.assign(obj, newObj);
-
-        });
+        formatRows(rows);
 
       }
 
@@ -1104,39 +1226,95 @@
 
     }
 
-    function checkHeaders(headers, rows) {
+    // 格式化rows
+    function formatRows(rows) {
+      // 遍历数组中的每个对象
+      rows.forEach(function (obj) {
+
+        // 创建一个新的对象来存储修改后的键值对
+        let newObj = {};
+
+        //专有属性按表头规定顺序排列
+        let result = Object.keys(obj)
+          .filter(key => speciality.includes(key))
+          .sort((a, b) => speciality.indexOf(a) - speciality.indexOf(b))
+          .map(key => obj[key]);
+
+        if (result.length < speciality.length) {
+          result = result.concat(Array(speciality.length - result.length).fill(undefined));
+        }
+
+        // 遍历对象的键
+        Object.keys(obj).forEach(function (key) {
+
+          // 修改键名并存储到新的对象中
+          if (key === "Structure" || key === "Name" || key === "Symmetry" || key === "Metal" || key === "DOI" || key === "URL" || key === "Publication") {
+            newObj[key.toLocaleLowerCase()] = obj[key];
+          }
+          if (key === "Bandgap-PBE(ev)") {
+            newObj["bandgappbe"] = obj[key];
+          }
+          if (key === "Bandgap-HSE(ev)") {
+            newObj["bandgaphse"] = obj[key];
+          }
+        });
+
+        // 清空原始对象的属性
+        Object.keys(obj).forEach(key => {
+          delete obj[key];
+        });
+
+        // 用修改后的对象替换原始对象
+        newObj.speciality = result;
+        newObj.uid = uid;
+        Object.assign(obj, newObj);
+
+      });
+    }
+
+    function checksAndSubmit(headers, rows) {
 
       $("#fileSubmit").off("click")
 
-      // 检查表头是否包含需要的字段
-      if (checkFields(headers)) {
+      checkRows(rows).then(fileFlag => {
 
-        // 上传成功处理
-        $("#fileSubmit").click(function () {
-          msg1 = "The XLSX file content format meets the requirements.Are you sure you want to upload it";
-          msg2 = 'The task has been submitted.';
-          openTipModal1();
-        });
+        // 检查表头是否包含需要的字段，检查专有属性格式是否正确
+        if (checkFields(headers) && fileFlag) {
+
+          // 上传成功处理
+          $("#fileSubmit").click(function () {
+            msg1 = "The file content format meets the requirements.Are you sure you want to upload it";
+            msg2 = 'The task has been submitted.';
+            openTipModal1();
+          });
 
 
-      } else {
+        } else {
 
-        // 表头错误提示
-        $("#fileSubmit").click(function () {
-          msg2 = "The header of the uploaded XLSX file does not meet the requirements.";
-          openTipModal2();
-        })
+          // 表头错误或者专有属性格式错误提示
+          $("#fileSubmit").click(function () {
+            msg2 = "The header of the file does not meet the requirements or invalid format for proprietary property.";
+            openTipModal2();
+          })
 
-      }
+        }
 
+      }).catch(err => {
+        console.error(err);
+      })
     }
 
+    // 检查表头
     function checkFields(headers) {
+
+      let isValid = true;
+      if (headers === "json") {
+        return isValid;
+      }
 
       // 判断headers包含需要的字段
       let requiredHeaders = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
 
-      let isValid = true;
       requiredHeaders.forEach(header => {
         if (!headers.includes(header)) {
           isValid = false;
@@ -1144,6 +1322,59 @@
       });
       return isValid;
 
+    }
+
+    // 校验专有属性格式
+    function checkRows(rows) {
+      return new Promise((resolve, reject) => {
+        function fetchRow(i) {
+          return new Promise((resolve, reject) => {
+            var row = rows[i];
+            resolve(row);
+          });
+        }
+
+        let isError = false; // 用于标记是否遇到错误
+
+        for (let i = 0; i < rows.length; i++) {
+          fetchRow(i)
+            .then(row => {
+              if (!row.hasOwnProperty('speciality') || !Array.isArray(row.speciality) || row.speciality.length === 0) {
+                isError = true; // 设置 isError 为 true 表示遇到了错误
+              } else {
+                for (let j = 0; j < row.speciality.length; j++) {
+                  try {
+                    let test = row.speciality[j];
+                    if (specialityType[j] == "Vector") {
+                      if (!validateVector(test)) {
+                        isError = true;
+                      }
+                    }
+                    if (specialityType[j] == "Tensor") {
+                      if (!validateTensor(test)) {
+                        isError = true;
+                      }
+                    }
+                  } catch (e) {
+                    console.error(e);
+                    isError = true;
+                  }
+                }
+              }
+            })
+            .catch(err => {
+              console.error(err);
+              isError = true;
+            });
+        }
+
+        // 在循环结束后根据 isError 的值来 resolve 或 reject
+        if (isError) {
+          reject(false);
+        } else {
+          resolve(true);
+        }
+      });
     }
 
   })
@@ -1257,7 +1488,7 @@
       </div>
       <div class="modal-body row_Y">
         <div id="fileText">
-          <P>Only XLSX file containing the following table headers can be accepted:</P>
+          <P>Only XLSX and JSON file containing the following table headers can be accepted:</P>
           <span>Structure</span>
           <span>Name</span>
           <span>Symmetry</span>
@@ -1270,7 +1501,7 @@
         </div>
         </br>
         <div class="file-loading">
-          <input id="file" type="file" accept=".xlsx" title="">
+          <input id="file" type="file" accept=".xlsx,.json" title="">
         </div>
       </div>
       <div class="modal-footer">
@@ -1448,14 +1679,14 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Tip</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body tipBody1">
         <p></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipYes">Yes</button>
-        <button class="btn btn-secondary" data-dismiss="modal">No</button>
+        <button class="btn btn-secondary" data-dismiss="modal" id="tipNo">No</button>
       </div>
     </div>
   </div>
@@ -1467,7 +1698,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Tip</h4>
-        <button type="button" class="close" data-dismiss="modal" id="tipClose">&times;</button>
+        <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
       </div>
       <div class="modal-body tipBody2">
         <p></p>
