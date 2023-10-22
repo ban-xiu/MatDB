@@ -18,9 +18,10 @@
   <link rel="stylesheet" href="datatables.net/jquery.dataTables.css">
   <script src="axios/axios.min.js"></script>
   <script src="xlsx/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.15.0/dist/tf.min.js"></script>
+  <script src="filesaver/FileSaver.min.js"></script>
+  <script src="tensorflow/tf.min.js"></script>
 </head>
+
 <style>
   body {
     background-color: #EFEDE6;
@@ -408,6 +409,66 @@
     };
   }
 
+  // 创建矢量标题
+  function vectorTitle(v) {
+    const res = validateVector(v);
+    if (!res) {
+      return "";
+    }
+    let title = `Dimension: ${res}
+    `;
+    for (let i = 0; i < v.length; i++) {
+      title += `
+      V${i + 1}: [${v[i]}]`;
+    }
+    return title;
+  }
+
+  // 创建张量标题
+  function tensorTitle(t) {
+  function getValueFromArray(array, indices) {
+  let value = array;
+  for (let i = 0; i < indices.length; i++) {
+    value = value[indices[i]];
+  }
+  return value;
+}
+
+function incrementIndices(indices, maxIndices) {
+  let i = indices.length - 1;
+  indices[i]++;
+
+  while (i > 0 && indices[i] > maxIndices[i]) {
+    indices[i] = 0;
+    indices[i - 1]++;
+    i--;
+  }
+}
+
+  const res = validateTensor(t);
+  if (!res) {
+    return '';
+  }
+
+  const { rank, shape } = res;
+  let title = `Rank: ${rank} Shape: [${shape.join(', ')}] `;
+  const tensor = tf.tensor(t);
+  const array = tensor.arraySync();
+
+  const indices = Array(rank).fill(0);
+  const maxIndices = shape.map((dim) => dim - 1);
+
+  while (indices[0] <= maxIndices[0]) {
+    const value = getValueFromArray(array, indices);
+    const tIndices = indices.map((i) => i + 1).join(',');
+    title += `T${tIndices}: ${value} `;
+    incrementIndices(indices, maxIndices);
+  }
+
+  return title;
+}
+
+
   //打开Tip1弹窗方法
   var msg1;
   function openTipModal1() {
@@ -708,13 +769,16 @@
       for (let i = 0; i < speciality.length; i++) {
         if (speciality[i] != "") {
           let str;
+          let title;
           let isNull;
           if (specialityType[i] == "Scalar") {
-            str = `<p class="infop scalar">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            title = "Scalar";
+            str = `<p class="infop scalar" title=${title}>${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
             $("#scalar").next("hr").after($(str))
           }
           if (specialityType[i] == "Vector") {
-            str = `<p class="infop vector">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            title = vectorTitle(v);
+            str = `<p class="infop vector" title=${title}>${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
             isNull = $("#vector").next("hr").next("p").text();
             if (isNull == "Null") {
               $("#vector").next("hr").next("p").replaceWith($(str))
@@ -724,7 +788,8 @@
             }
           }
           if (specialityType[i] == "Tensor") {
-            str = `<p class="infop tensor">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            title = tensorTitle(v);
+            str = `<p class="infop tensor" title=${title}>${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
             isNull = $("#tensor").next("hr").next("p").text();
             if (isNull == "Null") {
               $("#tensor").next("hr").next("p").replaceWith($(str))
@@ -1080,7 +1145,13 @@
         };
         let mutVal = {};
         if (specialityData) {
-          mutVal = formatSpeciality(speciality, specialityData);
+          try {
+            mutVal = formatSpeciality(speciality, specialityData);
+          } catch (e) {
+            msg2 = "Error."
+            openTipModal2();
+            console.error(e);
+          }
         }
         const data = {
           ...defVal,
@@ -1300,6 +1371,8 @@
         }
 
       }).catch(err => {
+        msg2 = "Error."
+        openTipModal2();
         console.error(err);
       })
     }
@@ -1575,14 +1648,14 @@
         <div id="infos" style="position: absolute; left: 45vw;">
           <small id="scalar">Scalar</small>
           <hr />
-          <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
-          <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
-          <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
-          <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
-          <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
-          <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
-          <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
-          <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
+          <p class="infop scalar" title="Scalar">Name:&emsp;<span id="nameInfo"></span></p>
+          <p class="infop scalar" title="Scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
+          <p class="infop scalar" title="Scalar">Metal:&emsp;<span id="metalInfo"></span></p>
+          <p class="infop scalar" title="Scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
+          <p class="infop scalar" title="Scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
+          <p class="infop scalar" title="Scalar">DOI:&emsp;<span id="doiInfo"></span></p>
+          <p class="infop scalar" title="Scalar">URL:&emsp;<span id="urlInfo"></span></p>
+          <p class="infop scalar" title="Scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
           <br />
           <hr /><small id="vector">Vector</small>
           <hr />
