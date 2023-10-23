@@ -52,6 +52,6 @@ db.matusers.find()
 如果matusers集合中不存在user账户：db.matusers.insertOne({username:"user", password:"user"})
 
 ## 2.启动项目
-保证数据库正常连接，通过maven更新pox.xml文件中的依赖后，运行APP.java，访问127.0.0.1:8080即可。
+保证数据库正常连接，通过maven（开发版本为3.9.3）更新pox.xml文件中的依赖后，运行APP.java，访问127.0.0.1:8080即可。
 
 
