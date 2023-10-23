@@ -19,7 +19,7 @@
   <script src="axios/axios.min.js"></script>
   <script src="xlsx/xlsx.full.min.js"></script>
   <script src="filesaver/FileSaver.min.js"></script>
-  <script src="tensorflow/tf.min.js"></script>
+  <script src="tensorflow//tf.min.js"></script>
 </head>
 
 <style>
@@ -370,6 +370,9 @@
 
   // 矢量校验
   function validateVector(input) {
+    if (!input) {
+      return false;
+    }
     const vector = tf.tensor(input);
     const shape = vector.shape;
     const rank = shape.length;
@@ -392,6 +395,9 @@
 
   // 张量校验
   function validateTensor(input) {
+    if (!input) {
+      return false;
+    }
     const tensor = tf.tensor(input);
     const shape = tensor.shape;
     const rank = shape.length;
@@ -413,10 +419,9 @@
   function vectorTitle(v) {
     const res = validateVector(v);
     if (!res) {
-      return "";
+      return "Vector";
     }
-    let title = `Dimension: ${res}
-    `;
+    let title = `Dimension: ${res}`;
     for (let i = 0; i < v.length; i++) {
       title += `
       V${i + 1}: [${v[i]}]`;
@@ -426,48 +431,55 @@
 
   // 创建张量标题
   function tensorTitle(t) {
-  function getValueFromArray(array, indices) {
-  let value = array;
-  for (let i = 0; i < indices.length; i++) {
-    value = value[indices[i]];
+    function getValueFromArray(array, indices) {
+      let value = array;
+      for (let i = 0; i < indices.length; i++) {
+        value = value[indices[i]];
+      }
+      return value;
+    }
+
+    function incrementIndices(indices, maxIndices) {
+      let i = indices.length - 1;
+      indices[i]++;
+
+      while (i > 0 && indices[i] > maxIndices[i]) {
+        indices[i] = 0;
+        indices[i - 1]++;
+        i--;
+      }
+    }
+
+    const res = validateTensor(t);
+    if (!res) {
+      return "Tensor";
+    }
+
+    const { rank, shape } = res;
+    let title = `Rank: ${rank} Shape: [${shape.join(', ')}]`;
+    const tensor = tf.tensor(t);
+    let array;
+    try {
+      array = tensor.arraySync();
+    } catch (e) {
+      console.error(e);
+      return title += `
+      Irregular`;
+    }
+
+    const indices = Array(rank).fill(0);
+    const maxIndices = shape.map((dim) => dim - 1);
+
+    while (indices[0] <= maxIndices[0]) {
+      const value = getValueFromArray(array, indices);
+      const tIndices = indices.map((i) => i + 1).join(',');
+      title += `
+      T${tIndices}: ${value}`;
+      incrementIndices(indices, maxIndices);
+    }
+
+    return title;
   }
-  return value;
-}
-
-function incrementIndices(indices, maxIndices) {
-  let i = indices.length - 1;
-  indices[i]++;
-
-  while (i > 0 && indices[i] > maxIndices[i]) {
-    indices[i] = 0;
-    indices[i - 1]++;
-    i--;
-  }
-}
-
-  const res = validateTensor(t);
-  if (!res) {
-    return '';
-  }
-
-  const { rank, shape } = res;
-  let title = `Rank: ${rank} Shape: [${shape.join(', ')}] `;
-  const tensor = tf.tensor(t);
-  const array = tensor.arraySync();
-
-  const indices = Array(rank).fill(0);
-  const maxIndices = shape.map((dim) => dim - 1);
-
-  while (indices[0] <= maxIndices[0]) {
-    const value = getValueFromArray(array, indices);
-    const tIndices = indices.map((i) => i + 1).join(',');
-    title += `T${tIndices}: ${value} `;
-    incrementIndices(indices, maxIndices);
-  }
-
-  return title;
-}
-
 
   //打开Tip1弹窗方法
   var msg1;
@@ -587,7 +599,7 @@ function incrementIndices(indices, maxIndices) {
     })
 
     //页面刷新方法
-    $('#tipOk,#tipNo,.tipClose').click(function () {
+    $('#tipOk,#tipNo,.tipClose,.detailClose').click(function () {
       location.reload();
     });
 
@@ -765,42 +777,6 @@ function incrementIndices(indices, maxIndices) {
       //创建Update输入框
       $("#updateArea").append(createUpdate(speciality))
 
-      //创建Detail文本
-      for (let i = 0; i < speciality.length; i++) {
-        if (speciality[i] != "") {
-          let str;
-          let title;
-          let isNull;
-          if (specialityType[i] == "Scalar") {
-            title = "Scalar";
-            str = `<p class="infop scalar" title=${title}>${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
-            $("#scalar").next("hr").after($(str))
-          }
-          if (specialityType[i] == "Vector") {
-            title = vectorTitle(v);
-            str = `<p class="infop vector" title=${title}>${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
-            isNull = $("#vector").next("hr").next("p").text();
-            if (isNull == "Null") {
-              $("#vector").next("hr").next("p").replaceWith($(str))
-            }
-            else {
-              $("#vector").next("hr").after($(str))
-            }
-          }
-          if (specialityType[i] == "Tensor") {
-            title = tensorTitle(v);
-            str = `<p class="infop tensor" title=${title}>${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
-            isNull = $("#tensor").next("hr").next("p").text();
-            if (isNull == "Null") {
-              $("#tensor").next("hr").next("p").replaceWith($(str))
-            }
-            else {
-              $("#tensor").next("hr").after($(str))
-            }
-          }
-        }
-      }
-
       //获取Add输入框内容
       add.uid = uid;
       add.speciality = [];
@@ -849,6 +825,7 @@ function incrementIndices(indices, maxIndices) {
         add.publication = $savePublication.val();
       });
 
+      // 输入框校验数据格式
       for (let i = 0; i < speciality.length; i++) {
         add.speciality[i] = undefined;
         $(`#add${i}`).on('change', function () {
@@ -973,6 +950,7 @@ function incrementIndices(indices, maxIndices) {
               mat.publication = $inputPublication.val();
             })
 
+            // 当专有属性为空时输出一个元素都是undefined字符串的数组
             if (!mat.speciality) {
               let ls = [];
               for (let i = 0; i < speciality.length; i++) {
@@ -981,6 +959,14 @@ function incrementIndices(indices, maxIndices) {
               mat.speciality = ls;
             }
 
+            // 当专有属性数组元素为空时用undefined字符串替代
+            for (let i = 0; i < mat.speciality.length; i++) {
+              if (!mat.speciality[i]) {
+                mat.speciality[i] = "undefined";
+              }
+            }
+
+            // 输入框校验数据格式
             for (let i = 0; i < mat.speciality.length; i++) {
               if (mat.speciality[i] !== "undefined") {
                 $(`#update${i}`).val(mat.speciality[i]);
@@ -1063,7 +1049,9 @@ function incrementIndices(indices, maxIndices) {
 
     })
 
-    //jsmol交互图像相关
+    // Detail弹窗相关
+
+    //jsmol交互图像
     $('#detailModal').on('shown.bs.modal', function () {
 
       Jmol._isAsync = false;
@@ -1096,6 +1084,54 @@ function incrementIndices(indices, maxIndices) {
       jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
 
       $("#appdiv").html(Jmol.getAppletHtml("jmolApplet0", Info));
+
+      // 创建Detail文本
+      for (let i = 0; i < speciality.length; i++) {
+        if (speciality[i] != "") {
+          let str;
+          let title;
+          let isNull;
+          if (specialityType[i] == "Scalar") {
+            title = "Scalar";
+            str = `<p class="infop scalar" title="${title}">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            $("#scalar").next("hr").after($(str))
+          }
+          if (specialityType[i] == "Vector") {
+            let v;
+            try {
+              v = JSON.parse(mat.speciality[i])
+            } catch (e) {
+              console.error(e);
+            }
+            title = vectorTitle(v);
+            str = `<p class="infop vector" title="${title}">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            isNull = $("#vector").next("hr").next("p").text();
+            if (isNull == "Null") {
+              $("#vector").next("hr").next("p").replaceWith($(str))
+            }
+            else {
+              $("#vector").next("hr").after($(str))
+            }
+          }
+          if (specialityType[i] == "Tensor") {
+            let t;
+            try {
+              t = JSON.parse(mat.speciality[i]);
+            } catch (e) {
+              console.error(e);
+            }
+            title = tensorTitle(t);
+            str = `<p class="infop tensor" title="${title}">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            isNull = $("#tensor").next("hr").next("p").text();
+            if (isNull == "Null") {
+              $("#tensor").next("hr").next("p").replaceWith($(str))
+            }
+            else {
+              $("#tensor").next("hr").after($(str))
+            }
+          }
+        }
+      }
 
       //Detail文本内容
       $("#structureInfo").text(mat.structure ? mat.structure : "Null")
@@ -1184,13 +1220,6 @@ function incrementIndices(indices, maxIndices) {
         a[0].click();
         a.remove();
       });
-
-      //关闭Detail弹窗清空内容
-      $(".detailClose").click(function () {
-        for (let i = 0; i < mat.speciality.length; i++) {
-          $(`#Info${i}`).text(undefined)
-        }
-      })
 
     })
 

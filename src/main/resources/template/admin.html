@@ -632,6 +632,12 @@
             $("#addOne").val(undefined);
             $("#addType").val("Scalar");
         })
+
+        $("#add").click(function () {
+            $("#addOne").val(undefined);
+            $("#addType").val("Scalar");
+        })
+
         $("#addSubmit").click(function () {
             $("#addOne").val(undefined);
         })
@@ -786,7 +792,7 @@
                 add = undefined;
                 $("#dbInfo").empty();
                 $("#dbInfo").append(createCard(speciality,specialityType));
-                $("#editType").val("Scalar");
+                $("#addType").val("Scalar");
             });
 
             //New弹窗相关
