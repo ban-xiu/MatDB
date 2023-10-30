@@ -233,7 +233,7 @@
 
 <script>
 
-  //设置File文本方法
+  // 设置File文本方法
   function createFile(speciality) {
     let str = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -244,7 +244,7 @@
     return str;
   }
 
-  //创建Update输入框方法
+  // 创建Update输入框方法
   function createUpdate(speciality) {
     let html = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -258,7 +258,7 @@
     return html;
   }
 
-  //创建Add输入框方法
+  // 创建Add输入框方法
   function createAdd(speciality) {
     let html = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -272,7 +272,7 @@
     return html;
   }
 
-  //创建表头方法
+  // 创建表头方法
   function createTr(speciality) {
     let html = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -283,7 +283,7 @@
     return html;
   }
 
-  //设置表格属性长度极限
+  // 设置表格属性长度极限
   function truncateValues(obj) {
     for (let prop in obj) {
       if (obj.hasOwnProperty(prop) && typeof obj[prop] === 'string') {
@@ -295,7 +295,7 @@
     return obj;
   }
 
-  //创建表格方法
+  // 创建表格方法
   function createTable(list, speciality) {
     let html = '';
     for (let i = 0; i < list.length; i++) {
@@ -335,7 +335,7 @@
     return html;
   }
 
-  //创建介绍卡片方法
+  // 创建介绍卡片方法
   function createCard(obj) {
     let html = `
   <div class="card-body">
@@ -349,7 +349,7 @@
     return html;
   }
 
-  //创建Show弹窗选项方法
+  // 创建Show弹窗选项方法
   function createShow(speciality) {
     let group = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
     let html = ``;
@@ -481,14 +481,14 @@
     return title;
   }
 
-  //打开Tip1弹窗方法
+  // 打开Tip1弹窗方法
   var msg1;
   function openTipModal1() {
     $('#tipModal1').modal('show');
     $('.tipBody1 p').text(`${msg1}`);
   }
 
-  //打开Tip2弹窗方法
+  // 打开Tip2弹窗方法
   var msg2 = 'The task has been submitted.';
   function openTipModal2() {
     $('#tipModal2').modal('show');
@@ -497,7 +497,12 @@
 
   $(document).ready(function () {
 
-    //初始化数据容器
+    // 设置卡片背景图
+    const backgroundsLength = 9;
+    let randomBackground = Math.floor(Math.random() * backgroundsLength + 1);
+    $(".card").css("background-image", `url('imgs/jpg/image${randomBackground}.jpg')`)
+
+    // 初始化数据容器
     var mat = {};
     var matFlag = true;
     var add = {};
@@ -513,7 +518,7 @@
     var username = $("#username").text();
     var password = $("#password").text();
 
-    //user用户不能操作数据库
+    // user用户不能操作数据库
     if (username == "user") {
       $("#add").css("display", "none");
       $("#burn").css("display", "none");
@@ -521,7 +526,7 @@
       $("#delete").css("display", "none");
     }
 
-    //在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
+    // 在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
         axios.get("http://127.0.0.1:8080/save", {
@@ -532,6 +537,7 @@
           msg2 = "Error."
           openTipModal2();
           console.error(err)
+          return;
         })
       }
       if (msg1 == "Are you sure to update it?") {
@@ -543,6 +549,7 @@
           msg2 = "Error."
           openTipModal2();
           console.error(err)
+          return;
         })
       }
       if (msg1 == "Are you sure to delete it?") {
@@ -554,11 +561,11 @@
           msg2 = "Error."
           openTipModal2();
           console.error(err)
+          return;
         })
       }
       if (msg1 == "Are you sure to go back?") {
-        location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
-        return;
+        location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`);
       }
       if (msg1 == "Are you sure to change it?") {
         axios.get("http://127.0.0.1:8080/changeDBCard", {
@@ -569,6 +576,7 @@
           msg2 = "Error."
           openTipModal2();
           console.error(err)
+          return;
         })
       }
       if (msg1 == "Are you sure to burn this database all?") {
@@ -577,11 +585,11 @@
         }).then(res => {
           console.log(res)
           location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
-          return;
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
           console.error(err)
+          return;
         })
       }
       if (msg1 == "The file content format meets the requirements.Are you sure you want to upload it") {
@@ -593,23 +601,24 @@
           msg2 = "Error."
           openTipModal2();
           console.error(err);
+          return;
         })
       }
       openTipModal2();
     })
 
-    //页面刷新方法
+    // 页面刷新方法
     $('#tipOk,#tipNo,.tipClose,.detailClose').click(function () {
       location.reload();
     });
 
-    //Back提示
+    // Back提示
     $("#back").click(function () {
       msg1 = "Are you sure to go back?";
       openTipModal1();
     })
 
-    //Add提示
+    // Add提示
     $("#addSubmit").click(function () {
       if (addFlag) {
         msg1 = "Are you sure to add it?";
@@ -621,7 +630,7 @@
       }
     })
 
-    //Update提示
+    // Update提示
     $("#updateSubmit").click(function () {
       if (matFlag) {
         msg1 = "Are you sure to update it?";
@@ -633,57 +642,57 @@
       }
     })
 
-    //Delete提示
+    // Delete提示
     $("#delete").click(function () {
       msg1 = "Are you sure to delete it?";
       openTipModal1();
     })
 
-    //Card提示
+    // Card提示
     $("#cardSubmit").click(function () {
       msg1 = "Are you sure to change it?";
       openTipModal1();
     })
 
-    //Burn提示
+    // Burn提示
     $("#burn").click(function () {
       msg1 = "Are you sure to burn this database all?";
       openTipModal1();
     })
 
-    //创建介绍卡片Card,创建表头
+    // 创建介绍卡片Card,创建表头
     axios.get("http://127.0.0.1:8080/findDBCard", {
       params: { "id": encodeURIComponent(uid) }
     }).then(res => {
 
-      //获取相关信息
+      // 获取相关信息
       console.log(res.data)
       title = res.data.title;
       introduction = res.data.introduction;
       speciality = res.data.speciality;
       specialityType = res.data.specialityType;
 
-      //创建卡片
+      // 创建卡片
       $('.card').append(createCard(res.data))
 
-      //创建表头
+      // 创建表头
       $("#tr").append(createTr(speciality));
 
-      //获取数据库中的所有内容
+      // 获取数据库中的所有内容
       axios.get("http://127.0.0.1:8080/findAll", {
         params: { "uid": encodeURIComponent(uid) }
       }).then(res => {
 
-        //渲染表格
+        // 渲染表格
         $('#tbody').append(createTable(res.data.matentityList, speciality))
 
-        //分页效果
+        // 分页效果
         table = $('#myTable').DataTable({
           "pageLength": 5,
           "lengthMenu": [5, 10, 25, 50, 100],
           "lengthChange": true,
           "paging": true,
-          //分页时也按需求展示
+          // 分页时也按需求展示
           "drawCallback": function () {
             $("#myTable_paginate").on("click", function () {
               hideOrShowChildElements(showOptions);
@@ -692,12 +701,10 @@
         });
 
       }).catch(err => {
-        msg2 = "Error."
-        openTipModal2();
         console.error(err)
       })
 
-      //创建Show选项
+      // 创建Show选项
       $("#showChoose").append(createShow(speciality));
       // 创建一个空数组用于存储选中的值
       var showOptions = [];
@@ -768,16 +775,16 @@
         });
       }
 
-      //创建Add输入框
+      // 创建Add输入框
       $("#addArea").append(createAdd(speciality))
 
-      //创建File文本
+      // 创建File文本
       $("#fileText").append(createFile(speciality))
 
-      //创建Update输入框
+      // 创建Update输入框
       $("#updateArea").append(createUpdate(speciality))
 
-      //获取Add输入框内容
+      // 获取Add输入框内容
       add.uid = uid;
       add.speciality = [];
 
@@ -850,7 +857,7 @@
         });
       }
 
-      //关闭Add弹窗清空输入内容
+      // 关闭Add弹窗清空输入内容
       $(".addClose").click(function () {
         add = {};
         add.uid = uid;
@@ -870,10 +877,10 @@
         }
       })
 
-      //获取所点击的表格内容,为Update输入框设置默认值，并获取修改的数据
+      // 获取所点击的表格内容,为Update输入框设置默认值，并获取修改的数据
       $("#myTable").on("click", "tbody tr", function () {
 
-        //获取所点击的数据信息
+        // 获取所点击的数据信息
         $(this).find("td, th").first().each(function () {
           let cid = $(this).text();
           if (cid === "No data available in table") {
@@ -895,7 +902,7 @@
             mat.publication = res.data.publication;
             mat.speciality = res.data.speciality;
 
-            //设置默认值，获取修改值
+            // 设置默认值，获取修改值
             const $inputStructure = $('#updateStructure');
             $inputStructure.val(res.data.structure);
             $inputStructure.on('change', function () {
@@ -993,7 +1000,7 @@
               })
             }
 
-            //关闭Update弹窗清空输入内容
+            // 关闭Update弹窗清空输入内容
             $(".updateClose").click(function () {
               mat = {};
               matFlag = true;
@@ -1012,8 +1019,6 @@
             })
 
           }).catch(err => {
-            msg2 = "Error."
-            openTipModal2();
             console.error(err);
           });
 
@@ -1029,12 +1034,12 @@
 
     $(".card").click(function () {
 
-      //打开卡片弹窗
+      // 打开卡片弹窗
       if (username != "user") {
         $("#cardModal").modal('show');
       }
 
-      //修改标题与介绍的默认值
+      // 修改标题与介绍的默认值
       const $newTitle = $('#title');
       $newTitle.val(title);
       $newTitle.on('change', function () {
@@ -1051,7 +1056,7 @@
 
     // Detail弹窗相关
 
-    //jsmol交互图像
+    // jsmol交互图像
     $('#detailModal').on('shown.bs.modal', function () {
 
       Jmol._isAsync = false;
@@ -1072,7 +1077,7 @@
         color: "0xFFFFF1",
         use: "HTML5",
         j2sPath: "jsmol/j2s",
-        //serverURL: "https://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php",
+        // serverURL: "https://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php",
         isSigned: true,
         script: "set zoomlarge false;set antialiasDisplay;load DATA 'model' vasp " + mat.structure + "\nEND 'model'",
         disableJ2SLoadMonitor: true,
@@ -1133,7 +1138,7 @@
         }
       }
 
-      //Detail文本内容
+      // Detail文本内容
       $("#structureInfo").text(mat.structure ? mat.structure : "Null")
       $("#nameInfo").text(mat.name ? mat.name : "Null")
       $("#symmetryInfo").text(mat.symmetry ? mat.symmetry : "Null")
@@ -1187,6 +1192,7 @@
             msg2 = "Error."
             openTipModal2();
             console.error(e);
+            return;
           }
         }
         const data = {
@@ -1226,7 +1232,7 @@
     // 初始化文件上传组件
     $("#file").fileinput({ showUpload: false, showCancel: false });
 
-    //关闭File弹窗清除上传文件
+    // 关闭File弹窗清除上传文件
     $(".fileClose").click(function () {
       $('#file').fileinput('clear');
     })
@@ -1379,7 +1385,7 @@
       checkRows(rows).then(fileFlag => {
 
         // 检查表头是否包含需要的字段，检查专有属性格式是否正确
-        if (checkFields(headers) && fileFlag) {
+        if (fileFlag && checkFields(headers)) {
 
           // 上传成功处理
           $("#fileSubmit").click(function () {
@@ -1590,7 +1596,7 @@
       </div>
       <div class="modal-body row_Y">
         <div id="fileText">
-          <P>Only XLSX and JSON file containing the following table headers can be accepted:</P>
+          <P>Only XLSX or JSON file containing the following table headers can be accepted:</P>
           <span>Structure</span>
           <span>Name</span>
           <span>Symmetry</span>

@@ -185,15 +185,14 @@
     }
 
     .col-lg-6.card .ibox {
-       opacity: 0.9;
-       background-color: rgba(255, 255, 255, 0.01);
+        opacity: 0.9;
+        background-color: rgba(255, 255, 255, 0.01);
     }
 
-    .col-lg-6.card .ibox-title, .col-lg-6.card .ibox-content {
-       background-color: rgba(255, 255, 255, 0.01);
+    .col-lg-6.card .ibox-title,
+    .col-lg-6.card .ibox-content {
+        background-color: rgba(255, 255, 255, 0.01);
     }
-
-
 </style>
 
 <body>
@@ -237,7 +236,8 @@
                         <input type="text" id="search" class="form-control-lg">
                     </li>
                     <li>
-                        <span class="m-r-sm text-muted welcome-message">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Welcome to the admin.</span>
+                            <span class="m-r-sm text-muted welcome-message">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Welcome
+                                to the admin.</span>
                     </li>
                     <li>
                         <a href="/">
@@ -492,7 +492,7 @@
         var add;
         var edit;
 
-        //卡片内容处理方法
+        // 卡片内容处理方法
         function deal(i) {
             const id = $(`#card${i}`).find('.toIndex').text();
             const type = $(`#card${i}`).find('small').text();
@@ -502,11 +502,11 @@
             return result.toLowerCase();
         }
 
-        //编辑数据库专有属性
+        // 编辑数据库专有属性
         function editCard(el) {
             $('#editModal').modal('show');
 
-            //设置专有属性名称与类型的默认值
+            // 设置专有属性名称与类型的默认值
             const e = el.parentNode.previousElementSibling.children[0].innerHTML;
             const t = el.parentNode.previousElementSibling.children[1].children[0].innerHTML;
             $("#editOne").val(e);
@@ -531,7 +531,7 @@
                         specialityType[i] = editType;
                         edit = undefined;
                         $("#dbInfo").empty();
-                        $("#dbInfo").append(createCard(speciality,specialityType));
+                        $("#dbInfo").append(createCard(speciality, specialityType));
                         $("#editType").val("Scalar");
                         return;
                     }
@@ -539,37 +539,27 @@
             })
         }
 
-        //删除数据库专有属性
+        // 删除数据库专有属性
         function deleteCard(el) {
             const e = el.parentNode.previousElementSibling.children[0].innerHTML;
             for (let i = 0; i < speciality.length; i++) {
                 if (speciality[i] == e) {
                     speciality.splice(i, 1);
                     $("#dbInfo").empty();
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
                     return;
                 }
             }
         }
 
-        // backgrounds数组进行随机打乱，以确保下一个随机索引不会重复
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
-            }
-        }
-
-        //创建数据库信息卡片
+        // 创建数据库信息卡片
         function createDBCard(list) {
             let html = ``;
-            let backgrounds = ["imgs/jpg/image1.jpg", "imgs/jpg/image2.jpg", "imgs/jpg/image3.jpg", "imgs/jpg/image4.jpg", "imgs/jpg/image5.jpg", "imgs/jpg/image6.jpg", "imgs/jpg/image7.jpg", "imgs/jpg/image8.jpg", "imgs/jpg/image9.jpg"];
-            shuffleArray(backgrounds);
-            let randomBackground;
+            const backgroundsLength = 9;
             for (let i = 0; i < list.length; i++) {
                 let obj = list[i];
-                randomBackground = backgrounds[Math.floor(Math.random() * backgrounds.length)];
-                html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('${randomBackground}')">
+                let randomBackground = Math.floor(Math.random() * backgroundsLength + 1);
+                html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('imgs/jpg/image${randomBackground}.jpg')">
                     <div class="ibox">
                         <div class="ibox-title">
                             <h5><a class="toIndex">${obj.id}</a>: <small>${obj.type}</small></h5>
@@ -586,8 +576,8 @@
             return html;
         }
 
-        //创建数据库专有属性
-        function createCard(speciality,specialityType) {
+        // 创建数据库专有属性
+        function createCard(speciality, specialityType) {
             let html = ``;
             if (speciality.length == 0) {
                 html += `<p>Null</p>`
@@ -608,7 +598,7 @@
             return html;
         }
 
-        //刷新页面
+        // 刷新页面
         $("#ok,#tipClose").click(function () {
             if (msg == "The new password has been submitted.") {
                 location.replace("http://127.0.0.1:8080");
@@ -618,7 +608,7 @@
             }
         })
 
-        //关闭Change弹窗恢复初始状态
+        // 关闭Change弹窗恢复初始状态
         $("#changeClose1,#changeClose2").click(function () {
             newPassword1 = undefined;
             newPassword2 = undefined;
@@ -626,7 +616,7 @@
             $("#newPassword2").val(undefined);
         })
 
-        //关闭Add弹窗恢复初始状态
+        // 关闭Add弹窗恢复初始状态
         $("#addClose1,#addClose2").click(function () {
             add = undefined;
             $("#addOne").val(undefined);
@@ -642,7 +632,7 @@
             $("#addOne").val(undefined);
         })
 
-        //关闭Edit弹窗恢复初始状态
+        // 关闭Edit弹窗恢复初始状态
         $("#editClose1,#editClose2").click(function () {
             edit = undefined;
             $("#editOne").val(undefined);
@@ -652,7 +642,7 @@
             $("#editOne").val(undefined);
         })
 
-        //关闭New弹窗恢复初始状态
+        // 关闭New弹窗恢复初始状态
         $("#newClose1,#newClose2").click(function () {
             title = undefined;
             $("#title").val(undefined);
@@ -665,20 +655,20 @@
             speciality = ["ETB(ev/atom)"];
             specialityType = ["Scalar"];
             $("#dbInfo").empty();
-            $("#dbInfo").append(createCard(speciality,specialityType));
+            $("#dbInfo").append(createCard(speciality, specialityType));
         })
 
-        //打开Tip弹窗
+        // 打开Tip弹窗
         function openTipModal() {
             $('#tipModal').modal('show');
             $('.tipBody p').text(`${msg}`);
         }
 
-        //密码必须大于等于6位
+        // 密码必须大于等于6位
         function passwordLength(password) {
             return password.length >= 6;
         }
-        //密码必须包含字母和数字
+        // 密码必须包含字母和数字
         function passwordFormat(password) {
             const reg = /(?=.*[A-Za-z])(?=.*\d)/;
             return reg.test(password);
@@ -686,12 +676,12 @@
 
         $(document).ready(function () {
 
-            //页面效果初始化
+            // 页面效果初始化
             WinMove();
 
-            //渲染数据库信息卡片
+            // 渲染数据库信息卡片
             axios.get("http://127.0.0.1:8080/findDBInof", {
-                params: { "username": encodeURIComponent(username==="user"?"root":username) }
+                params: { "username": encodeURIComponent(username === "user" ? "root" : username) }
             }).then(res => {
                 console.log(res)
                 let html = createDBCard(res.data.dbentityList)
@@ -701,13 +691,13 @@
                     location.replace(`http://127.0.0.1:8080/index?uid=${uid}&username=${username}&password=${password}`);
                 })
 
-                //获取每张卡片的信息并拼接为长字符串
+                // 获取每张卡片的信息并拼接为长字符串
                 let sl = [];
                 for (let i = 0; i < res.data.dbentityList.length; i++) {
                     sl.push(deal(i))
                 }
 
-                //监听Search输入框，匹配指定的卡片
+                // 监听Search输入框，匹配指定的卡片
                 let str;
                 const $search = $("#search");
                 $search.on("input", function () {
@@ -721,10 +711,12 @@
                 })
 
             }).catch(err => {
+                msg = "Error."
+                openTipModal();
                 console.error(err)
             })
 
-            //获取新密码
+            // 获取新密码
             $('#newPassword1').change(function () {
                 newPassword1 = $(this).val();
             });
@@ -732,7 +724,7 @@
                 newPassword2 = $(this).val();
             });
 
-            //获取各输入框内容
+            // 获取各输入框内容
             $('#intro').change(function () {
                 introduction = $(this).val();
             });
@@ -751,7 +743,7 @@
                 $('#infoModal').modal('show');
             });
             $('#change').click(function () {
-                if( username=="user" && password == "user"){
+                if (username == "user" && password == "user") {
                     msg = "Cannot change the password."
                     openTipModal();
                     return;
@@ -762,7 +754,7 @@
                 $('#aboutModal').modal('show');
             });
             $('#new').click(function () {
-                if( username=="user" && password == "user"){
+                if (username == "user" && password == "user") {
                     msg = "Cannot create new databases."
                     openTipModal();
                     return;
@@ -770,7 +762,7 @@
                 $('#newModal').modal('show');
             });
 
-            //Add弹窗相关
+            // Add弹窗相关
             $('#add').click(function () {
                 $('#addModal').modal('show');
             });
@@ -791,12 +783,12 @@
                 specialityType.push(addType);
                 add = undefined;
                 $("#dbInfo").empty();
-                $("#dbInfo").append(createCard(speciality,specialityType));
+                $("#dbInfo").append(createCard(speciality, specialityType));
                 $("#addType").val("Scalar");
             });
 
-            //New弹窗相关
-            $("#dbInfo").append(createCard(speciality,specialityType));
+            // New弹窗相关
+            $("#dbInfo").append(createCard(speciality, specialityType));
 
             $("#dbType").change(function () {
 
@@ -807,7 +799,7 @@
                     specialityType = [];
                     type = undefined;
                     $("#typeInput").show();
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
                     $('#typeName').change(function () {
                         type = $(this).val();
                     });
@@ -823,7 +815,7 @@
                     speciality.push("ETB(ev/atom)");
                     specialityType = [];
                     specialityType.push("Scalar");
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
 
                 } else if ($(this).val() === "2D NPB") {
                     type = "2D NPB";
@@ -831,7 +823,7 @@
                     speciality.push("NPR");
                     specialityType = [];
                     specialityType.push("Scalar");
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
 
 
                 } else if ($(this).val() === "BMS") {
@@ -844,19 +836,19 @@
                     specialityType.push("Scalar");
                     specialityType.push("Scalar");
                     specialityType.push("Scalar");
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
 
                 } else if ($(this).val() === "Penta") {
                     type = "Penta";
                     speciality = [];
                     specialityType = [];
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
 
                 } else if ($(this).val() === "2D-Carbon") {
                     type = "2D-Carbon";
                     speciality = [];
                     specialityType = [];
-                    $("#dbInfo").append(createCard(speciality,specialityType));
+                    $("#dbInfo").append(createCard(speciality, specialityType));
                 }
             });
 
@@ -867,7 +859,7 @@
                     return;
                 }
                 axios.get("http://127.0.0.1:8080/templateSave", {
-                    params: { "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction), "type": encodeURIComponent(type), "username": encodeURIComponent(username), "speciality": encodeURIComponent(speciality),"specialityType":encodeURIComponent(specialityType)}
+                    params: { "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction), "type": encodeURIComponent(type), "username": encodeURIComponent(username), "speciality": encodeURIComponent(speciality), "specialityType": encodeURIComponent(specialityType) }
                 })
                     .then(res => {
                         console.log(res)
@@ -881,10 +873,10 @@
                     })
             })
 
-            //修改密码
+            // 修改密码
             $("#changeSubmit").click(function () {
 
-                //开始校验
+                // 开始校验
                 if (!newPassword1 || !newPassword2) {
                     msg = "Null value cannot be entered."
                     openTipModal();
