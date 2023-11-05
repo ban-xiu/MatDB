@@ -543,9 +543,9 @@
     $("#sign").click(function (e) {
       e.preventDefault();
       if (username && password) {
-        axios.get("http://127.0.0.1:8080/signIn", {
-          params: { "username": encodeURIComponent(username), "password": encodeURIComponent(password) }
-        })
+        axios.post("http://127.0.0.1:8080/signIn",
+           {"username": username, "password": password}
+        )
           .then(function (res) {
             console.log(res);
             msg = res.data;

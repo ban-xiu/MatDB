@@ -681,10 +681,10 @@
 
             // 渲染数据库信息卡片
             axios.get("http://127.0.0.1:8080/findDBInof", {
-                params: { "username": encodeURIComponent(username === "user" ? "root" : username) }
+                params: { "username": username === "user" ? "root" : username }
             }).then(res => {
                 console.log(res)
-                let html = createDBCard(res.data.dbentityList)
+                let html = createDBCard(res.data)
                 $("#sortable-view").append(html);
                 $(".toIndex").click(function () {
                     const uid = $(this).text();
@@ -693,7 +693,7 @@
 
                 // 获取每张卡片的信息并拼接为长字符串
                 let sl = [];
-                for (let i = 0; i < res.data.dbentityList.length; i++) {
+                for (let i = 0; i < res.data.length; i++) {
                     sl.push(deal(i))
                 }
 
@@ -858,8 +858,8 @@
                     openTipModal();
                     return;
                 }
-                axios.get("http://127.0.0.1:8080/templateSave", {
-                    params: { "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction), "type": encodeURIComponent(type), "username": encodeURIComponent(username), "speciality": encodeURIComponent(speciality), "specialityType": encodeURIComponent(specialityType) }
+                axios.post("http://127.0.0.1:8080/templateSave", {
+                    "title": title, "introduction": introduction, "type": type, "username": username, "speciality": speciality, "specialityType": specialityType
                 })
                     .then(res => {
                         console.log(res)
@@ -900,9 +900,8 @@
                     openTipModal();
                     return;
                 }
-
-                axios.get("http://127.0.0.1:8080/changePassword", {
-                    params: { "username": encodeURIComponent(username), "newPassword": encodeURIComponent(newPassword1) }
+                axios.put("http://127.0.0.1:8080/changePassword", {
+                    "username": username, "newPassword": newPassword1
                 })
                     .then(res => {
                         console.log(res)

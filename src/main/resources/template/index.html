@@ -318,7 +318,7 @@
               html += `<td col="${9 + j}">${obj.speciality[j]}</td>`;
             }
             else {
-              html += `<td col="${9 + j}">undefined</td>`;
+              html += `<td col="${9 + j}">null</td>`;
             }
           }
         }
@@ -326,7 +326,7 @@
       else {
         if (JSON.stringify(speciality) != '[""]') {
           for (let j = 0; j < speciality.length; j++) {
-            html += `<td col="${9 + j}">undefined</td>`;
+            html += `<td col="${9 + j}">null</td>`;
           }
         }
       }
@@ -529,9 +529,9 @@
     // 在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
-        axios.get("http://127.0.0.1:8080/save", {
-          params: { "matentity": encodeURIComponent(JSON.stringify(add)) }
-        }).then(res => {
+        axios.post("http://127.0.0.1:8080/save",
+          add
+        ).then(res => {
           console.log(res)
         }).catch(err => {
           msg2 = "Error."
@@ -541,8 +541,8 @@
         })
       }
       if (msg1 == "Are you sure to update it?") {
-        axios.get("http://127.0.0.1:8080/update", {
-          params: { "id": encodeURIComponent(mat.id), "matentity": encodeURIComponent(JSON.stringify(mat)) }
+        axios.put("http://127.0.0.1:8080/update", {
+          "id": mat.id, "matentity": mat
         }).then(res => {
           console.log(res)
         }).catch(err => {
@@ -553,8 +553,8 @@
         })
       }
       if (msg1 == "Are you sure to delete it?") {
-        axios.get("http://127.0.0.1:8080/deleteById", {
-          params: { "id": encodeURIComponent(mat.id) }
+        axios.delete("http://127.0.0.1:8080/deleteById", {
+          params: { "id": mat.id }
         }).then(res => {
           console.log(res)
         }).catch(err => {
@@ -568,8 +568,8 @@
         location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`);
       }
       if (msg1 == "Are you sure to change it?") {
-        axios.get("http://127.0.0.1:8080/changeDBCard", {
-          params: { "id": encodeURIComponent(uid), "title": encodeURIComponent(title), "introduction": encodeURIComponent(introduction) }
+        axios.post("http://127.0.0.1:8080/changeDBCard", {
+          "id": uid, "title": title, "introduction": introduction
         }).then(res => {
           console.log(res)
         }).catch(err => {
@@ -580,8 +580,8 @@
         })
       }
       if (msg1 == "Are you sure to burn this database all?") {
-        axios.get("http://127.0.0.1:8080/destroy", {
-          params: { "uid": encodeURIComponent(uid) }
+        axios.delete("http://127.0.0.1:8080/destroy", {
+          params: { "uid": uid }
         }).then(res => {
           console.log(res)
           location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
@@ -593,8 +593,8 @@
         })
       }
       if (msg1 == "The file content format meets the requirements.Are you sure you want to upload it") {
-        axios.get("http://127.0.0.1:8080/addFile", {
-          params: { "file": encodeURIComponent(JSON.stringify(rows)) }
+        axios.post("http://127.0.0.1:8080/addFile", {
+          "file": rows
         }).then(res => {
           console.log(res);
         }).catch(err => {
@@ -662,7 +662,7 @@
 
     // 创建介绍卡片Card,创建表头
     axios.get("http://127.0.0.1:8080/findDBCard", {
-      params: { "id": encodeURIComponent(uid) }
+      params: { "id": uid }
     }).then(res => {
 
       // 获取相关信息
@@ -680,11 +680,11 @@
 
       // 获取数据库中的所有内容
       axios.get("http://127.0.0.1:8080/findAll", {
-        params: { "uid": encodeURIComponent(uid) }
+        params: { "uid": uid }
       }).then(res => {
 
         // 渲染表格
-        $('#tbody').append(createTable(res.data.matentityList, speciality))
+        $('#tbody').append(createTable(res.data, speciality))
 
         // 分页效果
         table = $('#myTable').DataTable({
@@ -957,25 +957,25 @@
               mat.publication = $inputPublication.val();
             })
 
-            // 当专有属性为空时输出一个元素都是undefined字符串的数组
+            // 当专有属性为空时输出一个元素都是null字符串的数组
             if (!mat.speciality) {
               let ls = [];
               for (let i = 0; i < speciality.length; i++) {
-                ls.push("undefined");
+                ls.push("null");
               }
               mat.speciality = ls;
             }
 
-            // 当专有属性数组元素为空时用undefined字符串替代
+            // 当专有属性数组元素为空时用null字符串替代
             for (let i = 0; i < mat.speciality.length; i++) {
               if (!mat.speciality[i]) {
-                mat.speciality[i] = "undefined";
+                mat.speciality[i] = "null";
               }
             }
 
             // 输入框校验数据格式
             for (let i = 0; i < mat.speciality.length; i++) {
-              if (mat.speciality[i] !== "undefined") {
+              if (mat.speciality[i] !== "null") {
                 $(`#update${i}`).val(mat.speciality[i]);
               }
               $(`#update${i}`).on("change", function () {
@@ -1150,7 +1150,7 @@
       $("#publicationInfo").text(mat.publication ? mat.publication : "Null")
 
       for (let i = 0; i < mat.speciality.length; i++) {
-        $(`#Info${i}`).text(mat.speciality[i] && mat.speciality[i] !== "undefined" ? mat.speciality[i] : "Null")
+        $(`#Info${i}`).text(mat.speciality[i] && mat.speciality[i] !== "null" ? mat.speciality[i] : "Null")
       }
 
       // 导出JSON文件功能
@@ -1170,7 +1170,7 @@
 
           return keyValuePairs;
         }
-        const specialityData = (mat.speciality === undefined || mat.speciality[0] === "undefined") ? undefined : mat.speciality;
+        const specialityData = (mat.speciality === undefined || mat.speciality[0] === "null") ? undefined : mat.speciality;
         const defVal = {
           "Structure": mat.structure,
           "Name": mat.name,

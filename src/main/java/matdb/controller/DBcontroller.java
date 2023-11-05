@@ -1,83 +1,48 @@
 package matdb.controller;
 
-
 import matdb.entity.DBentity;
-import matdb.entity.DBentitylist;
-import matdb.repository.DBrepository;
-import matdb.repository.Matrepository;
+import matdb.req.ChangeDBCrad;
+import matdb.req.TemplateReq;
+import matdb.service.DBService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.net.URLDecoder;
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
 public class DBcontroller {
+
     @Autowired
-    DBrepository dbrepository;
-    @Autowired
-    Matrepository matrepository;
-    @RequestMapping("/templateSave")
-    public void templateSave(@RequestParam("title") String title,@RequestParam("introduction") String introduction,@RequestParam("type") String type,@RequestParam("username") String username ,@RequestParam("speciality") String speciality,@RequestParam("specialityType") String specialityType){
-        try {
-            String dtitle = URLDecoder.decode(title, "UTF-8");
-            String dintroduction=URLDecoder.decode(introduction, "UTF-8");
-            String dtype=URLDecoder.decode(type, "UTF-8");
-            String dusername=URLDecoder.decode(username, "UTF-8");
-            String dspeciality=URLDecoder.decode(speciality, "UTF-8");
-            String dspecialityType=URLDecoder.decode(specialityType,"UTF-8");
-            String[] specialityArray = dspeciality.split(",");
-            String[] specialityTypeArray = dspecialityType.split(",");
-            DBentity db=new DBentity(null,dtitle,dintroduction,dtype,dusername,specialityArray,specialityTypeArray);
-            dbrepository.save(db);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    DBService dbService;
+
+    @PostMapping("/templateSave")
+    public void templateSave(@RequestBody TemplateReq templateReq){
+        System.out.println("templateSave:" + templateReq.toString());
+        dbService.templateSave(templateReq);
     }
-    @RequestMapping("/findDBInof")
-    public String findDBInof(@RequestParam("username") String username){
-        try {
-            String dusername=URLDecoder.decode(username, "UTF-8");
-            List<DBentity> dbentities=dbrepository.findAllByUsername(dusername);
-            DBentitylist dbentitylist = new DBentitylist(dbentities);
-            return dbentitylist.toJson();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return e.toString();
-        }
+    @GetMapping("/findDBInof")
+    public List<DBentity> findDBInof(@RequestParam("username") String username){
+        System.out.println("findDBInof:" + username);
+        List<DBentity> dbentities = dbService.findDBInof(username);
+        return dbentities;
     }
-    @RequestMapping("/findDBCard")
+    @GetMapping("/findDBCard")
     public String findDBCard(@RequestParam("id") String id){
-        Optional<DBentity> dbentity=dbrepository.findById(id);
-        return dbentity.get().toJson();
+        System.out.println("findDBCard:" + id);
+        String card = dbService.findDBCard(id);
+        System.out.println("findDBCard:" + card);
+        return card;
     }
-    @RequestMapping("/changeDBCard")
-    public void changDBCard(@RequestParam("id") String id ,@RequestParam("title") String title,@RequestParam("introduction") String introduction){
-        try {
-            String dtitle = URLDecoder.decode(title, "UTF-8");
-            String dintroduction=URLDecoder.decode(introduction, "UTF-8");
-            Optional<DBentity> dbentity=dbrepository.findById(id);
-            DBentity db= dbentity.get();
-            db.setTitle(dtitle);
-            db.setIntroduction(dintroduction);
-            dbrepository.deleteById(id);
-            dbrepository.save(db);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    @PostMapping("/changeDBCard")
+    public void changDBCard(@RequestBody ChangeDBCrad changeDBCrad){
+        System.out.println("changeDBCard:" + changeDBCrad.toString());
+        dbService.changDBCard(changeDBCrad);
     }
-    @RequestMapping("/destroy")
+    @DeleteMapping("/destroy")
     public void destroy(@RequestParam("uid") String uid){
-        try {
-            matrepository.deleteByUid(uid);
-            dbrepository.deleteById(uid);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        System.out.println("destroy:" + uid);
+        dbService.destroy(uid);
     }
 
 }

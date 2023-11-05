@@ -592,9 +592,9 @@
         }
         // 提交注册请求
         if (password1 == password2) {
-          axios.get("http://127.0.0.1:8080/signUp", {
-            params: { "username": encodeURIComponent(username), "password": encodeURIComponent(password1) }
-          })
+          axios.post("http://127.0.0.1:8080/signUp",
+            {"username": username, "password": password1}
+          )
             .then(function (res) {
               console.log(res)
               msg = res.data
