@@ -887,7 +887,7 @@
             return;
           }
           axios.get("http://127.0.0.1:8080/findByCid", {
-            params: { "cid": encodeURIComponent(cid) }
+            params: { "cid": cid }
           }).then(res => {
             mat.id = res.data.id;
             mat.uid = res.data.uid;
@@ -961,7 +961,7 @@
             if (!mat.speciality) {
               let ls = [];
               for (let i = 0; i < speciality.length; i++) {
-                ls.push("null");
+                ls.push(null);
               }
               mat.speciality = ls;
             }
@@ -969,13 +969,13 @@
             // 当专有属性数组元素为空时用null字符串替代
             for (let i = 0; i < mat.speciality.length; i++) {
               if (!mat.speciality[i]) {
-                mat.speciality[i] = "null";
+                mat.speciality[i] = null;
               }
             }
 
             // 输入框校验数据格式
             for (let i = 0; i < mat.speciality.length; i++) {
-              if (mat.speciality[i] !== "null") {
+              if (mat.speciality[i] !== null) {
                 $(`#update${i}`).val(mat.speciality[i]);
               }
               $(`#update${i}`).on("change", function () {
@@ -1150,7 +1150,7 @@
       $("#publicationInfo").text(mat.publication ? mat.publication : "Null")
 
       for (let i = 0; i < mat.speciality.length; i++) {
-        $(`#Info${i}`).text(mat.speciality[i] && mat.speciality[i] !== "null" ? mat.speciality[i] : "Null")
+        $(`#Info${i}`).text(mat.speciality[i] ? mat.speciality[i] : "Null")
       }
 
       // 导出JSON文件功能
@@ -1170,7 +1170,7 @@
 
           return keyValuePairs;
         }
-        const specialityData = (mat.speciality === undefined || mat.speciality[0] === "null") ? undefined : mat.speciality;
+        const specialityData = (mat.speciality === undefined || !mat.speciality[0] ) ? undefined : mat.speciality;
         const defVal = {
           "Structure": mat.structure,
           "Name": mat.name,

@@ -1,6 +1,5 @@
 package matdb.entity;
 
-import com.google.gson.Gson;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -47,11 +46,6 @@ public class DBentity {
                 ", speciality=" + Arrays.toString(speciality) +
                 ", specialityType=" + Arrays.toString(specialityType) +
                 '}';
-    }
-
-    public String toJson(){
-        Gson gson = new Gson();
-        return gson.toJson(this);
     }
 
 

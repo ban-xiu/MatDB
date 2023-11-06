@@ -1,11 +1,9 @@
 package matdb.entity;
 
-import com.google.gson.Gson;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.Arrays;
 
 
 @Document(collection = "mongodata")
@@ -52,13 +50,6 @@ public class Matentity {
         this.publication = publication;
         this.speciality = speciality;
     }
-
-    public String toJson(){
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
-
-
 
     public String getUid() {
         return uid;

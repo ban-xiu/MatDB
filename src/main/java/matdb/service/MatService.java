@@ -29,9 +29,9 @@ public class MatService {
         matrepository.save(matentity);
     }
 
-    public String findByCid(String cid){
+    public Matentity findByCid(String cid){
         Optional<Matentity> mat = matrepository.findById(cid);
-        return mat.get().toJson();
+        return mat.get();
     }
 
     public void update(UpdateReq updateReq){

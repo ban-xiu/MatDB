@@ -1,6 +1,6 @@
 package matdb.entity;
 
-import com.google.gson.Gson;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -14,10 +14,6 @@ public class Userentity {
     @Field("password")
     private String password;
 
-    public String toJson(){
-        Gson gson = new Gson();
-        return gson.toJson(this);
-    }
     public Userentity(){};
 
     public Userentity(String id, String username, String password) {

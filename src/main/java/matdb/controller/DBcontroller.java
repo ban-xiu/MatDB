@@ -28,9 +28,9 @@ public class DBcontroller {
         return dbentities;
     }
     @GetMapping("/findDBCard")
-    public String findDBCard(@RequestParam("id") String id){
+    public DBentity findDBCard(@RequestParam("id") String id){
         System.out.println("findDBCard:" + id);
-        String card = dbService.findDBCard(id);
+        DBentity card = dbService.findDBCard(id);
         System.out.println("findDBCard:" + card);
         return card;
     }

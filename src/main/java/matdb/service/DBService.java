@@ -34,12 +34,12 @@ public class DBService {
         return dbentities;
     }
 
-    public String findDBCard(String id){
+    public DBentity findDBCard(String id){
         Optional<DBentity> dbentity = dbrepository.findById(id);
         if (!dbentity.isPresent()){
             return null;
         }
-        return dbentity.get().toJson();
+        return dbentity.get();
     }
     public void changDBCard(ChangeDBCrad changeDBCrad){
         String title = changeDBCrad.getTitle();

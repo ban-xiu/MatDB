@@ -30,9 +30,9 @@ public class Matcontroller {
         matService.save(matentity);
     }
     @GetMapping("/findByCid")
-    public String findByCid(@RequestParam("cid") String cid){
+    public Matentity findByCid(@RequestParam("cid") String cid){
         System.out.println("findByCid:" + cid);
-        String mat = matService.findByCid(cid);
+        Matentity mat = matService.findByCid(cid);
         System.out.println(mat);
         return mat;
     }

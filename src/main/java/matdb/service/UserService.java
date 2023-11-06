@@ -54,6 +54,9 @@ public class UserService {
         String newPassword = changPwdReq.getNewPassword();
 
         Optional<Userentity> userOptional=userrepository.findByUsername(username);
+        if (!userOptional.isPresent()){
+            return;
+        }
         Userentity user = userOptional.get();
         user.setPassword(newPassword);
         userrepository.save(user);
