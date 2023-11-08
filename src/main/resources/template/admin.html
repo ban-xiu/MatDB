@@ -502,13 +502,39 @@
             return result.toLowerCase();
         }
 
+        // 检查数组中有没有重复元素
+        function hasDuplicates(array) {
+            var seen = {};
+
+            for (var i = 0; i < array.length; i++) {
+                var element = array[i];
+                if (seen[element]) {
+                    return true; // 发现重复元素
+                }
+                seen[element] = true;
+            }
+
+            return false; // 没有重复元素
+        }
+
+        // 查询元素
+        function findInArray(array, element) {
+            const index = array.indexOf(element);
+            if (index !== -1) {
+                return index;
+            } else {
+                return false;
+            }
+        }
+
         // 编辑数据库专有属性
         function editCard(el) {
             $('#editModal').modal('show');
 
             // 设置专有属性名称与类型的默认值
-            const e = el.parentNode.previousElementSibling.children[0].innerHTML;
-            const t = el.parentNode.previousElementSibling.children[1].children[0].innerHTML;
+            edit = el.parentNode.previousElementSibling.children[0].innerHTML;
+            let e = el.parentNode.previousElementSibling.children[0].innerHTML;
+            let t = el.parentNode.previousElementSibling.children[1].children[0].innerHTML;
             $("#editOne").val(e);
             $("#editType").val(t);
 
@@ -517,25 +543,31 @@
                     msg = "Null value cannot be entered."
                     openTipModal()
                     return;
-                }
-                if (edit.includes(",") || edit.includes(" ")) {
-                    msg = 'The value cannot contain ","and" ".'
-                    openTipModal();
-                    return;
-                }
+                } else {
 
-                for (let i = 0; i < speciality.length; i++) {
-                    if (speciality[i] == e) {
-                        speciality[i] = edit;
-                        let editType = $("#editType").val();
-                        specialityType[i] = editType;
-                        edit = undefined;
-                        $("#dbInfo").empty();
-                        $("#dbInfo").append(createCard(speciality, specialityType));
-                        $("#editType").val("Scalar");
+                    if (edit.includes(",") || edit.includes(" ")) {
+                        msg = 'The value cannot contain ","and" ".'
+                        openTipModal();
                         return;
                     }
+
+                    // 属性不能重复
+                    if (hasDuplicates(speciality)) {
+                        msg = "Cannot enter duplicate attributes."
+                        openTipModal();
+                        return;
+                    }
+
+                    const inx = findInArray(speciality, e);
+                    if (inx) {
+                        speciality[inx] = edit;
+                        specialityType[inx] = $("#editType").val();
+                        $("#dbInfo").empty();
+                        $("#dbInfo").append(createCard(speciality, specialityType));
+                    }
+
                 }
+
             })
         }
 
@@ -602,9 +634,11 @@
         $("#ok,#tipClose").click(function () {
             if (msg == "The new password has been submitted.") {
                 location.replace("http://127.0.0.1:8080");
+                return;
             }
             if (msg == "The new database has been submitted.") {
                 location.reload();
+                return;
             }
         })
 
@@ -638,9 +672,6 @@
             $("#editOne").val(undefined);
             $("#editType").val("Scalar");
         })
-        $("#editSubmit").click(function () {
-            $("#editOne").val(undefined);
-        })
 
         // 关闭New弹窗恢复初始状态
         $("#newClose1,#newClose2").click(function () {
@@ -654,6 +685,15 @@
             $("#dbType").val("2D FEM");
             speciality = ["ETB(ev/atom)"];
             specialityType = ["Scalar"];
+
+            edit = undefined;
+            $("#editOne").val(undefined);
+            $("#editType").val("Scalar");
+
+            add = undefined;
+            $("#addOne").val(undefined);
+            $("#addType").val("Scalar");
+
             $("#dbInfo").empty();
             $("#dbInfo").append(createCard(speciality, specialityType));
         })
@@ -778,13 +818,22 @@
                     openTipModal();
                     return;
                 }
+
                 speciality.push(add);
+                // 属性不能重复
+                if (hasDuplicates(speciality)) {
+                    msg = "Cannot enter duplicate attributes."
+                    openTipModal();
+                    return;
+                }
+
                 let addType = $("#addType").val();
                 specialityType.push(addType);
                 add = undefined;
                 $("#dbInfo").empty();
                 $("#dbInfo").append(createCard(speciality, specialityType));
                 $("#addType").val("Scalar");
+
             });
 
             // New弹窗相关
@@ -858,8 +907,11 @@
                     openTipModal();
                     return;
                 }
-                axios.post("http://127.0.0.1:8080/templateSave", {
+                const template = {
                     "title": title, "introduction": introduction, "type": type, "username": username, "speciality": speciality, "specialityType": specialityType
+                };
+                axios.post("http://127.0.0.1:8080/templateSave", {
+                    "dbEntity": template
                 })
                     .then(res => {
                         console.log(res)
