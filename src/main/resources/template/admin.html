@@ -54,6 +54,13 @@
         overflow-y: auto;
     }
 
+    @media (max-width: 768px) {
+    .row_Y {
+      height: auto;
+      overflow-y: unset;
+    }
+  }
+
     /*Search输入框样式*/
     li {
         display: flex;
@@ -193,6 +200,24 @@
     .col-lg-6.card .ibox-content {
         background-color: rgba(255, 255, 255, 0.01);
     }
+
+    @media (max-width: 768px) {
+
+        /*隐藏操作菜单*/
+        .navbar-default.navbar-static-side{
+            display: none;
+        }
+        /*隐藏欢迎语*/
+        .m-r-sm.text-muted.welcome-message{
+            display: none;
+        }
+
+        /*隐藏搜索框*/
+        #searchli{
+            display: none;
+        }
+    }
+
 </style>
 
 <body>
@@ -231,7 +256,7 @@
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <ul class="nav navbar-top-links navbar-right">
-                    <li>
+                    <li id="searchli">
                         <label for="search">Search:&emsp;</label>
                         <input type="text" id="search" class="form-control-lg">
                     </li>

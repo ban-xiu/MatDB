@@ -59,6 +59,25 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 
+  @media (max-width: 768px) {
+    .card {
+      width: 100%;
+      margin: 20px auto;
+    }
+
+    .card-body {
+      padding: 1rem;
+    }
+
+    .card-title {
+      font-size: 2rem;
+    }
+
+    .card-text {
+      font-size: 1.2rem;
+    }
+  }
+
   /*按钮样式*/
   .btns {
     text-align: center;
@@ -72,6 +91,12 @@
     border-radius: 25px;
     font-size: 16px;
     transition: all 0.3s;
+  }
+
+  @media (max-width: 768px) {
+    .btn:not(#back){
+      display: none;
+    }
   }
 
   /*表格样式*/
@@ -161,6 +186,13 @@
   .row_Y {
     height: 500px;
     overflow-y: auto;
+  }
+
+  @media (max-width: 768px) {
+    .row_Y {
+      height: auto;
+      overflow-y: unset;
+    }
   }
 
   /*Detail弹窗效果*/
@@ -529,8 +561,8 @@
     // 在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
-        axios.post("http://127.0.0.1:8080/save",{
-          "matEntity":add
+        axios.post("http://127.0.0.1:8080/save", {
+          "matEntity": add
         }).then(res => {
           console.log(res)
         }).catch(err => {
@@ -566,6 +598,7 @@
       }
       if (msg1 == "Are you sure to go back?") {
         location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`);
+        return;
       }
       if (msg1 == "Are you sure to change it?") {
         axios.post("http://127.0.0.1:8080/changeDBCard", {
@@ -585,6 +618,7 @@
         }).then(res => {
           console.log(res)
           location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
+          return;
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
@@ -594,7 +628,7 @@
       }
       if (msg1 == "The file content format meets the requirements.Are you sure you want to upload it") {
         axios.post("http://127.0.0.1:8080/addFile", {
-          "matEntities":rows
+          "matEntities": rows
         }).then(res => {
           console.log(res);
         }).catch(err => {
@@ -610,6 +644,7 @@
     // 页面刷新方法
     $('#tipOk,#tipNo,.tipClose,.detailClose').click(function () {
       location.reload();
+      return;
     });
 
     // Back提示
@@ -1170,7 +1205,7 @@
 
           return keyValuePairs;
         }
-        const specialityData = (mat.speciality === undefined || !mat.speciality[0] ) ? undefined : mat.speciality;
+        const specialityData = (mat.speciality === undefined || !mat.speciality[0]) ? undefined : mat.speciality;
         const defVal = {
           "Structure": mat.structure,
           "Name": mat.name,

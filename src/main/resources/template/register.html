@@ -43,16 +43,9 @@
     box-sizing: border-box;
   }
 
-  .wrapper-full {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
-  }
-
   .wrapper {
     width: 100%;
+    height: 100%;
     padding-right: 15px;
     padding-left: 15px;
     margin-right: auto;
@@ -593,7 +586,7 @@
         // 提交注册请求
         if (password1 == password2) {
           axios.post("http://127.0.0.1:8080/signUp",
-            {"username": username, "password": password1}
+            { "username": username, "password": password1 }
           )
             .then(function (res) {
               console.log(res)
@@ -640,15 +633,18 @@
                 <form>
                     <div>
                         <p class="text-head">Your username</p>
-                        <input type="text" name="username" class="input" placeholder="" required="" title="Please fill in this field."/>
+                        <input type="text" name="username" class="input" placeholder="" required=""
+                               title="Please fill in this field." />
                     </div>
                     <div>
                         <p class="text-head">Your password</p>
-                        <input type="password" name="password1" class="input" placeholder="" required="" title="Please fill in this field."/>
+                        <input type="password" name="password1" class="input" placeholder="" required=""
+                               title="Please fill in this field." />
                     </div>
                     <div>
                         <p class="text-head">Your password again</p>
-                        <input type="password" name="password2" class="input" placeholder="" required="" title="Please fill in this field."/>
+                        <input type="password" name="password2" class="input" placeholder="" required=""
+                               title="Please fill in this field." />
                     </div>
 
                     <button type="submit" class="signinbutton btn" id="sign">register</button>
