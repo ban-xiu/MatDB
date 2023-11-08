@@ -1,7 +1,9 @@
 package matdb.controller;
 
-import matdb.entity.Matentity;
-import matdb.req.UpdateReq;
+import matdb.entity.MatEntity;
+import matdb.vo.req.FileReq;
+import matdb.vo.req.SaveReq;
+import matdb.vo.req.UpdateReq;
 import matdb.service.MatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -10,13 +12,13 @@ import java.util.List;
 
 
 @RestController
-public class Matcontroller {
+public class MatController {
     @Autowired
     MatService matService;
     @GetMapping("/findAll")
-    public List<Matentity> findAll(@RequestParam String uid){
-        System.out.println("findAll" + uid);
-        List<Matentity> matentities = matService.findAll(uid);
+    public List<MatEntity> findAll(@RequestParam String uid){
+        System.out.println("findAll:" + uid);
+        List<MatEntity> matentities = matService.findAll(uid);
         return matentities;
     }
     @DeleteMapping("/deleteById")
@@ -25,14 +27,14 @@ public class Matcontroller {
         matService.deleteById(id);
     }
     @PostMapping("/save")
-    public void save(@RequestBody Matentity matentity){
-        System.out.println("save" + matentity.toString());
-        matService.save(matentity);
+    public void save(@RequestBody SaveReq saveReq){
+        System.out.println("save:" + saveReq.toString());
+        matService.save(saveReq);
     }
     @GetMapping("/findByCid")
-    public Matentity findByCid(@RequestParam("cid") String cid){
+    public MatEntity findByCid(@RequestParam("cid") String cid){
         System.out.println("findByCid:" + cid);
-        Matentity mat = matService.findByCid(cid);
+        MatEntity mat = matService.findByCid(cid);
         System.out.println(mat);
         return mat;
     }
@@ -42,8 +44,9 @@ public class Matcontroller {
         matService.update(updateReq);
     }
     @PostMapping("/addFile")
-    public void addFile(@RequestBody Matentity[] file){
-        System.out.println("file");
+    public void addFile(@RequestBody FileReq file){
+        System.out.println(file);
+        System.out.println("file:");
         matService.addFile(file);
     }
 }

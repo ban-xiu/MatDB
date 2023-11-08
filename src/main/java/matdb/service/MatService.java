@@ -1,9 +1,11 @@
 package matdb.service;
 
-import matdb.entity.Matentity;
+import matdb.entity.MatEntity;
 
-import matdb.repository.Matrepository;
-import matdb.req.UpdateReq;
+import matdb.repository.MatRepository;
+import matdb.vo.req.FileReq;
+import matdb.vo.req.SaveReq;
+import matdb.vo.req.UpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,11 +15,11 @@ import java.util.Optional;
 @Service
 public class MatService {
     @Autowired
-    Matrepository matrepository;
+    MatRepository matrepository;
 
-    public List<Matentity> findAll(String uid){
-        List<Matentity> matentities = matrepository.findAllByUid(uid);
-        return matentities;
+    public List<MatEntity> findAll(String uid){
+        List<MatEntity> mats = matrepository.findAllByUid(uid);
+        return mats;
     }
 
     public void deleteById(String id){
@@ -25,23 +27,27 @@ public class MatService {
     }
 
 
-    public void save(Matentity matentity){
-        matrepository.save(matentity);
+    public void save(SaveReq saveReq){
+        MatEntity mat = saveReq.getMatEntity();
+        matrepository.save(mat);
     }
 
-    public Matentity findByCid(String cid){
-        Optional<Matentity> mat = matrepository.findById(cid);
-        return mat.get();
+    public MatEntity findByCid(String cid){
+        Optional<MatEntity> matOption = matrepository.findById(cid);
+        MatEntity mat = matOption.get();
+        return mat;
     }
 
     public void update(UpdateReq updateReq){
-        Matentity mat = updateReq.getMatentity();
+        MatEntity mat = updateReq.getMatEntity();
         matrepository.deleteById(mat.getId());
         matrepository.save(mat);
     }
-    public void addFile(Matentity[] file){
-        for (Matentity matentity : file) {
-            matrepository.save(matentity);
+    public void addFile(FileReq file){
+        MatEntity[] mats = file.getMatEntities();
+        System.out.println(mats);
+        for (MatEntity mat : mats) {
+            matrepository.save(mat);
         }
     }
 }

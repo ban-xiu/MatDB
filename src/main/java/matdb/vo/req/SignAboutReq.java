@@ -1,11 +1,11 @@
-package matdb.req;
+package matdb.vo.req;
 
-public class SignInReq {
+public class SignAboutReq {
     private String username;
     private String password;
 
-    public SignInReq(){}
-    public SignInReq(String username, String password) {
+    public SignAboutReq(){}
+    public SignAboutReq(String username, String password) {
         this.username = username;
         this.password = password;
     }
@@ -28,7 +28,7 @@ public class SignInReq {
 
     @Override
     public String toString() {
-        return "SignInReq{" +
+        return "SignAboutReq{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';

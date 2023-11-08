@@ -5,8 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-@Document(collection = "matusers")
-public class Userentity {
+@Document(collection = "matUsers")
+public class UserEntity {
     @Id
     private String id;
     @Field("username")
@@ -14,9 +14,9 @@ public class Userentity {
     @Field("password")
     private String password;
 
-    public Userentity(){};
+    public UserEntity(){};
 
-    public Userentity(String id, String username, String password) {
+    public UserEntity(String id, String username, String password) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -24,7 +24,7 @@ public class Userentity {
 
     @Override
     public String toString() {
-        return "Userentity{" +
+        return "UserEntity{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

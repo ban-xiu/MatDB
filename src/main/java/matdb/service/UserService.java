@@ -1,10 +1,8 @@
 package matdb.service;
 
-import matdb.entity.Userentity;
-import matdb.repository.Userrepository;
-import matdb.req.ChangPwdReq;
-import matdb.req.SignInReq;
-import matdb.req.SignUpReq;
+import matdb.entity.UserEntity;
+import matdb.repository.UserRepository;
+import matdb.vo.req.SignAboutReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +11,19 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    Userrepository userrepository;
-    public String signIn(SignInReq signInReq) {
+    UserRepository userrepository;
+    public String signIn(SignAboutReq signInReq) {
 
         String username = signInReq.getUsername();
         String password = signInReq.getPassword();
 
-        Optional<Userentity> userOptional = userrepository.findByUsername(username);
+        Optional<UserEntity> userOption = userrepository.findByUsername(username);
 
-        if (userOptional.isEmpty()) {
+        if (userOption.isEmpty()) {
             return "The user does not exist.";
         }
 
-        Userentity user = userOptional.get();
+        UserEntity user = userOption.get();
 
         if (!user.getPassword().equals(password)) {
             return "Wrong password.";
@@ -34,30 +32,30 @@ public class UserService {
         // 登录成功
         return "Login succeeded.";
     }
-    public String signUp(SignUpReq signUpReq){
+    public String signUp(SignAboutReq signUpReq){
 
         String username = signUpReq.getUsername();
         String password = signUpReq.getPassword();
 
-        Optional<Userentity> userOptional = userrepository.findByUsername(username);
-        if (userOptional.isPresent()){
+        Optional<UserEntity> userOption = userrepository.findByUsername(username);
+        if (userOption.isPresent()){
             return "This username is already taken.";
         }
-        Userentity userentity =new Userentity(null,username,password);
-        userrepository.save(userentity);
+        UserEntity user = new UserEntity(null,username,password);
+        userrepository.save(user);
         return "The task has been submitted.";
     }
 
-    public void changePasswrod(ChangPwdReq changPwdReq){
+    public void changePassword(SignAboutReq changPwdReq){
 
         String username = changPwdReq.getUsername();
-        String newPassword = changPwdReq.getNewPassword();
+        String newPassword = changPwdReq.getPassword();
 
-        Optional<Userentity> userOptional=userrepository.findByUsername(username);
-        if (!userOptional.isPresent()){
+        Optional<UserEntity> userOption =userrepository.findByUsername(username);
+        if (!userOption.isPresent()){
             return;
         }
-        Userentity user = userOptional.get();
+        UserEntity user = userOption.get();
         user.setPassword(newPassword);
         userrepository.save(user);
     }

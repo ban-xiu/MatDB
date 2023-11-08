@@ -6,8 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
-@Document(collection = "mongodata")
-public class Matentity {
+@Document(collection = "matData")
+public class MatEntity {
 
     @Field("uid")
     private String uid;
@@ -34,9 +34,9 @@ public class Matentity {
     @Field("speciality")
     private String[] speciality;
 
-    public Matentity(){};
+    public MatEntity(){};
 
-    public Matentity(String uid, String id, String structure, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
+    public MatEntity(String uid, String id, String structure, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
         this.uid = uid;
         this.id = id;
         this.structure = structure;

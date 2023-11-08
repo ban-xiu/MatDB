@@ -1,8 +1,8 @@
 package matdb.controller;
 
-import matdb.entity.DBentity;
-import matdb.req.ChangeDBCrad;
-import matdb.req.TemplateReq;
+import matdb.entity.DBEntity;
+import matdb.vo.req.ChangeDBCardReq;
+import matdb.vo.req.TemplateReq;
 import matdb.service.DBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-public class DBcontroller {
+public class DBController {
 
     @Autowired
     DBService dbService;
@@ -22,27 +22,27 @@ public class DBcontroller {
         dbService.templateSave(templateReq);
     }
     @GetMapping("/findDBInof")
-    public List<DBentity> findDBInof(@RequestParam("username") String username){
+    public List<DBEntity> findDBInof(@RequestParam("username") String username){
         System.out.println("findDBInof:" + username);
-        List<DBentity> dbentities = dbService.findDBInof(username);
-        return dbentities;
+        List<DBEntity> dbs = dbService.findDBInof(username);
+        return dbs;
     }
     @GetMapping("/findDBCard")
-    public DBentity findDBCard(@RequestParam("id") String id){
+    public DBEntity findDBCard(@RequestParam("id") String id){
         System.out.println("findDBCard:" + id);
-        DBentity card = dbService.findDBCard(id);
+        DBEntity card = dbService.findDBCard(id);
         System.out.println("findDBCard:" + card);
         return card;
     }
     @PostMapping("/changeDBCard")
-    public void changDBCard(@RequestBody ChangeDBCrad changeDBCrad){
-        System.out.println("changeDBCard:" + changeDBCrad.toString());
-        dbService.changDBCard(changeDBCrad);
+    public void changDBCard(@RequestBody ChangeDBCardReq changeDBCardReq){
+        System.out.println("changeDBCard:" + changeDBCardReq.toString());
+        dbService.changDBCard(changeDBCardReq);
     }
     @DeleteMapping("/destroy")
-    public void destroy(@RequestParam("uid") String uid){
-        System.out.println("destroy:" + uid);
-        dbService.destroy(uid);
+    public void destroy(@RequestParam("uid") String id){
+        System.out.println("destroy:" + id);
+        dbService.destroy(id);
     }
 
 }

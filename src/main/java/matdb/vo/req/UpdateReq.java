@@ -1,15 +1,15 @@
-package matdb.req;
+package matdb.vo.req;
 
-import matdb.entity.Matentity;
+import matdb.entity.MatEntity;
 
 public class UpdateReq {
     private String id;
-    private Matentity matentity;
+    private MatEntity matEntity;
     public UpdateReq(){}
 
-    public UpdateReq(String id, Matentity matentity) {
+    public UpdateReq(String id, MatEntity matEntity) {
         this.id = id;
-        this.matentity = matentity;
+        this.matEntity = matEntity;
     }
 
     public String getId() {
@@ -20,19 +20,19 @@ public class UpdateReq {
         this.id = id;
     }
 
-    public Matentity getMatentity() {
-        return matentity;
+    public MatEntity getMatEntity() {
+        return matEntity;
     }
 
-    public void setMatentity(Matentity matentity) {
-        this.matentity = matentity;
+    public void setMatEntity(MatEntity matentity) {
+        this.matEntity = matentity;
     }
 
     @Override
     public String toString() {
         return "UpdateReq{" +
                 "id='" + id + '\'' +
-                ", matentity=" + matentity +
+                ", matEntity=" + matEntity +
                 '}';
     }
 }

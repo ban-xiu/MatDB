@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
-public class Indexcontroller {
+public class IndexController {
     @GetMapping("/")
     public String login(){
         return "login";

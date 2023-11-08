@@ -1,24 +1,60 @@
-package matdb.req;
+package matdb.entity;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Arrays;
 
-public class TemplateReq {
+@Document(collection = "matTemplates")
+public class DBEntity {
+    @Id
+    private String id;
+    @Field("title")
     private String title;
+    @Field("introduction")
     private String introduction;
+    @Field("type")
     private String type;
+    @Field("username")
     private String username;
+    @Field("speciality")
     private String[] speciality;
+
+    @Field("specialityType")
     private String[] specialityType;
+    public DBEntity(){};
 
-    public TemplateReq(){}
-
-    public TemplateReq(String title, String introduction, String type, String username, String[] speciality, String[] specialityType) {
+    public DBEntity(String id, String title, String introduction, String type, String username, String[] speciality, String[] specialityType) {
+        this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.type = type;
         this.username = username;
         this.speciality = speciality;
         this.specialityType = specialityType;
+    }
+
+    @Override
+    public String toString() {
+        return "DBEntity{" +
+                "id='" + id + '\'' +
+                ", title='" + title + '\'' +
+                ", introduction='" + introduction + '\'' +
+                ", type='" + type + '\'' +
+                ", username='" + username + '\'' +
+                ", speciality=" + Arrays.toString(speciality) +
+                ", specialityType=" + Arrays.toString(specialityType) +
+                '}';
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -69,15 +105,4 @@ public class TemplateReq {
         this.specialityType = specialityType;
     }
 
-    @Override
-    public String toString() {
-        return "TemplateReq{" +
-                "title='" + title + '\'' +
-                ", introduction='" + introduction + '\'' +
-                ", type='" + type + '\'' +
-                ", username='" + username + '\'' +
-                ", speciality=" + Arrays.toString(speciality) +
-                ", specialityType=" + Arrays.toString(specialityType) +
-                '}';
-    }
 }

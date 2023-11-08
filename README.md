@@ -33,23 +33,23 @@ show users
 ### 查看当前数据库中的所有集合
 登录成功后：show collections
 
-### 创建mongodata集合
-如果admin数据库中不存在mongodata集合：db.createCollection("mongodata")
+### 创建matData集合
+如果admin数据库中不存在matData集合：db.createCollection("matData")
 
-### 创建templatedata集合
-如果admin数据库中不存在templatedata集合：db.createCollection("templatedata")
+### 创建matTemplates集合
+如果admin数据库中不存在MatTemplates集合：db.createCollection("matTemplates")
 
-### 创建matusers集合
-如果admin数据库中不存在matusers集合：db.createCollection("matusers")
+### 创建matUsers集合
+如果admin数据库中不存在matUsers集合：db.createCollection("matUsers")
 
-### 查看matusers集合中的所有内容
-db.matusers.find()
+### 查看matUsers集合中的所有内容
+db.matUsers.find()
 
 ### 创建root账户
-如果matusers集合中不存在root账户：db.matusers.insertOne({username:"root", password:"root"})
+如果matUsers集合中不存在root账户：db.matUsers.insertOne({username:"root", password:"root"})
 
 ### 创建user账户
-如果matusers集合中不存在user账户：db.matusers.insertOne({username:"user", password:"user"})
+如果matUsers集合中不存在user账户：db.matUsers.insertOne({username:"user", password:"user"})
 
 ## 2.启动项目
 保证数据库正常连接，通过maven（开发版本为3.9.3）更新pox.xml文件中的依赖后，运行APP.java，访问127.0.0.1:8080即可。

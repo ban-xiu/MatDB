@@ -529,9 +529,9 @@
     // 在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
-        axios.post("http://127.0.0.1:8080/save",
-          add
-        ).then(res => {
+        axios.post("http://127.0.0.1:8080/save",{
+          "matEntity":add
+        }).then(res => {
           console.log(res)
         }).catch(err => {
           msg2 = "Error."
@@ -542,7 +542,7 @@
       }
       if (msg1 == "Are you sure to update it?") {
         axios.put("http://127.0.0.1:8080/update", {
-          "id": mat.id, "matentity": mat
+          "id": mat.id, "matEntity": mat
         }).then(res => {
           console.log(res)
         }).catch(err => {
@@ -594,7 +594,7 @@
       }
       if (msg1 == "The file content format meets the requirements.Are you sure you want to upload it") {
         axios.post("http://127.0.0.1:8080/addFile", {
-          "file": rows
+          "matEntities":rows
         }).then(res => {
           console.log(res);
         }).catch(err => {
@@ -957,7 +957,7 @@
               mat.publication = $inputPublication.val();
             })
 
-            // 当专有属性为空时输出一个元素都是null字符串的数组
+            // 当专有属性为空时输出一个元素都是null的数组
             if (!mat.speciality) {
               let ls = [];
               for (let i = 0; i < speciality.length; i++) {
@@ -966,7 +966,7 @@
               mat.speciality = ls;
             }
 
-            // 当专有属性数组元素为空时用null字符串替代
+            // 当专有属性数组元素为空时用null替代
             for (let i = 0; i < mat.speciality.length; i++) {
               if (!mat.speciality[i]) {
                 mat.speciality[i] = null;
