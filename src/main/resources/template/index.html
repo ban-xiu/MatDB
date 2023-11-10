@@ -99,6 +99,15 @@
     }
   }
 
+  @media (max-width: 992px) {
+    #update {
+      display: none;
+    }
+    #delete {
+      display: none;
+    }
+  }
+
   /*表格样式*/
   .table {
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
@@ -325,7 +334,7 @@
     let html = '';
     for (let i = 0; i < list.length; i++) {
       let obj = truncateValues(list[i]);
-      html += `<tr class="clickable-row">`;
+      html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
       html += `<th scope="row">${obj.id}</th>`;
       html += `<td col="0">${obj.structure}</td>`;
       html += `<td col="1">${obj.name}</td>`;
@@ -908,11 +917,6 @@
       // 获取所点击的表格内容,为Update输入框设置默认值，并获取修改的数据
       $("#myTable").on("click", "tbody tr", function () {
 
-        // 屏幕太小不能操作
-        if ($(window).width() <= 992) {
-          return;
-        }
-
         // 获取所点击的数据信息
         $(this).find("td, th").first().each(function () {
 
@@ -921,9 +925,6 @@
           if (cid === "No data available in table") {
             return;
           }
-
-          // 显示表格弹窗
-          $('#rowModal').modal('show');
 
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": cid }
@@ -1716,7 +1717,7 @@
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
      aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content" style="position: absolute; left: -90%; width: 85vw; height: 90vh;">
+    <div class="modal-content" style="position: absolute; left: -25vw; width: 85vw; height: 90vh;">
       <div class="modal-header">
         <h4 class="modal-title" id="detailModalLabel">Detail</h4>
         <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
