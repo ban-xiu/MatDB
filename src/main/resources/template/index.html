@@ -93,8 +93,8 @@
     transition: all 0.3s;
   }
 
-  @media (max-width: 768px) {
-    .btn:not(#back){
+  @media (max-width: 992px) {
+    .operation:not(#back) {
       display: none;
     }
   }
@@ -184,15 +184,8 @@
 
   /*设置弹窗滚动条*/
   .row_Y {
-    height: 500px;
+    max-height: 500px;
     overflow-y: auto;
-  }
-
-  @media (max-width: 768px) {
-    .row_Y {
-      height: auto;
-      overflow-y: unset;
-    }
   }
 
   /*Detail弹窗效果*/
@@ -332,7 +325,7 @@
     let html = '';
     for (let i = 0; i < list.length; i++) {
       let obj = truncateValues(list[i]);
-      html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
+      html += `<tr class="clickable-row">`;
       html += `<th scope="row">${obj.id}</th>`;
       html += `<td col="0">${obj.structure}</td>`;
       html += `<td col="1">${obj.name}</td>`;
@@ -915,12 +908,23 @@
       // 获取所点击的表格内容,为Update输入框设置默认值，并获取修改的数据
       $("#myTable").on("click", "tbody tr", function () {
 
+        // 屏幕太小不能操作
+        if ($(window).width() <= 992) {
+          return;
+        }
+
         // 获取所点击的数据信息
         $(this).find("td, th").first().each(function () {
-          let cid = $(this).text();
+
+          // 如果数据为空则不做响应
+          const cid = $(this).text();
           if (cid === "No data available in table") {
             return;
           }
+
+          // 显示表格弹窗
+          $('#rowModal').modal('show');
+
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": cid }
           }).then(res => {
@@ -1068,6 +1072,11 @@
     })
 
     $(".card").click(function () {
+
+      // 屏幕太小不能操作
+      if ($(window).width() <= 992) {
+        return;
+      }
 
       // 打开卡片弹窗
       if (username != "user") {
@@ -1686,7 +1695,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="rowModalLabel">Operations</h5>
-        <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span>&times;</span>
         </button>
       </div>
@@ -1697,7 +1706,7 @@
                 data-dismiss="modal" id="update">Update</button>
         <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
                 id="delete">Delete</button>
-        <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" id="rowClose" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -1862,10 +1871,12 @@
   <!--按钮-->
   </br></br>
   <div class="col-md-12 btns">
-    <button class="btn btn-primary" type="button" data-toggle="modal" id="back">Back</button>
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#addModal" id="add">Add</button>
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#showModal" id="show">Show</button>
-    <button class="btn btn-danger" type="button" data-toggle="modal" id="burn">Burn</button>
+    <button class="btn btn-primary operation" type="button" data-toggle="modal" id="back">Back</button>
+    <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#addModal"
+            id="add">Add</button>
+    <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#showModal"
+            id="show">Show</button>
+    <button class="btn btn-danger operation" type="button" data-toggle="modal" id="burn">Burn</button>
   </div>
   <!--表格-->
   <div class="row">

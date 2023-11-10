@@ -50,16 +50,9 @@
 
     /*设置弹窗滚动条*/
     .row_Y {
-        height: 500px;
+        max-height: 500px;
         overflow-y: auto;
     }
-
-    @media (max-width: 768px) {
-    .row_Y {
-      height: auto;
-      overflow-y: unset;
-    }
-  }
 
     /*Search输入框样式*/
     li {
@@ -201,7 +194,7 @@
         background-color: rgba(255, 255, 255, 0.01);
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 992px) {
 
         /*隐藏操作菜单*/
         .navbar-default.navbar-static-side{
@@ -257,7 +250,6 @@
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <ul class="nav navbar-top-links navbar-right">
                     <li id="searchli">
-                        <label for="search">Search:&emsp;</label>
                         <input type="text" id="search" class="form-control-lg">
                     </li>
                     <li>
@@ -558,8 +550,8 @@
 
             // 设置专有属性名称与类型的默认值
             edit = el.parentNode.previousElementSibling.children[0].innerHTML;
-            let e = el.parentNode.previousElementSibling.children[0].innerHTML;
-            let t = el.parentNode.previousElementSibling.children[1].children[0].innerHTML;
+            const e = el.parentNode.previousElementSibling.children[0].innerHTML;
+            const t = el.parentNode.previousElementSibling.children[1].children[0].innerHTML;
             $("#editOne").val(e);
             $("#editType").val(t);
 
