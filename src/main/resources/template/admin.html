@@ -562,14 +562,14 @@
                     return;
                 } else {
 
-                    if (edit.includes(",") || edit.includes(" ")) {
-                        msg = 'The value cannot contain ","and" ".'
+                    // 属性不能重复
+                    if (hasDuplicates(speciality)) {
+                        speciality.pop();
+                        msg = "Cannot enter duplicate attributes."
                         openTipModal();
                         return;
                     }
-
-                    // 属性不能重复
-                    if (hasDuplicates(speciality)) {
+                    if(speciality.includes(edit)){
                         msg = "Cannot enter duplicate attributes."
                         openTipModal();
                         return;
@@ -830,15 +830,12 @@
                     openTipModal();
                     return;
                 }
-                if (add.includes(",") || add.includes(" ")) {
-                    msg = 'The value cannot contain ","and" ".'
-                    openTipModal();
-                    return;
-                }
 
                 speciality.push(add);
+
                 // 属性不能重复
                 if (hasDuplicates(speciality)) {
+                    speciality.pop();
                     msg = "Cannot enter duplicate attributes."
                     openTipModal();
                     return;
