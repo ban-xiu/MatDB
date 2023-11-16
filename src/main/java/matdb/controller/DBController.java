@@ -1,8 +1,9 @@
 package matdb.controller;
 
-import matdb.entity.DBEntity;
-import matdb.vo.req.ChangeDBCardReq;
-import matdb.vo.req.TemplateReq;
+import matdb.dto.DBCardDto;
+import matdb.dto.DBInfoDto;
+import matdb.req.ChangeDBCardReq;
+import matdb.req.TemplateReq;
 import matdb.service.DBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +23,15 @@ public class DBController {
         dbService.templateSave(templateReq);
     }
     @GetMapping("/findDBInof")
-    public List<DBEntity> findDBInof(@RequestParam("username") String username){
+    public List<DBInfoDto> findDBInof(@RequestParam("username") String username){
         System.out.println("findDBInof:" + username);
-        List<DBEntity> dbs = dbService.findDBInof(username);
-        return dbs;
+        List<DBInfoDto> infos = dbService.findDBInof(username);
+        return infos;
     }
     @GetMapping("/findDBCard")
-    public DBEntity findDBCard(@RequestParam("id") String id){
+    public DBCardDto findDBCard(@RequestParam("id") String id){
         System.out.println("findDBCard:" + id);
-        DBEntity card = dbService.findDBCard(id);
+        DBCardDto card = dbService.findDBCard(id);
         System.out.println("findDBCard:" + card);
         return card;
     }

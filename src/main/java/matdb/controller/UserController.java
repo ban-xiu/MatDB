@@ -1,6 +1,6 @@
 package matdb.controller;
 
-import matdb.vo.req.SignAboutReq;
+import matdb.req.SignAboutReq;
 import matdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

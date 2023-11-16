@@ -1,14 +1,17 @@
 package matdb.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import matdb.dto.MatDto;
 import matdb.entity.MatEntity;
 
 import matdb.repository.MatRepository;
-import matdb.vo.req.FileReq;
-import matdb.vo.req.SaveReq;
-import matdb.vo.req.UpdateReq;
+import matdb.req.FileReq;
+import matdb.req.SaveReq;
+import matdb.req.UpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,37 +20,60 @@ public class MatService {
     @Autowired
     MatRepository matrepository;
 
-    public List<MatEntity> findAll(String uid){
-        List<MatEntity> mats = matrepository.findAllByUid(uid);
+    public List<MatDto> findAll(String uid){
+        List<MatEntity> allMatList = matrepository.findAllByUid(uid);
+        List<MatDto> mats = new ArrayList<>();
+        for (MatEntity oneMat : allMatList) {
+            MatDto mat = new MatDto();
+            BeanUtil.copyProperties(oneMat, mat);
+            mats.add(mat);
+        }
         return mats;
     }
 
     public void deleteById(String id){
-        matrepository.deleteById(id);
+        try {
+            matrepository.deleteById(id);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
 
     public void save(SaveReq saveReq){
         MatEntity mat = saveReq.getMatEntity();
-        matrepository.save(mat);
+        try {
+            matrepository.save(mat);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public MatEntity findByCid(String cid){
+    public MatDto findByCid(String cid){
         Optional<MatEntity> matOption = matrepository.findById(cid);
-        MatEntity mat = matOption.get();
+        MatEntity oneMat = matOption.get();
+        MatDto mat = new MatDto();
+        BeanUtil.copyProperties(oneMat, mat);
         return mat;
     }
 
     public void update(UpdateReq updateReq){
         MatEntity mat = updateReq.getMatEntity();
-        matrepository.deleteById(mat.getId());
-        matrepository.save(mat);
+        try {
+            matrepository.deleteById(mat.getId());
+            matrepository.save(mat);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
+
     public void addFile(FileReq file){
         MatEntity[] mats = file.getMatEntities();
-        System.out.println(mats);
-        for (MatEntity mat : mats) {
-            matrepository.save(mat);
+        try {
+            for (MatEntity mat : mats) {
+                matrepository.save(mat);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

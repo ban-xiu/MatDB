@@ -1,14 +1,18 @@
 package matdb.service;
 
+import cn.hutool.core.bean.BeanUtil;
+import matdb.dto.DBCardDto;
+import matdb.dto.DBInfoDto;
 import matdb.entity.DBEntity;
 
 import matdb.repository.DBRepository;
 import matdb.repository.MatRepository;
-import matdb.vo.req.ChangeDBCardReq;
-import matdb.vo.req.TemplateReq;
+import matdb.req.ChangeDBCardReq;
+import matdb.req.TemplateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,21 +24,33 @@ public class DBService {
     MatRepository matrepository;
     public void templateSave(TemplateReq templateReq){
         DBEntity db= templateReq.getDbEntity();
-        dbrepository.save(db);
+        try {
+            dbrepository.save(db);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
-    public List<DBEntity> findDBInof(String username){
+    public List<DBInfoDto> findDBInof(String username){
         List<DBEntity> dbs = dbrepository.findAllByUsername(username);
-        return dbs;
+        List<DBInfoDto> infos = new ArrayList<>();
+        for (DBEntity db : dbs) {
+            DBInfoDto info = new DBInfoDto();
+            BeanUtil.copyProperties(db, info);
+            infos.add(info);
+        }
+        return infos;
     }
 
-    public DBEntity findDBCard(String id){
+    public DBCardDto findDBCard(String id){
         Optional<DBEntity> dbOption = dbrepository.findById(id);
         if (!dbOption.isPresent()){
             return null;
         }
         DBEntity db = dbOption.get();
-        return db;
+        DBCardDto card = new DBCardDto();
+        BeanUtil.copyProperties(db, card);
+        return card;
     }
     public void changDBCard(ChangeDBCardReq changeDBCardReq){
         DBEntity dbCard = changeDBCardReq.getDbEntity();
@@ -48,8 +64,12 @@ public class DBService {
         DBEntity db = dbOption.get();
         db.setTitle(title);
         db.setIntroduction(introduction);
-        dbrepository.deleteById(id);
-        dbrepository.save(db);
+        try {
+            dbrepository.deleteById(id);
+            dbrepository.save(db);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void destroy(String uid){

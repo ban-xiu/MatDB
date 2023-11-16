@@ -1,4 +1,4 @@
-package matdb.vo.req;
+package matdb.req;
 
 public class SignAboutReq {
     private String username;

@@ -2,7 +2,7 @@ package matdb.service;
 
 import matdb.entity.UserEntity;
 import matdb.repository.UserRepository;
-import matdb.vo.req.SignAboutReq;
+import matdb.req.SignAboutReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,6 @@ public class UserService {
             return "Wrong password.";
         }
 
-        // 登录成功
         return "Login succeeded.";
     }
     public String signUp(SignAboutReq signUpReq){
@@ -57,6 +56,10 @@ public class UserService {
         }
         UserEntity user = userOption.get();
         user.setPassword(newPassword);
-        userrepository.save(user);
+        try {
+            userrepository.save(user);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

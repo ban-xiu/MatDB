@@ -1,38 +1,29 @@
-package matdb.entity;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+package matdb.dto;
 
 import java.util.Arrays;
 
-@Document(collection = "matTemplates")
-public class DBEntity {
-    @Id
+public class DBCardDto {
     private String id;
-    @Field("title")
+
     private String title;
-    @Field("introduction")
+
     private String introduction;
-    @Field("type")
+
     private String type;
-    @Field("username")
-    private String username;
-    @Field("speciality")
+
     private String[] speciality;
 
-    @Field("specialityType")
     private String[] specialityType;
-    @Field("img")
-    private byte[] img;
-    public DBEntity(){};
 
-    public DBEntity(String id, String title, String introduction, String type, String username, String[] speciality, String[] specialityType, byte[] img) {
+    private byte[] img;
+
+    public DBCardDto(){}
+
+    public DBCardDto(String id, String title, String introduction, String type, String[] speciality, String[] specialityType, byte[] img) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.type = type;
-        this.username = username;
         this.speciality = speciality;
         this.specialityType = specialityType;
         this.img = img;
@@ -70,14 +61,6 @@ public class DBEntity {
         this.type = type;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String[] getSpeciality() {
         return speciality;
     }
@@ -104,12 +87,11 @@ public class DBEntity {
 
     @Override
     public String toString() {
-        return "DBEntity{" +
+        return "DBCardDto{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", type='" + type + '\'' +
-                ", username='" + username + '\'' +
                 ", speciality=" + Arrays.toString(speciality) +
                 ", specialityType=" + Arrays.toString(specialityType) +
                 ", img=" + Arrays.toString(img) +
