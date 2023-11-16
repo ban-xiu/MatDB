@@ -11,13 +11,13 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
-    UserRepository userrepository;
+    UserRepository userRepository;
     public String signIn(SignAboutReq signInReq) {
 
         String username = signInReq.getUsername();
         String password = signInReq.getPassword();
 
-        Optional<UserEntity> userOption = userrepository.findByUsername(username);
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
 
         if (userOption.isEmpty()) {
             return "The user does not exist.";
@@ -36,12 +36,12 @@ public class UserService {
         String username = signUpReq.getUsername();
         String password = signUpReq.getPassword();
 
-        Optional<UserEntity> userOption = userrepository.findByUsername(username);
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (userOption.isPresent()){
             return "This username is already taken.";
         }
         UserEntity user = new UserEntity(null,username,password);
-        userrepository.save(user);
+        userRepository.save(user);
         return "The task has been submitted.";
     }
 
@@ -50,14 +50,14 @@ public class UserService {
         String username = changPwdReq.getUsername();
         String newPassword = changPwdReq.getPassword();
 
-        Optional<UserEntity> userOption =userrepository.findByUsername(username);
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (!userOption.isPresent()){
             return;
         }
         UserEntity user = userOption.get();
         user.setPassword(newPassword);
         try {
-            userrepository.save(user);
+            userRepository.save(user);
         }catch (Exception e){
             e.printStackTrace();
         }

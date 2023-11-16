@@ -18,10 +18,10 @@ import java.util.Optional;
 @Service
 public class MatService {
     @Autowired
-    MatRepository matrepository;
+    MatRepository matRepository;
 
     public List<MatDto> findAll(String uid){
-        List<MatEntity> allMatList = matrepository.findAllByUid(uid);
+        List<MatEntity> allMatList = matRepository.findAllByUid(uid);
         List<MatDto> mats = new ArrayList<>();
         for (MatEntity oneMat : allMatList) {
             MatDto mat = new MatDto();
@@ -33,7 +33,7 @@ public class MatService {
 
     public void deleteById(String id){
         try {
-            matrepository.deleteById(id);
+            matRepository.deleteById(id);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -42,14 +42,14 @@ public class MatService {
     public void save(SaveReq saveReq){
         MatEntity mat = saveReq.getMatEntity();
         try {
-            matrepository.save(mat);
+            matRepository.save(mat);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     public MatDto findByCid(String cid){
-        Optional<MatEntity> matOption = matrepository.findById(cid);
+        Optional<MatEntity> matOption = matRepository.findById(cid);
         MatEntity oneMat = matOption.get();
         MatDto mat = new MatDto();
         BeanUtil.copyProperties(oneMat, mat);
@@ -59,8 +59,8 @@ public class MatService {
     public void update(UpdateReq updateReq){
         MatEntity mat = updateReq.getMatEntity();
         try {
-            matrepository.deleteById(mat.getId());
-            matrepository.save(mat);
+            matRepository.deleteById(mat.getId());
+            matRepository.save(mat);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -70,7 +70,7 @@ public class MatService {
         MatEntity[] mats = file.getMatEntities();
         try {
             for (MatEntity mat : mats) {
-                matrepository.save(mat);
+                matRepository.save(mat);
             }
         }catch (Exception e){
             e.printStackTrace();

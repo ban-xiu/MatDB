@@ -19,30 +19,31 @@ public class DBController {
 
     @PostMapping("/templateSave")
     public void templateSave(@RequestBody TemplateReq templateReq){
-        System.out.println("templateSave:" + templateReq.toString());
+        System.out.println("\ntemplateSave:" + templateReq.toString());
         dbService.templateSave(templateReq);
     }
     @GetMapping("/findDBInof")
     public List<DBInfoDto> findDBInof(@RequestParam("username") String username){
-        System.out.println("findDBInof:" + username);
+        System.out.println("\nfindDBInof:" + username);
         List<DBInfoDto> infos = dbService.findDBInof(username);
+        System.out.println("\nfindDBInof:" + infos.toString());
         return infos;
     }
     @GetMapping("/findDBCard")
     public DBCardDto findDBCard(@RequestParam("id") String id){
-        System.out.println("findDBCard:" + id);
+        System.out.println("\nfindDBCard:" + id);
         DBCardDto card = dbService.findDBCard(id);
-        System.out.println("findDBCard:" + card);
+        System.out.println("\nfindDBCard:" + card.toString());
         return card;
     }
     @PostMapping("/changeDBCard")
     public void changDBCard(@RequestBody ChangeDBCardReq changeDBCardReq){
-        System.out.println("changeDBCard:" + changeDBCardReq.toString());
+        System.out.println("\nchangeDBCard:" + changeDBCardReq.toString());
         dbService.changDBCard(changeDBCardReq);
     }
     @DeleteMapping("/destroy")
     public void destroy(@RequestParam("uid") String id){
-        System.out.println("destroy:" + id);
+        System.out.println("\ndestroy:" + id);
         dbService.destroy(id);
     }
 

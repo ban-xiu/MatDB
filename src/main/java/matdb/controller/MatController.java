@@ -17,36 +17,36 @@ public class MatController {
     MatService matService;
     @GetMapping("/findAll")
     public List<MatDto> findAll(@RequestParam String uid){
-        System.out.println("findAll:" + uid);
+        System.out.println("\nfindAll:" + uid);
         List<MatDto> mats = matService.findAll(uid);
+        System.out.println("\nfindAll:" + mats.toString());
         return mats;
     }
     @DeleteMapping("/deleteById")
     public void deleteById(@RequestParam("id") String id){
-        System.out.println("deleteById:" + id);
+        System.out.println("\ndeleteById:" + id);
         matService.deleteById(id);
     }
     @PostMapping("/save")
     public void save(@RequestBody SaveReq saveReq){
-        System.out.println("save:" + saveReq.toString());
+        System.out.println("\nsave:" + saveReq.toString());
         matService.save(saveReq);
     }
     @GetMapping("/findByCid")
     public MatDto findByCid(@RequestParam("cid") String cid){
-        System.out.println("findByCid:" + cid);
+        System.out.println("\nfindByCid:" + cid);
         MatDto mat = matService.findByCid(cid);
-        System.out.println(mat);
+        System.out.println("\nfindByCid:" + mat.toString());
         return mat;
     }
     @PutMapping("/update")
     public void update(@RequestBody UpdateReq updateReq) {
-        System.out.println("update:" + updateReq.toString());
+        System.out.println("\nupdate:" + updateReq.toString());
         matService.update(updateReq);
     }
     @PostMapping("/addFile")
     public void addFile(@RequestBody FileReq file){
-        System.out.println(file);
-        System.out.println("file:");
+        System.out.println("\nfile:" + file.toString());
         matService.addFile(file);
     }
 }

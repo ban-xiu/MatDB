@@ -19,20 +19,20 @@ import java.util.Optional;
 @Service
 public class DBService {
     @Autowired
-    DBRepository dbrepository;
+    DBRepository dbRepository;
     @Autowired
-    MatRepository matrepository;
+    MatRepository matRepository;
     public void templateSave(TemplateReq templateReq){
         DBEntity db= templateReq.getDbEntity();
         try {
-            dbrepository.save(db);
+            dbRepository.save(db);
         }catch (Exception e){
             e.printStackTrace();
         }
     }
 
     public List<DBInfoDto> findDBInof(String username){
-        List<DBEntity> dbs = dbrepository.findAllByUsername(username);
+        List<DBEntity> dbs = dbRepository.findAllByUsername(username);
         List<DBInfoDto> infos = new ArrayList<>();
         for (DBEntity db : dbs) {
             DBInfoDto info = new DBInfoDto();
@@ -43,7 +43,7 @@ public class DBService {
     }
 
     public DBCardDto findDBCard(String id){
-        Optional<DBEntity> dbOption = dbrepository.findById(id);
+        Optional<DBEntity> dbOption = dbRepository.findById(id);
         if (!dbOption.isPresent()){
             return null;
         }
@@ -57,7 +57,7 @@ public class DBService {
         String title = dbCard.getTitle();
         String introduction = dbCard.getIntroduction();
         String id = dbCard.getId();
-        Optional<DBEntity> dbOption = dbrepository.findById(id);
+        Optional<DBEntity> dbOption = dbRepository.findById(id);
         if (!dbOption.isPresent()){
             return;
         }
@@ -65,8 +65,8 @@ public class DBService {
         db.setTitle(title);
         db.setIntroduction(introduction);
         try {
-            dbrepository.deleteById(id);
-            dbrepository.save(db);
+            dbRepository.deleteById(id);
+            dbRepository.save(db);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -74,8 +74,8 @@ public class DBService {
 
     public void destroy(String uid){
         try {
-            matrepository.deleteByUid(uid);
-            dbrepository.deleteById(uid);
+            matRepository.deleteByUid(uid);
+            dbRepository.deleteById(uid);
         }catch (Exception e){
             e.printStackTrace();
         }
