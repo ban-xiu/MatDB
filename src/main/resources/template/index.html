@@ -335,24 +335,25 @@
     for (let i = 0; i < list.length; i++) {
       let obj = truncateValues(list[i]);
       html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
-      html += `<th scope="row">${obj.id}</th>`;
-      html += `<td col="0">${obj.structure}</td>`;
-      html += `<td col="1">${obj.name}</td>`;
-      html += `<td col="2">${obj.symmetry}</td>`;
-      html += `<td col="3">${obj.metal}</td>`;
-      html += `<td col="4">${obj.bandgappbe}</td>`;
-      html += `<td col="5">${obj.bandgaphse}</td>`;
-      html += `<td col="6">${obj.doi}</td>`;
-      html += `<td col="7">${obj.url}</td>`;
-      html += `<td col="8">${obj.publication}</td>`;
+      html += `<th scope="row" title="${obj.id}">${obj.id}</th>`;
+      html += `<td col="0" title="${obj.structure}">${obj.structure}</td>`;
+      html += `<td col="1" title="${obj.formula}">${obj.formula}</td>`;
+      html += `<td col="2" title="${obj.name}">${obj.name}</td>`;
+      html += `<td col="3" title="${obj.symmetry}">${obj.symmetry}</td>`;
+      html += `<td col="4" title="${obj.metal}">${obj.metal}</td>`;
+      html += `<td col="5" title="${obj.bandgappbe}">${obj.bandgappbe}</td>`;
+      html += `<td col="6" title="${obj.bandgaphse}">${obj.bandgaphse}</td>`;
+      html += `<td col="7" title="${obj.doi}">${obj.doi}</td>`;
+      html += `<td col="8" title="${obj.url}">${obj.url}</td>`;
+      html += `<td col="9" title="${obj.publication}">${obj.publication}</td>`;
       if (obj.speciality) {
         if (JSON.stringify(speciality) != '[""]') {
           for (let j = 0; j < obj.speciality.length; j++) {
             if (obj.speciality[j]) {
-              html += `<td col="${9 + j}">${obj.speciality[j]}</td>`;
+              html += `<td col="${10 + j}">${obj.speciality[j]}</td>`;
             }
             else {
-              html += `<td col="${9 + j}">null</td>`;
+              html += `<td col="${10 + j}">null</td>`;
             }
           }
         }
@@ -360,7 +361,7 @@
       else {
         if (JSON.stringify(speciality) != '[""]') {
           for (let j = 0; j < speciality.length; j++) {
-            html += `<td col="${9 + j}">null</td>`;
+            html += `<td col="${10 + j}">null</td>`;
           }
         }
       }
@@ -385,13 +386,14 @@
 
   // 创建Show弹窗选项方法
   function createShow(speciality) {
-    let group = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
+    let group = ["Structure", "Formula", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
     let html = ``;
     for (let i = 0; i < group.length; i++) {
       if (group[i] != "") {
         html += `<div class="form-group col-md-4">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="option" value="${i}" id="show${i}" checked>
+                <input class="form-check-input" type="checkbox" name="option"
+                value="${i}" id="show${i}" checked>
                 <label class="form-check-label" for="show${i}">
                   ${group[i]}
                 </label>
@@ -560,7 +562,7 @@
       $("#delete").css("display", "none");
     }
 
-    // 在Tip1弹窗中提交Add,Update,Delete任务，并打开Tip2弹窗
+    // 在Tip1弹窗中提交各种任务，并打开Tip2弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
         axios.post("http://127.0.0.1:8080/save", {
@@ -597,10 +599,6 @@
           console.error(err)
           return;
         })
-      }
-      if (msg1 == "Are you sure to go back?") {
-        location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`);
-        return;
       }
       if (msg1 == "Are you sure to change it?") {
         axios.post("http://127.0.0.1:8080/changeDBCard", {
@@ -649,10 +647,9 @@
       return;
     });
 
-    // Back提示
+    // Back返回
     $("#back").click(function () {
-      msg1 = "Are you sure to go back?";
-      openTipModal1();
+      location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`);
     })
 
     // Add提示
@@ -743,16 +740,15 @@
 
       // 创建Show选项
       $("#showChoose").append(createShow(speciality));
+
       // 创建一个空数组用于存储选中的值
-      var showOptions = [];
+      let showOptions = [];
 
       // 获取所有多选框元素
       const checkboxes = $('input[type="checkbox"]');
 
       // 遍历每个多选框元素
       checkboxes.each(function () {
-        //默认情况下都展示
-        showOptions.push($(this).val());
         // 添加事件监听器，当多选框状态改变时触发
         $(this).on('change', function () {
           // 检查多选框是否被选中
@@ -768,7 +764,7 @@
           }
 
           // 打印当前选中的值
-          console.log('当前选中的值: ' + showOptions);
+          console.log('showOptions: ' + showOptions);
           // 显示或隐藏子元素
           hideOrShowChildElements(showOptions);
 
@@ -828,6 +824,11 @@
       const $saveStructure = $('#addStructure');
       $saveStructure.on('change', function () {
         add.structure = $saveStructure.val();
+      });
+
+      const $saveFormula = $('#addFormula');
+      $saveFormula.on('change', function () {
+        add.formula = $saveFormula.val();
       });
 
       const $saveName = $('#addName');
@@ -901,6 +902,7 @@
         add.speciality = [];
         addFlag = true;
         $saveStructure.val(undefined);
+        $saveFormula.val(undefined);
         $saveName.val(undefined);
         $saveSymmetry.val(undefined);
         $saveMetal.val(undefined);
@@ -932,6 +934,7 @@
             mat.id = res.data.id;
             mat.uid = res.data.uid;
             mat.structure = res.data.structure;
+            mat.formula = res.data.formula;
             mat.name = res.data.name;
             mat.symmetry = res.data.symmetry;
             mat.metal = res.data.metal;
@@ -947,6 +950,12 @@
             $inputStructure.val(res.data.structure);
             $inputStructure.on('change', function () {
               mat.structure = $inputStructure.val();
+            });
+
+            const $inputFormula = $('#updateFormula');
+            $inputFormula.val(res.data.formula);
+            $inputFormula.on('change', function () {
+              mat.formula = $inputFormula.val();
             });
 
             const $inputName = $('#updateName');
@@ -1045,6 +1054,7 @@
               mat = {};
               matFlag = true;
               $inputStructure.val(undefined);
+              $inputFormula.val(undefined);
               $inputName.val(undefined);
               $inputSymmetry.val(undefined);
               $inputMetal.val(undefined);
@@ -1079,10 +1089,13 @@
         return;
       }
 
-      // 打开卡片弹窗
-      if (username != "user") {
-        $("#cardModal").modal('show');
+      // user用户不能操作
+      if (username === "user") {
+        return;
       }
+
+      // 打开卡片弹窗
+      $("#cardModal").modal('show');
 
       // 修改标题与介绍的默认值
       const $newTitle = $('#title');
@@ -1122,7 +1135,6 @@
         color: "0xFFFFF1",
         use: "HTML5",
         j2sPath: "jsmol/j2s",
-        // serverURL: "https://chemapps.stolaf.edu/jmol/jsmol/php/jsmol.php",
         isSigned: true,
         script: "set zoomlarge false;set antialiasDisplay;load DATA 'model' vasp " + mat.structure + "\nEND 'model'",
         disableJ2SLoadMonitor: true,
@@ -1142,8 +1154,7 @@
           let title;
           let isNull;
           if (specialityType[i] == "Scalar") {
-            title = "Scalar";
-            str = `<p class="infop scalar" title="${title}">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
+            str = `<p class="infop scalar">${speciality[i]}:&emsp;<span id="Info${i}"></span></p>`;
             $("#scalar").next("hr").after($(str))
           }
           if (specialityType[i] == "Vector") {
@@ -1184,18 +1195,26 @@
       }
 
       // Detail文本内容
-      $("#structureInfo").text(mat.structure ? mat.structure : "Null")
-      $("#nameInfo").text(mat.name ? mat.name : "Null")
-      $("#symmetryInfo").text(mat.symmetry ? mat.symmetry : "Null")
-      $("#metalInfo").text(mat.metal ? mat.metal : "Null")
-      $("#PBEInfo").text(mat.bandgappbe ? mat.bandgappbe : "Null")
-      $("#HSEInfo").text(mat.bandgaphse ? mat.bandgaphse : "Null")
-      $("#doiInfo").text(mat.doi ? mat.doi : "Null")
-      $("#urlInfo").text(mat.url ? mat.url : "Null")
-      $("#publicationInfo").text(mat.publication ? mat.publication : "Null")
 
+      // 设置内容与标题
+      $("#formulaInfo").text(mat.formula ? mat.formula : "Null").parent().attr('title', mat.formula ? mat.formula : "Null");
+      $("#nameInfo").text(mat.name ? mat.name : "Null").parent().attr('title', mat.name ? mat.name : "Null");
+      $("#symmetryInfo").text(mat.symmetry ? mat.symmetry : "Null").parent().attr('title', mat.symmetry ? mat.symmetry : "Null");
+      $("#metalInfo").text(mat.metal ? mat.metal : "Null").parent().attr('title', mat.metal ? mat.metal : "Null");
+      $("#PBEInfo").text(mat.bandgappbe ? mat.bandgappbe : "Null").parent().attr('title', mat.bandgappbe ? mat.bandgappbe : "Null");
+      $("#HSEInfo").text(mat.bandgaphse ? mat.bandgaphse : "Null").parent().attr('title', mat.bandgaphse ? mat.bandgaphse : "Null");
+      $("#doiInfo").text(mat.doi ? mat.doi : "Null").parent().attr('title', mat.doi ? mat.doi : "Null");
+      $("#publicationInfo").text(mat.publication ? mat.publication : "Null").parent().attr('title', mat.publication ? mat.publication : "Null");
+
+      // 关于VASP
+      $("#structureInfo").text(mat.structure ? "VASP" : "Null").parent().attr('title', mat.structure ? mat.structure : "Null");
+
+      // 关于Link
+      $("#urlInfo").html(mat.url ? `<a href="${mat.url}" target="_blank" style="color: white;">Link</a>` : "Null").parent().attr('title', mat.url ? mat.url : "Null");
+
+      // 关于其他
       for (let i = 0; i < mat.speciality.length; i++) {
-        $(`#Info${i}`).text(mat.speciality[i] ? mat.speciality[i] : "Null")
+        $(`#Info${i}`).text(mat.speciality[i] ? mat.speciality[i] : "Null").parent().attr('title', mat.speciality[i] ? mat.speciality[i] : "Null");
       }
 
       // 导出JSON文件功能
@@ -1218,6 +1237,7 @@
         const specialityData = (mat.speciality === undefined || !mat.speciality[0]) ? undefined : mat.speciality;
         const defVal = {
           "Structure": mat.structure,
+          "Formula": mat.formula,
           "Name": mat.name,
           "Symmetry": mat.symmetry,
           "Metal": mat.metal,
@@ -1399,7 +1419,7 @@
         Object.keys(obj).forEach(function (key) {
 
           // 修改键名并存储到新的对象中
-          if (key === "Structure" || key === "Name" || key === "Symmetry" || key === "Metal" || key === "DOI" || key === "URL" || key === "Publication") {
+          if (key === "Structure" || key === "Formula" || key === "Name" || key === "Symmetry" || key === "Metal" || key === "DOI" || key === "URL" || key === "Publication") {
             newObj[key.toLocaleLowerCase()] = obj[key];
           }
           if (key === "Bandgap-PBE(ev)") {
@@ -1466,7 +1486,7 @@
       }
 
       // 判断headers包含需要的字段
-      let requiredHeaders = ["Structure", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
+      let requiredHeaders = ["Structure", "Formula", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
 
       requiredHeaders.forEach(header => {
         if (!headers.includes(header)) {
@@ -1587,6 +1607,10 @@
             <textarea class="form-control" id="addStructure"></textarea>
           </div>
           <div class="form-group col-6">
+            <label for="addFormula">Formula</label>
+            <textarea class="form-control" id="addFormula"></textarea>
+          </div>
+          <div class="form-group col-6">
             <label for="addName">Name</label>
             <textarea class="form-control" id="addName"></textarea>
           </div>
@@ -1643,6 +1667,7 @@
         <div id="fileText">
           <P>Only XLSX or JSON file containing the following table headers can be accepted:</P>
           <span>Structure</span>
+          <span>Formula</span>
           <span>Name</span>
           <span>Symmetry</span>
           <span>Metal</span>
@@ -1676,7 +1701,7 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+      <div class="modal-body row_Y">
         <form>
           <div class="form-row" id="showChoose">
 
@@ -1728,14 +1753,16 @@
         <div id="infos" style="position: absolute; left: 45vw;">
           <small id="scalar">Scalar</small>
           <hr />
-          <p class="infop scalar" title="Scalar">Name:&emsp;<span id="nameInfo"></span></p>
-          <p class="infop scalar" title="Scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
-          <p class="infop scalar" title="Scalar">Metal:&emsp;<span id="metalInfo"></span></p>
-          <p class="infop scalar" title="Scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
-          <p class="infop scalar" title="Scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
-          <p class="infop scalar" title="Scalar">DOI:&emsp;<span id="doiInfo"></span></p>
-          <p class="infop scalar" title="Scalar">URL:&emsp;<span id="urlInfo"></span></p>
-          <p class="infop scalar" title="Scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
+          <p class="infop scalar">Structure:&emsp;<span id="structureInfo"></span></p>
+          <p class="infop scalar">Formula:&emsp;<span id="formulaInfo"></span></p>
+          <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
+          <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
+          <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
+          <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
+          <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
+          <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
+          <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
+          <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
           <br />
           <hr /><small id="vector">Vector</small>
           <hr />
@@ -1767,9 +1794,15 @@
       <div class="modal-body row_Y">
 
         <div class="form-row" id="updateArea">
+
           <div class="form-group col-6">
             <label for="updateStructure">Structure</label>
             <textarea class="form-control" id="updateStructure"></textarea>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="updateFormula">Formula</label>
+            <textarea class="form-control" id="updateFormula"></textarea>
           </div>
 
           <div class="form-group col-6">
@@ -1887,6 +1920,7 @@
         <tr id="tr">
           <th scope="col">ID</th>
           <th scope="col">Structure</th>
+          <th scope="col">Formula</th>
           <th scope="col">Name</th>
           <th scope="col">Symmetry</th>
           <th scope="col">Metal</th>

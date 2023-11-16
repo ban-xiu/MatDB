@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.Arrays;
+
 
 @Document(collection = "matData")
 public class MatEntity {
@@ -15,6 +17,8 @@ public class MatEntity {
     private String id;
     @Field("structure")
     private String structure;
+    @Field("formula")
+    private String formula;
     @Field("name")
     private String name;
     @Field("symmetry")
@@ -36,10 +40,11 @@ public class MatEntity {
 
     public MatEntity(){};
 
-    public MatEntity(String uid, String id, String structure, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
+    public MatEntity(String uid, String id, String structure, String formula, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
         this.uid = uid;
         this.id = id;
         this.structure = structure;
+        this.formula = formula;
         this.name = name;
         this.symmetry = symmetry;
         this.metal = metal;
@@ -73,6 +78,14 @@ public class MatEntity {
 
     public void setStructure(String structure) {
         this.structure = structure;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
     }
 
     public String getName() {
@@ -145,5 +158,24 @@ public class MatEntity {
 
     public void setSpeciality(String[] speciality) {
         this.speciality = speciality;
+    }
+
+    @Override
+    public String toString() {
+        return "MatEntity{" +
+                "uid='" + uid + '\'' +
+                ", id='" + id + '\'' +
+                ", structure='" + structure + '\'' +
+                ", formula='" + formula + '\'' +
+                ", name='" + name + '\'' +
+                ", symmetry='" + symmetry + '\'' +
+                ", metal='" + metal + '\'' +
+                ", bandgappbe='" + bandgappbe + '\'' +
+                ", bandgaphse='" + bandgaphse + '\'' +
+                ", doi='" + doi + '\'' +
+                ", url='" + url + '\'' +
+                ", publication='" + publication + '\'' +
+                ", speciality=" + Arrays.toString(speciality) +
+                '}';
     }
 }

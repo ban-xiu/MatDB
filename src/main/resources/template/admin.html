@@ -549,8 +549,8 @@
             $('#editModal').modal('show');
 
             // 设置专有属性名称与类型的默认值
-            edit = el.parentNode.previousElementSibling.children[0].innerHTML;
             const e = el.parentNode.previousElementSibling.children[0].innerHTML;
+            edit = e;
             const t = el.parentNode.previousElementSibling.children[1].children[0].innerHTML;
             $("#editOne").val(e);
             $("#editType").val(t);
@@ -561,6 +561,12 @@
                     openTipModal()
                     return;
                 } else {
+
+                    if (edit.includes(",") || edit.includes(" ")) {
+                        msg = 'The value cannot contain ","and" ".'
+                        openTipModal();
+                        return;
+                    }
 
                     // 属性不能重复
                     if (hasDuplicates(speciality)) {
@@ -827,6 +833,11 @@
             $('#addSubmit').click(function () {
                 if (!add) {
                     msg = "Null value cannot be entered."
+                    openTipModal();
+                    return;
+                }
+                if (add.includes(",") || add.includes(" ")) {
+                    msg = 'The value cannot contain ","and" ".'
                     openTipModal();
                     return;
                 }
