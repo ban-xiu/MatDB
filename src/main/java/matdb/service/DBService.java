@@ -44,7 +44,7 @@ public class DBService {
 
     public DBCardDto findDBCard(String id){
         Optional<DBEntity> dbOption = dbRepository.findById(id);
-        if (!dbOption.isPresent()){
+        if (dbOption.isEmpty()){
             return null;
         }
         DBEntity db = dbOption.get();
@@ -58,7 +58,7 @@ public class DBService {
         String introduction = dbCard.getIntroduction();
         String id = dbCard.getId();
         Optional<DBEntity> dbOption = dbRepository.findById(id);
-        if (!dbOption.isPresent()){
+        if (dbOption.isEmpty()){
             return;
         }
         DBEntity db = dbOption.get();

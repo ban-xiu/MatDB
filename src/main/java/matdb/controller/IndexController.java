@@ -1,5 +1,6 @@
 package matdb.controller;
 
+import matdb.entity.UserEntity;
 import matdb.service.IndexService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +26,7 @@ public class IndexController {
         String password = indexService.findPassword(username);
         model.addAttribute("username", username);
         model.addAttribute("password",password);
-        System.out.println("\nadmin:\nusername:" + username);
+        System.out.println("\nadmin:\nusername:" + username + "password:" + password);
         return "admin";
     }
 
@@ -36,12 +37,14 @@ public class IndexController {
     }
 
     @GetMapping("/index")
-    public String index(@RequestParam("username") String username, @RequestParam("uid") String uid, Model model){
-        String password = indexService.findPassword(username);
+    public String index(@RequestParam("uid") String uid, Model model){
+        UserEntity user = indexService.findUser(uid);
+        String username = user.getUsername();
+        String password = user.getPassword();
         model.addAttribute("uid",uid);
         model.addAttribute("username",username);
         model.addAttribute("password",password);
-        System.out.println("\nindex:\nuid:" + uid + "username:" + username);
+        System.out.println("\nindex:\nuid:" + uid + "username:" + username + "password:" + password);
         return "index";
     }
 }

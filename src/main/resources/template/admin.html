@@ -751,7 +751,7 @@
                 $("#sortable-view").append(html);
                 $(".toIndex").click(function () {
                     const uid = $(this).text();
-                    location.replace(`http://127.0.0.1:8080/index?username=${username}&uid=${uid}`);
+                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}`);
                 })
 
                 // 获取每张卡片的信息并拼接为长字符串
