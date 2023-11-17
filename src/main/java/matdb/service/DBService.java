@@ -48,6 +48,7 @@ public class DBService {
     public DBCardDto findDBCard(String id){
         Optional<DBEntity> dbOption = dbRepository.findById(id);
         if (dbOption.isEmpty()){
+            System.out.println("\nfindDBCard: null");
             return null;
         }
         DBEntity db = dbOption.get();
@@ -58,19 +59,18 @@ public class DBService {
 
     @Transactional
     public void changDBCard(ChangeDBCardReq changeDBCardReq){
-        DBEntity dbCard = changeDBCardReq.getDbEntity();
-        String title = dbCard.getTitle();
-        String introduction = dbCard.getIntroduction();
-        String id = dbCard.getId();
+        String id = changeDBCardReq.getId();
+        String title = changeDBCardReq.getTitle();
+        String introduction = changeDBCardReq.getIntroduction();
         Optional<DBEntity> dbOption = dbRepository.findById(id);
         if (dbOption.isEmpty()){
+            System.out.println("\nchangDBCard: null");
             return;
         }
         DBEntity db = dbOption.get();
         db.setTitle(title);
         db.setIntroduction(introduction);
         try {
-            dbRepository.deleteById(id);
             dbRepository.save(db);
         }catch (Exception e){
             e.printStackTrace();

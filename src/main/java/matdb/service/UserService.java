@@ -56,6 +56,7 @@ public class UserService {
 
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (userOption.isEmpty()){
+            System.out.println("\nchangePassword: null");
             return;
         }
         UserEntity user = userOption.get();

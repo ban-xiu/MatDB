@@ -53,6 +53,10 @@ public class MatService {
 
     public MatDto findByCid(String cid){
         Optional<MatEntity> matOption = matRepository.findById(cid);
+        if (matOption.isEmpty()){
+            System.out.println("\nfindByCid: null");
+            return null;
+        }
         MatEntity mat = matOption.get();
         MatDto matDto = new MatDto();
         BeanUtil.copyProperties(mat, matDto);
@@ -61,9 +65,16 @@ public class MatService {
 
     @Transactional
     public void update(UpdateReq updateReq){
-        MatEntity mat = updateReq.getMatEntity();
+        MatEntity update = updateReq.getMatEntity();
+        String id = update.getId();
+        Optional<MatEntity> matOption = matRepository.findById(id);
+        if (matOption.isEmpty()){
+            System.out.println("\nupdate: null");
+            return;
+        }
+        MatEntity mat = matOption.get();
+        BeanUtil.copyProperties(update, mat);
         try {
-            matRepository.deleteById(mat.getId());
             matRepository.save(mat);
         }catch (Exception e){
             e.printStackTrace();

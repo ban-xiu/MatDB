@@ -19,6 +19,7 @@ public class IndexService {
     public String findPassword(String username){
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (userOption.isEmpty()){
+            System.out.println("\nfindPassword: null");
             return null;
         }
         UserEntity user = userOption.get();
@@ -29,12 +30,14 @@ public class IndexService {
     public UserEntity findUser(String uid){
         Optional<DBEntity> dbOption = dbRepository.findById(uid);
         if (dbOption.isEmpty()){
+            System.out.println("\nfindUser_db: null");
             return null;
         }
         DBEntity db = dbOption.get();
         String username = db.getUsername();
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (userOption.isEmpty()){
+            System.out.println("\nfindUser_user: null");
             return null;
         }
         UserEntity user = userOption.get();

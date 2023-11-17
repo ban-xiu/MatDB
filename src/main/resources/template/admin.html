@@ -562,6 +562,7 @@
                     return;
                 } else {
 
+                    // 不能有特殊符号
                     if (edit.includes(",") || edit.includes(" ")) {
                         msg = 'The value cannot contain ","and" ".'
                         openTipModal();
@@ -582,7 +583,7 @@
                     }
 
                     const inx = findInArray(speciality, e);
-                    if (inx) {
+                    if (inx >= 0) {
                         speciality[inx] = edit;
                         specialityType[inx] = $("#editType").val();
                         $("#dbInfo").empty();
@@ -831,11 +832,14 @@
             });
 
             $('#addSubmit').click(function () {
+
                 if (!add) {
                     msg = "Null value cannot be entered."
                     openTipModal();
                     return;
                 }
+
+                // 不能有特殊符号
                 if (add.includes(",") || add.includes(" ")) {
                     msg = 'The value cannot contain ","and" ".'
                     openTipModal();
@@ -978,7 +982,7 @@
                     return;
                 }
                 axios.put("http://127.0.0.1:8080/changePassword", {
-                    "username": username, "newPassword": newPassword1
+                    "username": username, "password": newPassword1
                 })
                     .then(res => {
                         console.log(res)

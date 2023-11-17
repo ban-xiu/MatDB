@@ -931,8 +931,11 @@
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": cid }
           }).then(res => {
+
+            // 使用当前uid
+            mat.uid = uid;
+
             mat.id = res.data.id;
-            mat.uid = res.data.uid;
             mat.structure = res.data.structure;
             mat.formula = res.data.formula;
             mat.name = res.data.name;
