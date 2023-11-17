@@ -11,6 +11,7 @@ import matdb.req.ChangeDBCardReq;
 import matdb.req.TemplateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,8 @@ public class DBService {
     DBRepository dbRepository;
     @Autowired
     MatRepository matRepository;
+
+    @Transactional
     public void templateSave(TemplateReq templateReq){
         DBEntity db= templateReq.getDbEntity();
         try {
@@ -52,6 +55,8 @@ public class DBService {
         BeanUtil.copyProperties(db, card);
         return card;
     }
+
+    @Transactional
     public void changDBCard(ChangeDBCardReq changeDBCardReq){
         DBEntity dbCard = changeDBCardReq.getDbEntity();
         String title = dbCard.getTitle();
@@ -72,6 +77,7 @@ public class DBService {
         }
     }
 
+    @Transactional
     public void destroy(String uid){
         try {
             matRepository.deleteByUid(uid);

@@ -17,24 +17,27 @@ public class IndexService {
     DBRepository dbRepository;
 
     public String findPassword(String username){
-        Optional<UserEntity> user = userRepository.findByUsername(username);
-        if (user.isEmpty()){
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
+        if (userOption.isEmpty()){
             return null;
         }
-        String password = user.get().getPassword();
+        UserEntity user = userOption.get();
+        String password = user.getPassword();
         return password;
     }
 
     public UserEntity findUser(String uid){
-        Optional<DBEntity> db = dbRepository.findById(uid);
-        if (db.isEmpty()){
+        Optional<DBEntity> dbOption = dbRepository.findById(uid);
+        if (dbOption.isEmpty()){
             return null;
         }
-        String username = db.get().getUsername();
-        Optional<UserEntity> user = userRepository.findByUsername(username);
-        if (user.isEmpty()){
+        DBEntity db = dbOption.get();
+        String username = db.getUsername();
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
+        if (userOption.isEmpty()){
             return null;
         }
-        return user.get();
+        UserEntity user = userOption.get();
+        return user;
     }
 }

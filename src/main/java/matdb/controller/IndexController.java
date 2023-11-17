@@ -26,7 +26,7 @@ public class IndexController {
         String password = indexService.findPassword(username);
         model.addAttribute("username", username);
         model.addAttribute("password",password);
-        System.out.println("\nadmin:\nusername:" + username + "password:" + password);
+        System.out.println("\nadmin: username:" + username + "password:" + password);
         return "admin";
     }
 
@@ -44,7 +44,7 @@ public class IndexController {
         model.addAttribute("uid",uid);
         model.addAttribute("username",username);
         model.addAttribute("password",password);
-        System.out.println("\nindex:\nuid:" + uid + "username:" + username + "password:" + password);
+        System.out.println("\nindex: uid:" + uid + "username:" + username + "password:" + password);
         return "index";
     }
 }

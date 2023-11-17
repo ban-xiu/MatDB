@@ -10,6 +10,7 @@ import matdb.req.SaveReq;
 import matdb.req.UpdateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +22,17 @@ public class MatService {
     MatRepository matRepository;
 
     public List<MatDto> findAll(String uid){
-        List<MatEntity> allMatList = matRepository.findAllByUid(uid);
-        List<MatDto> mats = new ArrayList<>();
-        for (MatEntity oneMat : allMatList) {
-            MatDto mat = new MatDto();
-            BeanUtil.copyProperties(oneMat, mat);
-            mats.add(mat);
+        List<MatEntity> mats = matRepository.findAllByUid(uid);
+        List<MatDto> matDtos = new ArrayList<>();
+        for (MatEntity mat : mats) {
+            MatDto matDto = new MatDto();
+            BeanUtil.copyProperties(mat, matDto);
+            matDtos.add(matDto);
         }
-        return mats;
+        return matDtos;
     }
 
+    @Transactional
     public void deleteById(String id){
         try {
             matRepository.deleteById(id);
@@ -39,6 +41,7 @@ public class MatService {
         }
     }
 
+    @Transactional
     public void save(SaveReq saveReq){
         MatEntity mat = saveReq.getMatEntity();
         try {
@@ -50,12 +53,13 @@ public class MatService {
 
     public MatDto findByCid(String cid){
         Optional<MatEntity> matOption = matRepository.findById(cid);
-        MatEntity oneMat = matOption.get();
-        MatDto mat = new MatDto();
-        BeanUtil.copyProperties(oneMat, mat);
-        return mat;
+        MatEntity mat = matOption.get();
+        MatDto matDto = new MatDto();
+        BeanUtil.copyProperties(mat, matDto);
+        return matDto;
     }
 
+    @Transactional
     public void update(UpdateReq updateReq){
         MatEntity mat = updateReq.getMatEntity();
         try {
@@ -66,6 +70,7 @@ public class MatService {
         }
     }
 
+    @Transactional
     public void addFile(FileReq file){
         MatEntity[] mats = file.getMatEntities();
         try {

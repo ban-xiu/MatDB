@@ -5,6 +5,7 @@ import matdb.repository.UserRepository;
 import matdb.req.SignAboutReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -31,6 +32,8 @@ public class UserService {
 
         return "Login succeeded.";
     }
+
+    @Transactional
     public String signUp(SignAboutReq signUpReq){
 
         String username = signUpReq.getUsername();
@@ -45,13 +48,14 @@ public class UserService {
         return "The task has been submitted.";
     }
 
+    @Transactional
     public void changePassword(SignAboutReq changPwdReq){
 
         String username = changPwdReq.getUsername();
         String newPassword = changPwdReq.getPassword();
 
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
-        if (!userOption.isPresent()){
+        if (userOption.isEmpty()){
             return;
         }
         UserEntity user = userOption.get();
