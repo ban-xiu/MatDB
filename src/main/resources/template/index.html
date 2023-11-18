@@ -392,8 +392,7 @@
       if (group[i] != "") {
         html += `<div class="form-group col-md-4">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="option"
-                value="${i}" id="show${i}" checked>
+                <input class="form-check-input" type="checkbox" name="option" value="${i}" id="show${i}" checked>
                 <label class="form-check-label" for="show${i}">
                   ${group[i]}
                 </label>
@@ -716,6 +715,7 @@
       axios.get("http://127.0.0.1:8080/findAll", {
         params: { "uid": uid }
       }).then(res => {
+        console.log(res)
 
         // 渲染表格
         $('#tbody').append(createTable(res.data, speciality))
@@ -723,7 +723,7 @@
         // 分页效果
         table = $('#myTable').DataTable({
           "pageLength": 5,
-          "lengthMenu": [5, 10, 25, 50, 100],
+          "lengthMenu": [1, 2, 3, 4, 5, 10, 15, 20, 25, 50, 100],
           "lengthChange": true,
           "paging": true,
           // 分页时也按需求展示
@@ -742,13 +742,15 @@
       $("#showChoose").append(createShow(speciality));
 
       // 创建一个空数组用于存储选中的值
-      let showOptions = [];
+      var showOptions = [];
 
       // 获取所有多选框元素
       const checkboxes = $('input[type="checkbox"]');
 
       // 遍历每个多选框元素
       checkboxes.each(function () {
+        //默认情况下都展示
+        showOptions.push($(this).val());
         // 添加事件监听器，当多选框状态改变时触发
         $(this).on('change', function () {
           // 检查多选框是否被选中
@@ -817,10 +819,11 @@
       // 创建Update输入框
       $("#updateArea").append(createUpdate(speciality))
 
-      // 获取Add输入框内容
+      // add初始化
       add.uid = uid;
       add.speciality = [];
 
+      // 获取Add输入框内容
       const $saveStructure = $('#addStructure');
       $saveStructure.on('change', function () {
         add.structure = $saveStructure.val();
@@ -931,6 +934,7 @@
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": cid }
           }).then(res => {
+            console.log(res)
 
             // 使用当前uid
             mat.uid = uid;
@@ -1122,9 +1126,7 @@
 
       Jmol._isAsync = false;
 
-      var jmolApplet0;
-
-      var s = document.location.search;
+      const s = document.location.search;
 
       Jmol._debugCode = (s.indexOf("debugcode") >= 0);
 
@@ -1146,7 +1148,7 @@
       }
 
       // 创建并初始化 Jmol applet 对象
-      jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
+      const jmolApplet0 = Jmol.getApplet("jmolApplet0", Info);
 
       $("#appdiv").html(Jmol.getAppletHtml("jmolApplet0", Info));
 

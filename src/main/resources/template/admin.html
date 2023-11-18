@@ -54,15 +54,35 @@
         overflow-y: auto;
     }
 
-    /*Search输入框样式*/
-    li {
+    /*li与Search输入框样式*/
+    .navbar.navbar-static-top {
+        margin-bottom: 0;
         display: flex;
-        align-items: center;
     }
 
-    li label {
-        margin-right: 10px;
-        font-weight: bold;
+    nav.navbar.navbar-static-top ul {
+        flex-grow: 1;
+    }
+
+    ul.navbar-left li {
+        margin-left: 4%;
+    }
+
+    ul.navbar-right li {
+        flex-grow: 1;
+    }
+
+    nav.navbar-top-links.navbar-right {
+        display: flex;
+    }
+
+    #li1,
+    #li2,
+    #li3 {
+        margin-top: 1%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     li input[type="text"] {
@@ -70,8 +90,8 @@
         border: 2px solid #ccc;
         border-radius: 25px;
         font-size: 14px;
-        height: 36px;
-        width: 1000px;
+        height: 5vh;
+        width: 60vw;
         background-color: #f2f2f2;
         color: #333;
         transition: border-color 0.3s ease-in-out;
@@ -179,9 +199,9 @@
 
     .col-lg-6.card {
         background-color: rgba(255, 255, 255, 0.01);
-        width: 49.5%;
-        border-radius: 15px;
-        margin: 0.25%;
+        width: 30%;
+        border-radius: 10%;
+        margin: 1.5%;
     }
 
     .col-lg-6.card .ibox {
@@ -197,20 +217,20 @@
     @media (max-width: 992px) {
 
         /*隐藏操作菜单*/
-        .navbar-default.navbar-static-side{
-            display: none;
-        }
-        /*隐藏欢迎语*/
-        .m-r-sm.text-muted.welcome-message{
+        .navbar-default.navbar-static-side {
             display: none;
         }
 
         /*隐藏搜索框*/
-        #searchli{
+        #li1 {
+            display: none;
+        }
+
+        /*隐藏欢迎语*/
+        #li2 {
             display: none;
         }
     }
-
 </style>
 
 <body>
@@ -247,16 +267,18 @@
 
     <div id="page-wrapper" class="gray-bg">
         <div class="row border-bottom">
-            <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-                <ul class="nav navbar-top-links navbar-right">
-                    <li id="searchli">
+            <nav class="navbar navbar-static-top" role="navigation">
+                <ul class="nav navbar-top-links navbar-left">
+                    <li id="li1">
                         <input type="text" id="search" class="form-control-lg">
                     </li>
-                    <li>
-                            <span class="m-r-sm text-muted welcome-message">&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Welcome
+                </ul>
+                <ul class="nav navbar-top-links navbar-right" style="display: flex;">
+                    <li id="li2">
+                            <span class="m-r-sm text-muted welcome-message">Welcome
                                 to the admin.</span>
                     </li>
-                    <li>
+                    <li id="li3">
                         <a href="/">
                             <i class="fa"></i> Log out
                         </a>
@@ -556,6 +578,7 @@
             $("#editType").val(t);
 
             $("#editSubmit").click(function () {
+
                 if (!edit) {
                     msg = "Null value cannot be entered."
                     openTipModal()
@@ -570,20 +593,14 @@
                     }
 
                     // 属性不能重复
-                    if (hasDuplicates(speciality)) {
-                        speciality.pop();
-                        msg = "Cannot enter duplicate attributes."
-                        openTipModal();
-                        return;
-                    }
-                    if(speciality.includes(edit)){
+                    if (speciality.includes(edit)) {
                         msg = "Cannot enter duplicate attributes."
                         openTipModal();
                         return;
                     }
 
                     const inx = findInArray(speciality, e);
-                    if (inx >= 0) {
+                    if (inx || inx === 0) {
                         speciality[inx] = edit;
                         specialityType[inx] = $("#editType").val();
                         $("#dbInfo").empty();
