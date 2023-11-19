@@ -1,10 +1,10 @@
-package matdb.controller;
+package com.matdb.controller;
 
-import matdb.dto.DBCardDto;
-import matdb.dto.DBInfoDto;
-import matdb.req.ChangeDBCardReq;
-import matdb.req.TemplateReq;
-import matdb.service.DBService;
+import com.matdb.dto.DBInfoDto;
+import com.matdb.dto.DBCardDto;
+import com.matdb.req.ChangeDBCardReq;
+import com.matdb.req.TemplateReq;
+import com.matdb.service.DBService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

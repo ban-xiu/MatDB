@@ -1,7 +1,7 @@
-package matdb.controller;
+package com.matdb.controller;
 
-import matdb.req.SignAboutReq;
-import matdb.service.UserService;
+import com.matdb.req.SignAboutReq;
+import com.matdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

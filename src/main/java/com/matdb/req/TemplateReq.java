@@ -1,6 +1,6 @@
-package matdb.req;
+package com.matdb.req;
 
-import matdb.entity.DBEntity;
+import com.matdb.entity.DBEntity;
 
 public class TemplateReq {
     private DBEntity dbEntity;

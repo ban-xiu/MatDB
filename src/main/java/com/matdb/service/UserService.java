@@ -1,8 +1,8 @@
-package matdb.service;
+package com.matdb.service;
 
-import matdb.entity.UserEntity;
-import matdb.repository.UserRepository;
-import matdb.req.SignAboutReq;
+import com.matdb.entity.UserEntity;
+import com.matdb.repository.UserRepository;
+import com.matdb.req.SignAboutReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

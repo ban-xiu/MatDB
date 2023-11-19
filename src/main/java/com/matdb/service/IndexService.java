@@ -1,9 +1,9 @@
-package matdb.service;
+package com.matdb.service;
 
-import matdb.entity.DBEntity;
-import matdb.entity.UserEntity;
-import matdb.repository.DBRepository;
-import matdb.repository.UserRepository;
+import com.matdb.entity.DBEntity;
+import com.matdb.entity.UserEntity;
+import com.matdb.repository.DBRepository;
+import com.matdb.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

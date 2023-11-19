@@ -1,4 +1,4 @@
-package matdb.dto;
+package com.matdb.dto;
 
 import java.util.Arrays;
 

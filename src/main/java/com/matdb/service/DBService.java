@@ -1,14 +1,14 @@
-package matdb.service;
+package com.matdb.service;
 
 import cn.hutool.core.bean.BeanUtil;
-import matdb.dto.DBCardDto;
-import matdb.dto.DBInfoDto;
-import matdb.entity.DBEntity;
+import com.matdb.dto.DBCardDto;
+import com.matdb.dto.DBInfoDto;
+import com.matdb.repository.DBRepository;
+import com.matdb.repository.MatRepository;
+import com.matdb.req.ChangeDBCardReq;
+import com.matdb.entity.DBEntity;
 
-import matdb.repository.DBRepository;
-import matdb.repository.MatRepository;
-import matdb.req.ChangeDBCardReq;
-import matdb.req.TemplateReq;
+import com.matdb.req.TemplateReq;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

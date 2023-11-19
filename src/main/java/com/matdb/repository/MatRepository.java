@@ -1,6 +1,6 @@
-package matdb.repository;
+package com.matdb.repository;
 
-import matdb.entity.MatEntity;
+import com.matdb.entity.MatEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

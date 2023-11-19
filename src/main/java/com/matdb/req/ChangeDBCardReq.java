@@ -1,4 +1,4 @@
-package matdb.req;
+package com.matdb.req;
 
 
 public class ChangeDBCardReq {

@@ -1,47 +1,37 @@
-package matdb.entity;
+package com.matdb.dto;
 
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Arrays;
 
+public class MatDto {
 
-@Document(collection = "matData")
-public class MatEntity {
-
-    @Field("uid")
-    private String uid;
-    @Id
     private String id;
-    @Field("structure")
+
     private String structure;
-    @Field("formula")
+
     private String formula;
-    @Field("name")
+
     private String name;
-    @Field("symmetry")
+
     private String symmetry;
-    @Field("metal")
+
     private String metal;
-    @Field("bandgappbe")
+
     private String bandgappbe;
-    @Field("bandgaphse")
+
     private String bandgaphse;
-    @Field("doi")
+
     private String doi;
-    @Field("url")
+
     private String url;
-    @Field("publication")
+
     private String publication;
-    @Field("speciality")
+
     private String[] speciality;
 
-    public MatEntity(){};
+    public MatDto(){}
 
-    public MatEntity(String uid, String id, String structure, String formula, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
-        this.uid = uid;
+    public MatDto(String id, String structure, String formula, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
         this.id = id;
         this.structure = structure;
         this.formula = formula;
@@ -54,14 +44,6 @@ public class MatEntity {
         this.url = url;
         this.publication = publication;
         this.speciality = speciality;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
     }
 
     public String getId() {
@@ -162,9 +144,8 @@ public class MatEntity {
 
     @Override
     public String toString() {
-        return "MatEntity{" +
-                "uid='" + uid + '\'' +
-                ", id='" + id + '\'' +
+        return "MatDto{" +
+                "id='" + id + '\'' +
                 ", structure='" + structure + '\'' +
                 ", formula='" + formula + '\'' +
                 ", name='" + name + '\'' +

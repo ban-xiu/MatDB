@@ -1,6 +1,6 @@
-package matdb.req;
+package com.matdb.req;
 
-import matdb.entity.MatEntity;
+import com.matdb.entity.MatEntity;
 
 public class UpdateReq {
     private String id;
