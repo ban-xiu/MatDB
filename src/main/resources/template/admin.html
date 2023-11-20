@@ -60,8 +60,14 @@
         display: flex;
     }
 
+    /*顶部效果*/
     nav.navbar.navbar-static-top ul {
         flex-grow: 1;
+    }
+
+    ul.navbar-left {
+        display: flex;
+        align-items: center;
     }
 
     ul.navbar-left li {
@@ -79,7 +85,6 @@
     #li1,
     #li2,
     #li3 {
-        margin-top: 1%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -89,7 +94,6 @@
         padding: 8px 12px;
         border: 2px solid #ccc;
         border-radius: 25px;
-        font-size: 14px;
         height: 5vh;
         width: 60vw;
         background-color: #f2f2f2;
@@ -197,6 +201,7 @@
         background-color: #777;
     }
 
+    /*卡片效果*/
     .col-lg-6.card {
         background-color: rgba(255, 255, 255, 0.01);
         width: 30%;
@@ -211,7 +216,22 @@
 
     .col-lg-6.card .ibox-title,
     .col-lg-6.card .ibox-content {
+        word-wrap: break-word;
+        overflow-wrap: normal;
         background-color: rgba(255, 255, 255, 0.01);
+    }
+
+    .col-lg-6.card .ibox-title small {
+        display: block;
+        word-wrap: break-word;
+    }
+
+    a.toIndex {
+        display: none;
+    }
+
+    .col-lg-6.card .ibox-content p {
+        overflow-wrap: break-word;
     }
 
     @media (max-width: 992px) {
@@ -221,15 +241,6 @@
             display: none;
         }
 
-        /*隐藏搜索框*/
-        #li1 {
-            display: none;
-        }
-
-        /*隐藏欢迎语*/
-        #li2 {
-            display: none;
-        }
     }
 </style>
 
@@ -633,9 +644,10 @@
                 let obj = list[i];
                 let randomBackground = Math.floor(Math.random() * backgroundsLength + 1);
                 html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('imgs/jpg/image${randomBackground}.jpg')">
+                    <a class="toIndex">${obj.id}</a>
                     <div class="ibox">
                         <div class="ibox-title">
-                            <h5><a class="toIndex">${obj.id}</a>: <small>${obj.type}</small></h5>
+                            <small>${obj.type}</small>
                         </div>
                         <div class="ibox-content">
                             <h2>
@@ -767,9 +779,10 @@
                 console.log(res)
                 let html = createDBCard(res.data)
                 $("#sortable-view").append(html);
-                $(".toIndex").click(function () {
-                    const uid = $(this).text();
-                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}`);
+
+                $(".col-lg-6.card").on("click", function () {
+                   const uid = $(this).find('.toIndex').text();
+                   location.replace(`http://127.0.0.1:8080/index?uid=${uid}`);
                 })
 
                 // 获取每张卡片的信息并拼接为长字符串
