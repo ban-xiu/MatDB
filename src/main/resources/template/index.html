@@ -338,7 +338,6 @@
   *::-ms-scrollbar-thumb:hover {
     background-color: #555;
   }
-
 </style>
 
 <script>
@@ -468,7 +467,8 @@
       if (group[i] != "") {
         html += `<div class="form-group col-md-4">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="option" value="${i}" id="show${i}" checked>
+                <input class="form-check-input" type="checkbox" name="option" value="${i}" id="show${i}"
+                ${group[i] === "Structure" || group[i] === "Name" || group[i] === "URL" ? "" : "checked"}>
                 <label class="form-check-label" for="show${i}">
                   ${group[i]}
                 </label>
@@ -775,7 +775,7 @@
     }).then(res => {
 
       // 获取相关信息
-      console.log(res.data)
+      console.log(res)
       title = res.data.title;
       introduction = res.data.introduction;
       speciality = res.data.speciality;
@@ -810,81 +810,85 @@
           }
         });
 
+        // 创建Show选项
+        $("#showChoose").append(createShow(speciality));
+
+        // 创建一个空数组用于存储选中的值
+        var showOptions = [];
+
+        // 获取所有多选框元素
+        const checkboxes = $('input[type="checkbox"]');
+
+        // 遍历每个多选框元素
+        checkboxes.each(function () {
+          // 默认情况下展示选中内容
+          if ($(this).prop('checked')) {
+            showOptions.push($(this).val());
+          }
+          // 添加事件监听器，当多选框状态改变时触发
+          $(this).on('change', function () {
+            // 检查多选框是否被选中
+            if ($(this).prop('checked')) {
+              // 将选中的值添加到数组中
+              showOptions.push($(this).val());
+            } else {
+              // 如果多选框被取消选中，则从数组中移除该值
+              let index = showOptions.indexOf($(this).val());
+              if (index > -1) {
+                showOptions.splice(index, 1);
+              }
+            }
+
+            console.log('showOptions: ' + showOptions);
+            // 显示或隐藏子元素
+            hideOrShowChildElements(showOptions);
+
+          });
+
+        });
+
+        // show展示初始化
+        hideOrShowChildElements(showOptions);
+
+        // 显示或隐藏子元素方法
+        function hideOrShowChildElements(showOptions) {
+
+          // 获取 tr 元素下的除了ID以外的所有子元素
+          const trChildElements = $('#tr').children().slice(1);
+          // 获取 tbody 元素下的所有子元素
+          const tElementsToHide = $('th[col], td[col]');
+
+          // 遍历子元素
+          trChildElements.each(function (index) {
+            // 检查当前子元素的索引是否在 showOptions 数组中
+            if (showOptions.includes(index + "")) {
+              // 如果在数组中，则显示该子元素
+              $(this).show();
+            } else {
+              // 如果不在数组中，则隐藏该子元素
+              $(this).hide();
+            }
+
+          });
+
+          // 遍历子元素
+          tElementsToHide.each(function () {
+            let colValue = $(this).attr('col');
+
+            // 检查当前元素的 col 值是否在 showOptions 数组中
+            if (showOptions.includes(colValue)) {
+              // 如果在数组中，则显示该元素
+              $(this).show();
+            } else {
+              // 如果不在数组中，则隐藏该元素
+              $(this).hide();
+            }
+          });
+        }
+
       }).catch(err => {
         console.error(err)
       })
-
-      // 创建Show选项
-      $("#showChoose").append(createShow(speciality));
-
-      // 创建一个空数组用于存储选中的值
-      var showOptions = [];
-
-      // 获取所有多选框元素
-      const checkboxes = $('input[type="checkbox"]');
-
-      // 遍历每个多选框元素
-      checkboxes.each(function () {
-        //默认情况下都展示
-        showOptions.push($(this).val());
-        // 添加事件监听器，当多选框状态改变时触发
-        $(this).on('change', function () {
-          // 检查多选框是否被选中
-          if ($(this).prop('checked')) {
-            // 将选中的值添加到数组中
-            showOptions.push($(this).val());
-          } else {
-            // 如果多选框被取消选中，则从数组中移除该值
-            let index = showOptions.indexOf($(this).val());
-            if (index > -1) {
-              showOptions.splice(index, 1);
-            }
-          }
-
-          // 打印当前选中的值
-          console.log('showOptions: ' + showOptions);
-          // 显示或隐藏子元素
-          hideOrShowChildElements(showOptions);
-
-        });
-
-      });
-
-      // 显示或隐藏子元素方法
-      function hideOrShowChildElements(showOptions) {
-
-        // 获取 tr 元素下的除了ID以外的所有子元素
-        const trChildElements = $('#tr').children().slice(1);
-        // 获取 tbody 元素下的所有子元素
-        const tElementsToHide = $('th[col], td[col]');
-
-        // 遍历子元素
-        trChildElements.each(function (index) {
-          // 检查当前子元素的索引是否在 showOptions 数组中
-          if (showOptions.includes(index + "")) {
-            // 如果在数组中，则显示该子元素
-            $(this).show();
-          } else {
-            // 如果不在数组中，则隐藏该子元素
-            $(this).hide();
-          }
-
-        });
-
-        // 遍历子元素
-        tElementsToHide.each(function () {
-          let colValue = $(this).attr('col');
-
-          // 检查当前元素的 col 值是否在 showOptions 数组中
-          if (showOptions.includes(colValue)) {
-            // 如果在数组中，则显示该元素
-            $(this).show();
-          } else {
-            // 如果不在数组中，则隐藏该元素
-            $(this).hide();
-          }
-        });
-      }
 
       // 创建Add输入框
       $("#addArea").append(createAdd(speciality))
