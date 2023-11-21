@@ -242,6 +242,57 @@
         }
 
     }
+
+    /*滚动条效果*/
+    /*WebKit浏览器Chrome Safari*/
+    ::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: #f5f5f5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+
+    /*Firefox浏览器*/
+    /*Firefox 64及更早版本*/
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f5f5f5;
+    }
+
+    /*Firefox 65+*/
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #888 #f5f5f5;
+    }
+
+    /*IE/Edge浏览器*/
+    *::-ms-scrollbar {
+        width: 8px;
+    }
+
+    *::-ms-scrollbar-track {
+        background-color: #f5f5f5;
+    }
+
+    *::-ms-scrollbar-thumb {
+        background-color: #888;
+        border-radius: 4px;
+    }
+
+    *::-ms-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+
 </style>
 
 <body>
@@ -781,8 +832,8 @@
                 $("#sortable-view").append(html);
 
                 $(".col-lg-6.card").on("click", function () {
-                   const uid = $(this).find('.toIndex').text();
-                   location.replace(`http://127.0.0.1:8080/index?uid=${uid}`);
+                    const uid = $(this).find('.toIndex').text();
+                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}`);
                 })
 
                 // 获取每张卡片的信息并拼接为长字符串

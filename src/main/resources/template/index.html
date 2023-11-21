@@ -59,7 +59,7 @@
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
 
-   @media (max-width: 992px) {
+  @media (max-width: 992px) {
     .card {
       width: 100%;
       margin: 25px auto;
@@ -121,6 +121,7 @@
     #update {
       display: none;
     }
+
     #delete {
       display: none;
     }
@@ -174,6 +175,12 @@
     display: block;
     overflow: auto;
     max-height: 500px;
+  }
+
+  #myTable thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
   }
 
   #myTable th,
@@ -281,6 +288,57 @@
   #fileText span:active {
     background-color: #777;
   }
+
+  /*滚动条效果*/
+  /*WebKit浏览器Chrome Safari*/
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #f5f5f5;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+  /*Firefox浏览器*/
+  /*Firefox 64及更早版本*/
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f5f5f5;
+  }
+
+  /*Firefox 65+*/
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f5f5f5;
+  }
+
+  /*IE/Edge浏览器*/
+  *::-ms-scrollbar {
+    width: 8px;
+  }
+
+  *::-ms-scrollbar-track {
+    background-color: #f5f5f5;
+  }
+
+  *::-ms-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 4px;
+  }
+
+  *::-ms-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
 </style>
 
 <script>
@@ -746,7 +804,7 @@
           "paging": true,
           // 分页时也按需求展示
           "drawCallback": function () {
-            $("#myTable_paginate").on("click", function () {
+            $("#myTable_paginate,#myTable_length > label > select").on("click", function () {
               hideOrShowChildElements(showOptions);
             });
           }
