@@ -60,16 +60,20 @@ public class DBService {
     @Transactional
     public void changDBCard(ChangeDBCardReq changeDBCardReq){
         String id = changeDBCardReq.getId();
-        String title = changeDBCardReq.getTitle();
-        String introduction = changeDBCardReq.getIntroduction();
         Optional<DBEntity> dbOption = dbRepository.findById(id);
         if (dbOption.isEmpty()){
             System.out.println("\nchangDBCard: null");
             return;
         }
+        String title = changeDBCardReq.getTitle();
+        String introduction = changeDBCardReq.getIntroduction();
+        byte[] img = changeDBCardReq.getImg();
         DBEntity db = dbOption.get();
         db.setTitle(title);
         db.setIntroduction(introduction);
+        if (img != null) {
+            db.setImg(img);
+        }
         try {
             dbRepository.save(db);
         }catch (Exception e){

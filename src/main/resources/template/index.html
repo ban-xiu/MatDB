@@ -338,9 +338,61 @@
   *::-ms-scrollbar-thumb:hover {
     background-color: #555;
   }
+
+  /*image上传相关*/
+  #imgFile {
+    display: none;
+  }
+
+  /*image按钮*/
+  .custom-file-upload {
+    display: inline-block;
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: #333333;
+    color: #EFEDE6;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #0069d9;
+  }
+
+  /*显示所选文件名称的文本框*/
+  .selected-file {
+    margin-top: 8px;
+    font-size: 14px;
+  }
+
 </style>
 
 <script>
+
+  // 上传图片处理
+  function uploadImage() {
+    return new Promise((resolve, reject) => {
+      const fileInput = $('#imgFile');
+      const file = fileInput[0].files[0];
+
+      if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+          const imageData = new Uint8Array(event.target.result);
+          resolve(imageData);
+        };
+
+        reader.onerror = function (event) {
+          reject(event.target.error);
+        };
+
+        reader.readAsArrayBuffer(file);
+      }
+    });
+  }
 
   // 设置File文本方法
   function createFile(speciality) {
@@ -608,11 +660,6 @@
 
   $(document).ready(function () {
 
-    // 设置卡片背景图
-    const backgroundsLength = 9;
-    let randomBackground = Math.floor(Math.random() * backgroundsLength + 1);
-    $(".card").css("background-image", `url('imgs/jpg/image${randomBackground}.jpg')`)
-
     // 初始化数据容器
     var mat = {};
     var matFlag = true;
@@ -624,6 +671,7 @@
     var specialityType;
     var rows;
     var table;
+    var cardImg;
 
     var uid = $("#uid").text();
     var username = $("#username").text();
@@ -677,7 +725,7 @@
       }
       if (msg1 == "Are you sure to change it?") {
         axios.post("http://127.0.0.1:8080/changeDBCard", {
-          "id": uid, "title": title, "introduction": introduction
+          "id": uid, "title": title, "introduction": introduction, "img": Array.from(cardImg)
         }).then(res => {
           console.log(res)
         }).catch(err => {
@@ -780,6 +828,27 @@
       introduction = res.data.introduction;
       speciality = res.data.speciality;
       specialityType = res.data.specialityType;
+
+      // 转换为Blob对象
+      const binaryData = atob(res.data.img);
+      // 将二进制数据转换为 Uint8Array
+      const uint8Array = new Uint8Array(binaryData.length);
+      for (let i = 0; i < binaryData.length; i++) {
+        uint8Array[i] = binaryData.charCodeAt(i);
+      }
+
+      const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+
+      // 创建URL对象并设置为背景图片
+      const imageUrl = URL.createObjectURL(blob);
+
+      // 设置卡片背景
+      const cardType = res.data.type;
+      if (binaryData) {
+        $('.card').css('background-image', `url(${imageUrl})`);
+      } else {
+        $(".card").css("background-image", `url('imgs/jpg/${cardType}.jpg')`);
+      }
 
       // 创建卡片
       $('.card').append(createCard(res.data))
@@ -1197,6 +1266,28 @@
         introduction = $newIntro.val();
       });
 
+    })
+
+    // 图片上传相关
+    $('#imgFile').on('change', function () {
+      const imgVal = $('#imgFile').val();
+      if (imgVal) {
+        $('.custom-file-upload').css('background-color', '#999').text(imgVal);
+      }
+      uploadImage().then(img => {
+        cardImg = img;
+      }).catch(err => {
+        msg2 = "Error."
+        openTipModal2();
+        console.error(err);
+      });
+    })
+
+    // 关闭时清空上传图片
+    $('.cardClose').click(function () {
+        $('.custom-file-upload').css('background-color', '#333333').text('image');
+        $('#imgFile').val('');
+        cardImg = undefined;
     })
 
     // Detail弹窗相关
@@ -1652,7 +1743,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="cardModalLabel">Card</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <button type="button" class="close cardClose" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -1665,11 +1756,16 @@
           <label for="intro">New introduction</label>
           <textarea class="form-control" id="intro"></textarea>
         </div>
+        <div class="form-group">
+          <label for="imgFile" class="custom-file-upload">image</label>
+          <input type="file" id="imgFile" accept=".jpg,.jpeg,.png,.webp">
+          <div id="selectedFileName" class="selected-file"></div>
+        </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-dismiss="modal"
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
                 id="cardSubmit">Submit</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary cardClose" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>

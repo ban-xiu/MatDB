@@ -595,11 +595,10 @@
 
         // 卡片内容处理方法
         function deal(i) {
-            const id = $(`#card${i}`).find('.toIndex').text();
             const type = $(`#card${i}`).find('small').text();
             const title = $(`#card${i}`).find('strong').text();
             const introduction = $(`#card${i}`).find('p').text();
-            const result = id + type + title + introduction;
+            const result = type + title + introduction;
             return result.toLowerCase();
         }
 
@@ -639,7 +638,7 @@
             $("#editOne").val(e);
             $("#editType").val(t);
 
-            $("#editSubmit").click(function () {
+            $("#editSubmit").off('click').click(function () {
 
                 if (!edit) {
                     msg = "Null value cannot be entered."
@@ -655,7 +654,7 @@
                     }
 
                     // 属性不能重复
-                    if (speciality.includes(edit)) {
+                    if (speciality.includes(edit) && $("#editType").val() === t) {
                         msg = "Cannot enter duplicate attributes."
                         openTipModal();
                         return;
@@ -687,15 +686,39 @@
             }
         }
 
+        // 图片处理
+        function makeImageUrl(img) {
+            // 转换为Blob对象
+            const binaryData = atob(img);
+            // 将二进制数据转换为 Uint8Array
+            const uint8Array = new Uint8Array(binaryData.length);
+            for (let i = 0; i < binaryData.length; i++) {
+                uint8Array[i] = binaryData.charCodeAt(i);
+            }
+
+            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+
+            // 创建URL对象并设置为背景图片
+            const imageUrl = URL.createObjectURL(blob);
+            return imageUrl
+        }
+
         // 创建数据库信息卡片
         function createDBCard(list) {
             let html = ``;
-            const backgroundsLength = 9;
+            let obj;
+            let imgUrl;
+            const types = ["2D FEM", "2D NPB", "BMS", "Penta", "2D-Carbon"];
             for (let i = 0; i < list.length; i++) {
-                let obj = list[i];
-                let randomBackground = Math.floor(Math.random() * backgroundsLength + 1);
-                html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('imgs/jpg/image${randomBackground}.jpg')">
-                    <a class="toIndex">${obj.id}</a>
+                obj = list[i];
+                if (obj.img) {
+                    imgUrl = makeImageUrl(obj.img);
+                    html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('${imgUrl}')">`
+                } else {
+                    imgUrl = types.includes(obj.type) ? obj.type : "Self-defined";
+                    html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('imgs/jpg/${imgUrl}.jpg')">`
+                }
+                html += `<a class="toIndex">${obj.id}</a>
                     <div class="ibox">
                         <div class="ibox-title">
                             <small>${obj.type}</small>

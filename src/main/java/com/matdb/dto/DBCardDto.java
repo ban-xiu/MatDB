@@ -87,6 +87,7 @@ public class DBCardDto {
 
     @Override
     public String toString() {
+        byte[] arr = Arrays.copyOfRange(img,0,5);
         return "DBCardDto{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
@@ -94,7 +95,7 @@ public class DBCardDto {
                 ", type='" + type + '\'' +
                 ", speciality=" + Arrays.toString(speciality) +
                 ", specialityType=" + Arrays.toString(specialityType) +
-                ", img=" + Arrays.toString(img) +
+                ", img=" + Arrays.toString(arr) +
                 '}';
     }
 }
