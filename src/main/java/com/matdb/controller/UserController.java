@@ -1,28 +1,33 @@
 package com.matdb.controller;
 
-import com.matdb.req.SignAboutReq;
+import com.matdb.domain.vo.req.SignAboutReq;
+import com.matdb.domain.vo.resp.Result;
 import com.matdb.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
+
     @Autowired
     UserService userService;
+
     @PostMapping("/signIn")
-    public String signIn(@RequestBody SignAboutReq signInReq) {
+    public Result<String> signIn(@RequestBody SignAboutReq signInReq) {
         System.out.println(signInReq.toString());
         return userService.signIn(signInReq);
     }
+
     @PostMapping("/signUp")
-    public String signUp(@RequestBody SignAboutReq signUpReq){
+    public Result<String> signUp(@RequestBody SignAboutReq signUpReq){
         System.out.println(signUpReq.toString());
         return userService.signUp(signUpReq);
     }
 
     @PutMapping("/changePassword")
-    public void changePassword(@RequestBody SignAboutReq changPwdReq){
+    public Result<String> changePassword(@RequestBody SignAboutReq changPwdReq){
         System.out.println(changPwdReq.toString());
-        userService.changePassword(changPwdReq);
+        return userService.changePassword(changPwdReq);
     }
+
 }

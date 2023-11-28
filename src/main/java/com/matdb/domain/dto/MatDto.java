@@ -1,9 +1,9 @@
-package com.matdb.dto;
+package com.matdb.domain.dto;
 
-
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class MatDto {
+public class MatDto implements Serializable {
 
     private String id;
 

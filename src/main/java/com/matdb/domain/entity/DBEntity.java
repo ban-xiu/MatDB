@@ -1,4 +1,4 @@
-package com.matdb.entity;
+package com.matdb.domain.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -104,6 +104,12 @@ public class DBEntity {
 
     @Override
     public String toString() {
+        byte[] arr;
+        if (img != null) {
+            arr = Arrays.copyOfRange(img,0,5);
+        } else {
+            arr = null;
+        }
         return "DBEntity{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
@@ -112,7 +118,7 @@ public class DBEntity {
                 ", username='" + username + '\'' +
                 ", speciality=" + Arrays.toString(speciality) +
                 ", specialityType=" + Arrays.toString(specialityType) +
-                ", img=" + Arrays.toString(img) +
+                ", img=" + Arrays.toString(arr) +
                 '}';
     }
 }

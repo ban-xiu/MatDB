@@ -1,9 +1,9 @@
 package com.matdb.controller;
 
-import com.matdb.dto.MatDto;
-import com.matdb.req.FileReq;
-import com.matdb.req.SaveReq;
-import com.matdb.req.UpdateReq;
+import com.matdb.domain.dto.MatDto;
+import com.matdb.domain.vo.req.FileReq;
+import com.matdb.domain.vo.req.SaveReq;
+import com.matdb.domain.vo.req.UpdateReq;
 import com.matdb.service.MatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

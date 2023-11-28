@@ -1,4 +1,4 @@
-package com.matdb.entity;
+package com.matdb.domain.entity;
 
 
 import org.springframework.data.annotation.Id;

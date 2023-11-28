@@ -1,6 +1,8 @@
-package com.matdb.req;
+package com.matdb.domain.vo.req;
 
-public class SignAboutReq {
+import java.io.Serializable;
+
+public class SignAboutReq implements Serializable {
     private String username;
     private String password;
 

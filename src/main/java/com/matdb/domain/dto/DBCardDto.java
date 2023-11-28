@@ -1,8 +1,9 @@
-package com.matdb.dto;
+package com.matdb.domain.dto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class DBInfoDto {
+public class DBCardDto implements Serializable {
     private String id;
 
     private String title;
@@ -11,15 +12,21 @@ public class DBInfoDto {
 
     private String type;
 
+    private String[] speciality;
+
+    private String[] specialityType;
+
     private byte[] img;
 
-    public DBInfoDto(){}
+    public DBCardDto(){}
 
-    public DBInfoDto(String id, String title, String introduction, String type, byte[] img) {
+    public DBCardDto(String id, String title, String introduction, String type, String[] speciality, String[] specialityType, byte[] img) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.type = type;
+        this.speciality = speciality;
+        this.specialityType = specialityType;
         this.img = img;
     }
 
@@ -55,6 +62,22 @@ public class DBInfoDto {
         this.type = type;
     }
 
+    public String[] getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(String[] speciality) {
+        this.speciality = speciality;
+    }
+
+    public String[] getSpecialityType() {
+        return specialityType;
+    }
+
+    public void setSpecialityType(String[] specialityType) {
+        this.specialityType = specialityType;
+    }
+
     public byte[] getImg() {
         return img;
     }
@@ -65,12 +88,20 @@ public class DBInfoDto {
 
     @Override
     public String toString() {
-        return "DBInfoDto{" +
+        byte[] arr;
+        if (img != null) {
+            arr = Arrays.copyOfRange(img,0,5);
+        } else {
+            arr = null;
+        }
+        return "DBCardDto{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", type='" + type + '\'' +
-                ", img=" + Arrays.toString(img) +
+                ", speciality=" + Arrays.toString(speciality) +
+                ", specialityType=" + Arrays.toString(specialityType) +
+                ", img=" + Arrays.toString(arr) +
                 '}';
     }
 }

@@ -1,8 +1,10 @@
-package com.matdb.req;
+package com.matdb.domain.vo.req;
 
-import com.matdb.entity.DBEntity;
+import com.matdb.domain.entity.DBEntity;
 
-public class TemplateReq {
+import java.io.Serializable;
+
+public class TemplateReq implements Serializable {
     private DBEntity dbEntity;
     public TemplateReq(){}
 

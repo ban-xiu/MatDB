@@ -1,7 +1,7 @@
 package com.matdb.controller;
 
 import com.matdb.service.IndexService;
-import com.matdb.entity.UserEntity;
+import com.matdb.domain.entity.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

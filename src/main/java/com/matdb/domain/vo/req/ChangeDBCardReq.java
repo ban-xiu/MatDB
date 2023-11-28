@@ -1,9 +1,10 @@
-package com.matdb.req;
+package com.matdb.domain.vo.req;
 
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class ChangeDBCardReq {
+public class ChangeDBCardReq implements Serializable {
    private String id;
    private String title;
    private String introduction;

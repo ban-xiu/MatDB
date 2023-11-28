@@ -696,7 +696,7 @@
                 uint8Array[i] = binaryData.charCodeAt(i);
             }
 
-            const blob = new Blob([uint8Array], { type: 'image/jpeg' });
+            const blob = new Blob([uint8Array], { type: 'image/jpg' });
 
             // 创建URL对象并设置为背景图片
             const imageUrl = URL.createObjectURL(blob);

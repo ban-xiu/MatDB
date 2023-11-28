@@ -1,46 +1,11 @@
 package com.matdb.service;
 
-import com.matdb.entity.DBEntity;
-import com.matdb.entity.UserEntity;
-import com.matdb.repository.DBRepository;
-import com.matdb.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.matdb.domain.entity.UserEntity;
 
-import java.util.Optional;
+public interface IndexService {
 
-@Service
-public class IndexService {
-    @Autowired
-    UserRepository userRepository;
-    @Autowired
-    DBRepository dbRepository;
+    String findPassword(String username);
 
-    public String findPassword(String username){
-        Optional<UserEntity> userOption = userRepository.findByUsername(username);
-        if (userOption.isEmpty()){
-            System.out.println("\nfindPassword: null");
-            return null;
-        }
-        UserEntity user = userOption.get();
-        String password = user.getPassword();
-        return password;
-    }
+    UserEntity findUser(String uid);
 
-    public UserEntity findUser(String uid){
-        Optional<DBEntity> dbOption = dbRepository.findById(uid);
-        if (dbOption.isEmpty()){
-            System.out.println("\nfindUser_db: null");
-            return null;
-        }
-        DBEntity db = dbOption.get();
-        String username = db.getUsername();
-        Optional<UserEntity> userOption = userRepository.findByUsername(username);
-        if (userOption.isEmpty()){
-            System.out.println("\nfindUser_user: null");
-            return null;
-        }
-        UserEntity user = userOption.get();
-        return user;
-    }
 }

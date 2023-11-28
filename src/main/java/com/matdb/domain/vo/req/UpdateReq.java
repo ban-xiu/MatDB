@@ -1,8 +1,10 @@
-package com.matdb.req;
+package com.matdb.domain.vo.req;
 
-import com.matdb.entity.MatEntity;
+import com.matdb.domain.entity.MatEntity;
 
-public class UpdateReq {
+import java.io.Serializable;
+
+public class UpdateReq implements Serializable {
     private String id;
     private MatEntity matEntity;
     public UpdateReq(){}
