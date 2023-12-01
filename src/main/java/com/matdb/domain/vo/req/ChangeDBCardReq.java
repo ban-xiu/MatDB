@@ -53,7 +53,12 @@ public class ChangeDBCardReq implements Serializable {
 
    @Override
    public String toString() {
-      byte[] arr = Arrays.copyOfRange(img,0,5);
+      byte[] arr;
+      if (img != null) {
+         arr = Arrays.copyOfRange(img,0,5);
+      } else {
+         arr = null;
+      }
       return "ChangeDBCardReq{" +
               "id='" + id + '\'' +
               ", title='" + title + '\'' +

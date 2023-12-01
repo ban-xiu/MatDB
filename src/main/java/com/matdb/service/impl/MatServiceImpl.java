@@ -3,6 +3,9 @@ package com.matdb.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.matdb.domain.dto.MatDto;
 import com.matdb.domain.entity.MatEntity;
+import com.matdb.domain.vo.resp.Result;
+import com.matdb.enums.DBEnum;
+import com.matdb.enums.MatEnum;
 import com.matdb.mapper.repository.MatRepository;
 import com.matdb.domain.vo.req.FileReq;
 import com.matdb.domain.vo.req.SaveReq;
@@ -35,22 +38,33 @@ public class MatServiceImpl implements MatService {
 
     @Transactional
     @Override
-    public void deleteById(String id){
+    public Result<String> deleteById(String id){
+        String msg;
         try {
             matRepository.deleteById(id);
+            msg = MatEnum.MAT_DELETE_SUCCESS.getMessage();
+            return Result.success(msg);
         }catch (Exception e){
             e.printStackTrace();
+            msg = MatEnum.MAT_DELETE_ERROR.getMessage();
+            return Result.error(msg);
         }
     }
 
     @Transactional
     @Override
-    public void save(SaveReq saveReq){
+    public Result<String> save(SaveReq saveReq){
         MatEntity mat = saveReq.getMatEntity();
+
+        String msg;
         try {
             matRepository.save(mat);
+            msg = MatEnum.MAT_SAVE_SUCCESS.getMessage();
+            return Result.success(msg);
         }catch (Exception e){
             e.printStackTrace();
+            msg = MatEnum.MAT_SAVE_ERROR.getMessage();
+            return Result.error(msg);
         }
     }
 
@@ -69,33 +83,46 @@ public class MatServiceImpl implements MatService {
 
     @Transactional
     @Override
-    public void update(UpdateReq updateReq){
+    public Result<String> update(UpdateReq updateReq){
         MatEntity update = updateReq.getMatEntity();
         String id = update.getId();
         Optional<MatEntity> matOption = matRepository.findById(id);
+
+        String msg;
         if (matOption.isEmpty()){
             System.out.println("\nupdate: null");
-            return;
+            msg = MatEnum.MAT_NOT_FOUND.getMessage();
+            return Result.error(msg);
         }
         MatEntity mat = matOption.get();
         BeanUtil.copyProperties(update, mat);
         try {
             matRepository.save(mat);
+            msg = MatEnum.MAT_UPDATE_SUCCESS.getMessage();
+            return Result.success(msg);
         }catch (Exception e){
             e.printStackTrace();
+            msg = MatEnum.MAT_UPDATE_ERROR.getMessage();
+            return Result.error(msg);
         }
     }
 
     @Transactional
     @Override
-    public void addFile(FileReq file){
+    public Result<String> addFile(FileReq file){
         MatEntity[] mats = file.getMatEntities();
+
+        String msg;
         try {
             for (MatEntity mat : mats) {
                 matRepository.save(mat);
             }
+            msg = MatEnum.MAT_ADD_FILE_SUCCESS.getMessage();
+            return Result.success(msg);
         }catch (Exception e){
             e.printStackTrace();
+            msg = MatEnum.MAT_ADD_FILE_ERROR.getMessage();
+            return Result.error(msg);
         }
     }
 

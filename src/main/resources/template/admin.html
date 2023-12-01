@@ -595,10 +595,11 @@
 
         // 卡片内容处理方法
         function deal(i) {
+            const user = $(`#card${i}`).find('i').text();
             const type = $(`#card${i}`).find('small').text();
             const title = $(`#card${i}`).find('strong').text();
             const introduction = $(`#card${i}`).find('p').text();
-            const result = type + title + introduction;
+            const result = user + type + title + introduction;
             return result.toLowerCase();
         }
 
@@ -721,6 +722,7 @@
                 html += `<a class="toIndex">${obj.id}</a>
                     <div class="ibox">
                         <div class="ibox-title">
+                            <i>${obj.username}</i>
                             <small>${obj.type}</small>
                         </div>
                         <div class="ibox-content">
@@ -763,7 +765,7 @@
                 location.replace("http://127.0.0.1:8080");
                 return;
             }
-            if (msg == "The new database has been submitted.") {
+            if (msg == "The template is saved successfully.") {
                 location.reload();
                 return;
             }
@@ -847,16 +849,15 @@
             WinMove();
 
             // 渲染数据库信息卡片
-            axios.get("http://127.0.0.1:8080/findDBInof", {
-                params: { "username": username === "user" ? "root" : username }
-            }).then(res => {
+            axios.get("http://127.0.0.1:8080/findDBInof")
+            .then(res => {
                 console.log(res)
-                let html = createDBCard(res.data)
+                let html = createDBCard(res.data.data)
                 $("#sortable-view").append(html);
 
                 $(".col-lg-6.card").on("click", function () {
                     const uid = $(this).find('.toIndex').text();
-                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}`);
+                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}&username=${username}`);
                 })
 
                 // 获取每张卡片的信息并拼接为长字符串
@@ -1048,7 +1049,7 @@
                 })
                     .then(res => {
                         console.log(res)
-                        msg = "The new database has been submitted."
+                        msg = res.data.data;
                         openTipModal();
                     })
                     .catch(err => {

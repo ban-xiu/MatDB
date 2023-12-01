@@ -646,7 +646,7 @@
   }
 
   // 打开Tip2弹窗方法
-  var msg2 = 'The task has been submitted.';
+  var msg2;
   function openTipModal2() {
     $('#tipModal2').modal('show');
     $('.tipBody2 p').text(`${msg2}`);
@@ -666,6 +666,7 @@
     var rows;
     var table;
     var cardImg;
+    var cardUser;
 
     var uid = $("#uid").text();
     var username = $("#username").text();
@@ -686,6 +687,9 @@
           "matEntity": add
         }).then(res => {
           console.log(res)
+          msg2 = res.data.data;
+          openTipModal2();
+          return;
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
@@ -698,6 +702,9 @@
           "id": mat.id, "matEntity": mat
         }).then(res => {
           console.log(res)
+          msg2 = res.data.data;
+          openTipModal2();
+          return;
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
@@ -710,6 +717,9 @@
           params: { "id": mat.id }
         }).then(res => {
           console.log(res)
+          msg2 = res.data.data;
+          openTipModal2();
+          return;
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
@@ -719,9 +729,12 @@
       }
       if (msg1 == "Are you sure to change it?") {
         axios.post("http://127.0.0.1:8080/changeDBCard", {
-          "id": uid, "title": title, "introduction": introduction, "img": Array.from(cardImg)
+          "id": uid, "title": title, "introduction": introduction, "img": cardImg ? Array.from(cardImg) : cardImg
         }).then(res => {
           console.log(res)
+          msg2 = res.data.data
+          openTipModal2();
+          return;
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
@@ -734,7 +747,8 @@
           params: { "uid": uid }
         }).then(res => {
           console.log(res)
-          location.replace(`http://127.0.0.1:8080/admin?username=${username}&password=${password}`)
+          msg2 = res.data.data;
+          openTipModal2();
           return;
         }).catch(err => {
           msg2 = "Error."
@@ -748,20 +762,23 @@
           "matEntities": rows
         }).then(res => {
           console.log(res);
+          msg2 = res.data.data;
+          openTipModal2();
         }).catch(err => {
           msg2 = "Error."
           openTipModal2();
           console.error(err);
-          return;
         })
       }
-      openTipModal2();
     })
 
     // 页面刷新方法
     $('#tipOk,#tipNo,.tipClose,.detailClose').click(function () {
-      location.reload();
-      return;
+      if (msg2 === "Burn out.") {
+        location.replace(`http://127.0.0.1:8080/admin?username=${username}`)
+      }else {
+        location.reload();
+      }
     });
 
     // Back返回
@@ -815,20 +832,32 @@
     axios.get("http://127.0.0.1:8080/findDBCard", {
       params: { "id": uid }
     }).then(res => {
-
       // 获取相关信息
       console.log(res)
-      title = res.data.title;
-      introduction = res.data.introduction;
-      speciality = res.data.speciality;
-      specialityType = res.data.specialityType;
+
+      const cont = res.data.data
+
+      title = cont.title;
+      introduction = cont.introduction;
+      speciality = cont.speciality;
+      specialityType = cont.specialityType;
+
+      // 普通用户只可以操作自己的数据
+      cardUser = cont.username;
+      if ((username !== "root" && username !== cardUser)) {
+        $("#add").css("display", "none");
+        $("#burn").css("display", "none");
+        $("#update").css("display", "none");
+        $("#delete").css("display", "none");
+      }
+
 
       // 设置卡片背景
-      const backgroundImg = res.data.img;
+      const backgroundImg = cont.img;
       if (backgroundImg) {
 
         // 转换为Blob对象
-        const binaryData = atob(res.data.img);
+        const binaryData = atob(backgroundImg);
         // 将二进制数据转换为 Uint8Array
         const uint8Array = new Uint8Array(binaryData.length);
         for (let i = 0; i < binaryData.length; i++) {
@@ -842,13 +871,13 @@
         $('.card').css('background-image', `url(${imageUrl})`);
       } else {
         const types = ["2D FEM", "2D NPB", "BMS", "Penta", "2D-Carbon"];
-        const cardType = res.data.type;
+        const cardType = cont.type;
         const imageUrl = types.includes(cardType) ? cardType : "Self-defined";
         $(".card").css("background-image", `url('imgs/jpg/${imageUrl}.jpg')`);
       }
 
       // 创建卡片
-      $('.card').append(createCard(res.data))
+      $('.card').append(createCard(cont))
 
       // 创建表头
       $("#tr").append(createTr(speciality));
@@ -860,7 +889,8 @@
         console.log(res)
 
         // 渲染表格
-        $('#tbody').append(createTable(res.data, speciality))
+        const cont = res.data.data;
+        $('#tbody').append(createTable(cont, speciality))
 
         // 分页效果
         table = $('#myTable').DataTable({
@@ -1082,79 +1112,81 @@
           }).then(res => {
             console.log(res)
 
+            const cont = res.data.data;
+
             // 使用当前uid
             mat.uid = uid;
 
-            mat.id = res.data.id;
-            mat.structure = res.data.structure;
-            mat.formula = res.data.formula;
-            mat.name = res.data.name;
-            mat.symmetry = res.data.symmetry;
-            mat.metal = res.data.metal;
-            mat.bandgappbe = res.data.bandgappbe;
-            mat.bandgaphse = res.data.bandgaphse;
-            mat.doi = res.data.doi;
-            mat.url = res.data.url;
-            mat.publication = res.data.publication;
-            mat.speciality = res.data.speciality;
+            mat.id = cont.id;
+            mat.structure = cont.structure;
+            mat.formula = cont.formula;
+            mat.name = cont.name;
+            mat.symmetry = cont.symmetry;
+            mat.metal = cont.metal;
+            mat.bandgappbe = cont.bandgappbe;
+            mat.bandgaphse = cont.bandgaphse;
+            mat.doi = cont.doi;
+            mat.url = cont.url;
+            mat.publication = cont.publication;
+            mat.speciality = cont.speciality;
 
             // 设置默认值，获取修改值
             const $inputStructure = $('#updateStructure');
-            $inputStructure.val(res.data.structure);
+            $inputStructure.val(cont.structure);
             $inputStructure.on('change', function () {
               mat.structure = $inputStructure.val();
             });
 
             const $inputFormula = $('#updateFormula');
-            $inputFormula.val(res.data.formula);
+            $inputFormula.val(cont.formula);
             $inputFormula.on('change', function () {
               mat.formula = $inputFormula.val();
             });
 
             const $inputName = $('#updateName');
-            $inputName.val(res.data.name);
+            $inputName.val(cont.name);
             $inputName.on('change', function () {
               mat.name = $inputName.val();
             });
 
             const $inputSymmetry = $('#updateSymmetry');
-            $inputSymmetry.val(res.data.symmetry);
+            $inputSymmetry.val(cont.symmetry);
             $inputSymmetry.on('change', function () {
               mat.symmetry = $inputSymmetry.val();
             });
 
             const $inputMetal = $('#updateMetal');
-            $inputMetal.val(res.data.metal);
+            $inputMetal.val(cont.metal);
             $inputMetal.on('change', function () {
               mat.metal = $inputMetal.val();
             });
 
             const $inputBandgap_PBE = $('#updateBandgap-PBE');
-            $inputBandgap_PBE.val(res.data.bandgappbe);
+            $inputBandgap_PBE.val(cont.bandgappbe);
             $inputBandgap_PBE.on('change', function () {
               mat.bandgappbe = $inputBandgap_PBE.val();
             });
 
             const $inputBandgap_HSE = $('#updateBandgap-HSE');
-            $inputBandgap_HSE.val(res.data.bandgaphse);
+            $inputBandgap_HSE.val(cont.bandgaphse);
             $inputBandgap_HSE.on('change', function () {
               mat.bandgaphse = $inputBandgap_HSE.val();
             });
 
             const $inputDOI = $('#updateDOI');
-            $inputDOI.val(res.data.doi);
+            $inputDOI.val(cont.doi);
             $inputDOI.on('change', function () {
               mat.doi = $inputDOI.val();
             });
 
             const $inputURL = $('#updateURL');
-            $inputURL.val(res.data.url);
+            $inputURL.val(cont.url);
             $inputURL.on('change', function () {
               mat.url = $inputURL.val();
             });
 
             const $inputPublication = $('#updatePublication');
-            $inputPublication.val(res.data.publication);
+            $inputPublication.val(cont.publication);
             $inputPublication.on('change', function () {
               mat.publication = $inputPublication.val();
             })
@@ -1242,8 +1274,8 @@
         return;
       }
 
-      // user用户不能操作
-      if (username === "user") {
+      // user用户不能操作且普通用户只能操作自己的数据
+      if ((username !== "root" && username !== cardUser) || username === "user") {
         return;
       }
 

@@ -639,12 +639,12 @@
           axios.post("http://127.0.0.1:8080/signUp",
             { "username": username, "password": password1 }
           )
-            .then(function (res) {
+            .then(res => {
               console.log(res)
-              msg = res.data.data
+              msg = res.data.data;
               openTipModal();
             })
-            .catch(function (err) {
+            .catch(err => {
               console.error(err)
               msg = "Error."
               openTipModal();

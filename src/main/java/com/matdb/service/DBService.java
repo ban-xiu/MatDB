@@ -5,19 +5,20 @@ import com.matdb.domain.dto.DBInfoDto;
 import com.matdb.domain.vo.req.ChangeDBCardReq;
 
 import com.matdb.domain.vo.req.TemplateReq;
+import com.matdb.domain.vo.resp.Result;
 
 import java.util.List;
 
 public interface DBService {
 
-    void templateSave(TemplateReq templateReq);
+    Result<String> templateSave(TemplateReq templateReq);
 
-    List<DBInfoDto> findDBInof(String username);
+    List<DBInfoDto> findDBInof();
 
     DBCardDto findDBCard(String id);
 
-    void changDBCard(ChangeDBCardReq changeDBCardReq);
+    Result<String> changDBCard(ChangeDBCardReq changeDBCardReq);
 
-    void destroy(String uid);
+    Result<String> destroy(String uid);
 
 }

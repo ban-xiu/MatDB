@@ -4,6 +4,7 @@ import com.matdb.domain.dto.MatDto;
 import com.matdb.domain.vo.req.FileReq;
 import com.matdb.domain.vo.req.SaveReq;
 import com.matdb.domain.vo.req.UpdateReq;
+import com.matdb.domain.vo.resp.Result;
 import com.matdb.service.MatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,38 +17,38 @@ public class MatController {
     @Autowired
     MatService matService;
     @GetMapping("/findAll")
-    public List<MatDto> findAll(@RequestParam String uid){
+    public Result<List<MatDto>> findAll(@RequestParam String uid){
         System.out.println("\nfindAll:" + uid);
         List<MatDto> mats = matService.findAll(uid);
         System.out.println("\nfindAll:" + mats.toString());
-        return mats;
+        return Result.success(mats);
     }
     @DeleteMapping("/deleteById")
-    public void deleteById(@RequestParam("id") String id){
+    public Result<String> deleteById(@RequestParam("id") String id){
         System.out.println("\ndeleteById:" + id);
-        matService.deleteById(id);
+        return matService.deleteById(id);
     }
     @PostMapping("/save")
-    public void save(@RequestBody SaveReq saveReq){
+    public Result<String> save(@RequestBody SaveReq saveReq){
         System.out.println("\nsave:" + saveReq.toString());
-        matService.save(saveReq);
+        return matService.save(saveReq);
     }
     @GetMapping("/findByCid")
-    public MatDto findByCid(@RequestParam("cid") String cid){
+    public Result<MatDto> findByCid(@RequestParam("cid") String cid){
         System.out.println("\nfindByCid:" + cid);
         MatDto mat = matService.findByCid(cid);
         System.out.println("\nfindByCid:" + mat.toString());
-        return mat;
+        return Result.success(mat);
     }
     @PutMapping("/update")
-    public void update(@RequestBody UpdateReq updateReq) {
+    public Result<String> update(@RequestBody UpdateReq updateReq) {
         System.out.println("\nupdate:" + updateReq.toString());
-        matService.update(updateReq);
+        return matService.update(updateReq);
     }
     @PostMapping("/addFile")
-    public void addFile(@RequestBody FileReq file){
+    public Result<String> addFile(@RequestBody FileReq file){
         System.out.println("\nfile:" + file.toString());
-        matService.addFile(file);
+        return matService.addFile(file);
     }
 }
 

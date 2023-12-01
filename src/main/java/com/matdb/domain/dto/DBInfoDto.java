@@ -12,15 +12,18 @@ public class DBInfoDto implements Serializable {
 
     private String type;
 
+    private String username;
+
     private byte[] img;
 
     public DBInfoDto(){}
 
-    public DBInfoDto(String id, String title, String introduction, String type, byte[] img) {
+    public DBInfoDto(String id, String title, String introduction, String type, String username, byte[] img) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.type = type;
+        this.username = username;
         this.img = img;
     }
 
@@ -56,6 +59,14 @@ public class DBInfoDto implements Serializable {
         this.type = type;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public byte[] getImg() {
         return img;
     }
@@ -77,7 +88,9 @@ public class DBInfoDto implements Serializable {
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", type='" + type + '\'' +
+                ", username='" + username + '\'' +
                 ", img=" + Arrays.toString(arr) +
                 '}';
     }
+
 }

@@ -12,6 +12,8 @@ public class DBCardDto implements Serializable {
 
     private String type;
 
+    private String username;
+
     private String[] speciality;
 
     private String[] specialityType;
@@ -20,11 +22,12 @@ public class DBCardDto implements Serializable {
 
     public DBCardDto(){}
 
-    public DBCardDto(String id, String title, String introduction, String type, String[] speciality, String[] specialityType, byte[] img) {
+    public DBCardDto(String id, String title, String introduction, String type, String username, String[] speciality, String[] specialityType, byte[] img) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
         this.type = type;
+        this.username = username;
         this.speciality = speciality;
         this.specialityType = specialityType;
         this.img = img;
@@ -60,6 +63,14 @@ public class DBCardDto implements Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String[] getSpeciality() {
@@ -99,9 +110,11 @@ public class DBCardDto implements Serializable {
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +
                 ", type='" + type + '\'' +
+                ", username='" + username + '\'' +
                 ", speciality=" + Arrays.toString(speciality) +
                 ", specialityType=" + Arrays.toString(specialityType) +
                 ", img=" + Arrays.toString(arr) +
                 '}';
     }
+
 }

@@ -590,12 +590,12 @@
                 axios.post("http://127.0.0.1:8080/signIn",
                     { "username": username, "password": password }
                 )
-                    .then(function (res) {
+                    .then(res => {
                         console.log(res);
                         msg = res.data.data;
                         openTipModal();
                     })
-                    .catch(function (err) {
+                    .catch(err => {
                         // 请求失败
                         console.error(err)
                         msg = "Error."
