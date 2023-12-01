@@ -1,7 +1,8 @@
 package com.matdb.service;
 
-public interface IndexService {
+import com.matdb.domain.entity.UserEntity;
 
-    String findPassword(String username);
+public interface IndexService {
+    UserEntity findUserByUsername(String username);
 
 }

@@ -14,12 +14,16 @@ public class UserEntity {
     @Field("password")
     private String password;
 
+    @Field("key")
+    private String key;
+
     public UserEntity(){};
 
-    public UserEntity(String id, String username, String password) {
+    public UserEntity(String id, String username, String password, String key) {
         this.id = id;
         this.username = username;
         this.password = password;
+        this.key = key;
     }
 
     public String getId() {
@@ -46,12 +50,21 @@ public class UserEntity {
         this.password = password;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     @Override
     public String toString() {
         return "UserEntity{" +
                 "id='" + id + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
+                ", key='" + key + '\'' +
                 '}';
     }
 }

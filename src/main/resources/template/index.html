@@ -671,6 +671,7 @@
     var uid = $("#uid").text();
     var username = $("#username").text();
     var password = $("#password").text();
+    var key = $("#key").text();
 
     // user用户不能操作数据库
     if (username == "user") {
@@ -783,7 +784,7 @@
 
     // Back返回
     $("#back").click(function () {
-      location.replace(`http://127.0.0.1:8080/admin?username=${username}`);
+      location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`);
     })
 
     // Add提示
@@ -1764,6 +1765,7 @@
 <i class="fa" th:text="${uid}" id="uid" hidden></i>
 <i class="fa" th:text="${username}" id="username" hidden></i>
 <i class="fa" th:text="${password}" id="password" hidden></i>
+<i class="fa" th:text="${key}" id="key" hidden></i>
 
 <!--卡片弹窗-->
 <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"

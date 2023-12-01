@@ -1,5 +1,7 @@
 package com.matdb.service.impl;
 
+import cn.hutool.core.util.RandomUtil;
+import com.matdb.domain.dto.UserDto;
 import com.matdb.domain.entity.UserEntity;
 import com.matdb.domain.vo.resp.Result;
 import com.matdb.enums.UserEnum;
@@ -17,8 +19,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    private static int keyLength = 30;
+
     @Override
-    public Result<String> signIn(SignAboutReq signInReq) {
+    public UserDto signIn(SignAboutReq signInReq) {
 
         String username = signInReq.getUsername();
         String password = signInReq.getPassword();
@@ -26,20 +30,30 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
 
         String msg;
+        UserDto userDto = new UserDto();
         if (userOption.isEmpty()) {
             msg = UserEnum.USER_NOT_FOUND.getMessage();
-            return Result.error(msg);
+            userDto.setMsg(msg);
+            return userDto;
         }
 
         UserEntity user = userOption.get();
 
         if (!user.getPassword().equals(password)) {
             msg = UserEnum.WRONG_PASSWORD.getMessage();
-            return Result.error(msg);
+            userDto.setMsg(msg);
+            return userDto;
         }
 
         msg = UserEnum.LOGIN_SUCCESS.getMessage();
-        return Result.success(msg);
+        userDto.setMsg(msg);
+        userDto.setUsername(username);
+        userDto.setPassword(password);
+        String randomKey = RandomUtil.randomString(keyLength);
+        userDto.setKey(randomKey);
+        user.setKey(randomKey);
+        userRepository.save(user);
+        return userDto;
     }
 
     @Transactional
@@ -56,7 +70,7 @@ public class UserServiceImpl implements UserService {
             msg = UserEnum.USERNAME_EXISTS.getMessage();
             return Result.error(msg);
         }
-        UserEntity user = new UserEntity(null,username,password);
+        UserEntity user = new UserEntity(null,username,password,null);
         userRepository.save(user);
 
         msg = UserEnum.SIGN_UP_SUCCESS.getMessage();

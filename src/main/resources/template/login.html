@@ -554,6 +554,7 @@
     var password;
     var msg;
     var user;
+    var key;
 
     // 打开Tip弹窗
     function openTipModal() {
@@ -579,7 +580,7 @@
         // 前往当前用户工作区
         $("#ok,.close").click(function () {
             if (msg == "Login succeeded.") {
-                location.replace(`http://127.0.0.1:8080/admin?username=${username}`)
+                location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`)
             }
         })
 
@@ -592,7 +593,8 @@
                 )
                     .then(res => {
                         console.log(res);
-                        msg = res.data.data;
+                        msg = res.data.data.msg;
+                        key = res.data.data.key;
                         openTipModal();
                     })
                     .catch(err => {

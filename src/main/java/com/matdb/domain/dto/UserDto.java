@@ -1,18 +1,22 @@
-package com.matdb.domain.vo.req;
+package com.matdb.domain.dto;
 
-import java.io.Serializable;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-public class SignAboutReq implements Serializable {
+public class UserDto {
+
     private String username;
     private String password;
     private String key;
 
-    public SignAboutReq(){}
+    private String msg;
 
-    public SignAboutReq(String username, String password, String key) {
+    public UserDto(){}
+
+    public UserDto(String username, String password, String key, String msg) {
         this.username = username;
         this.password = password;
         this.key = key;
+        this.msg = msg;
     }
 
     public String getUsername() {
@@ -39,12 +43,21 @@ public class SignAboutReq implements Serializable {
         this.key = key;
     }
 
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
     @Override
     public String toString() {
-        return "SignAboutReq{" +
+        return "UserDto{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", key='" + key + '\'' +
+                ", msg='" + msg + '\'' +
                 '}';
     }
 }
