@@ -1,8 +1,9 @@
 package com.matdb.domain.dto;
 
-import org.springframework.data.mongodb.core.mapping.Field;
 
-public class UserDto {
+import java.io.Serializable;
+
+public class UserDTO implements Serializable {
 
     private String username;
     private String password;
@@ -10,9 +11,9 @@ public class UserDto {
 
     private String msg;
 
-    public UserDto(){}
+    public UserDTO(){}
 
-    public UserDto(String username, String password, String key, String msg) {
+    public UserDTO(String username, String password, String key, String msg) {
         this.username = username;
         this.password = password;
         this.key = key;
@@ -53,7 +54,7 @@ public class UserDto {
 
     @Override
     public String toString() {
-        return "UserDto{" +
+        return "UserDTO{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", key='" + key + '\'' +

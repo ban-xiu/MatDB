@@ -2,8 +2,8 @@
 
 ## 一个快速构建的材料模板数据库。
 
-### 前端基于：jquery bootstrap axios jsmol等。
-### 后端基于：springboot mongodb等。
+### 前端基于：jQuery Bootstrap Axios JSmol Tensorflow.js等。
+### 后端基于：Springboot MongoDB等。
 
 ## 1.创建数据库
 
@@ -52,6 +52,6 @@ db.matUsers.find()
 如果matUsers集合中不存在user账户：db.matUsers.insertOne({username:"user", password:"user"})
 
 ## 2.启动项目
-保证数据库正常连接，通过maven（开发版本为3.9.3）更新pox.xml文件中的依赖后，运行APP.java，访问127.0.0.1:8080即可。
+保证数据库正常连接，通过Maven（开发版本为3.9.3）更新pox.xml文件中的依赖后，运行APP.java，访问127.0.0.1:8080即可。
 
 

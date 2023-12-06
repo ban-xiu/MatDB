@@ -761,7 +761,7 @@
 
         // 刷新页面
         $("#ok,#tipClose").click(function () {
-            if (msg == "The new password has been submitted.") {
+            if (msg == "Password changed successfully.") {
                 location.replace("http://127.0.0.1:8080");
                 return;
             }
@@ -1091,7 +1091,7 @@
                 })
                     .then(res => {
                         console.log(res)
-                        msg = "The new password has been submitted."
+                        msg = res.data.data;
                         openTipModal();
                     })
                     .catch(err => {

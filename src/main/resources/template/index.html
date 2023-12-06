@@ -22,6 +22,11 @@
   <script src="tensorflow/tf.min.js"></script>
 </head>
 
+<i class="fa" th:text="${uid}" id="uid" hidden></i>
+<i class="fa" th:text="${username}" id="username" hidden></i>
+<i class="fa" th:text="${password}" id="password" hidden></i>
+<i class="fa" th:text="${key}" id="key" hidden></i>
+
 <style>
   body {
     background-color: #EFEDE6;
@@ -113,16 +118,6 @@
 
   @media (max-width: 992px) {
     .operation:not(#back) {
-      display: none;
-    }
-  }
-
-  @media (max-width: 992px) {
-    #update {
-      display: none;
-    }
-
-    #delete {
       display: none;
     }
   }
@@ -455,7 +450,7 @@
     let html = '';
     for (let i = 0; i < list.length; i++) {
       let obj = truncateValues(list[i]);
-      html += `<tr class="clickable-row" data-toggle="modal" data-target="#rowModal">`;
+      html += `<tr class="clickable-row">`;
       html += `<th scope="row" title="${obj.id}">${obj.id}</th>`;
       html += `<td col="0" title="${obj.structure}">${obj.structure}</td>`;
       html += `<td col="1" title="${obj.formula}">${obj.formula}</td>`;
@@ -852,7 +847,6 @@
         $("#delete").css("display", "none");
       }
 
-
       // 设置卡片背景
       const backgroundImg = cont.img;
       if (backgroundImg) {
@@ -1107,6 +1101,14 @@
           if (cid === "No data available in table") {
             return;
           }
+
+          // 小屏幕不能操作
+          if ($(window).width() <= 992) {
+            return;
+          }
+
+          // 打开弹窗
+          $('#rowModal').modal('show');
 
           axios.get("http://127.0.0.1:8080/findByCid", {
             params: { "cid": cid }
@@ -1761,11 +1763,6 @@
 </script>
 
 <body>
-
-<i class="fa" th:text="${uid}" id="uid" hidden></i>
-<i class="fa" th:text="${username}" id="username" hidden></i>
-<i class="fa" th:text="${password}" id="password" hidden></i>
-<i class="fa" th:text="${key}" id="key" hidden></i>
 
 <!--卡片弹窗-->
 <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"

@@ -1,13 +1,13 @@
 package com.matdb.service;
 
-import com.matdb.domain.dto.UserDto;
+import com.matdb.domain.dto.UserDTO;
 import com.matdb.domain.vo.req.SignAboutReq;
 import com.matdb.domain.vo.resp.Result;
 
 
 public interface UserService {
 
-    UserDto signIn(SignAboutReq signInReq);
+    UserDTO signIn(SignAboutReq signInReq);
 
 
     Result<String> signUp(SignAboutReq signUpReq);

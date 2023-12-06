@@ -3,7 +3,7 @@ package com.matdb.domain.dto;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class DBCardDto implements Serializable {
+public class DBCardDTO implements Serializable {
     private String id;
 
     private String title;
@@ -20,9 +20,9 @@ public class DBCardDto implements Serializable {
 
     private byte[] img;
 
-    public DBCardDto(){}
+    public DBCardDTO(){}
 
-    public DBCardDto(String id, String title, String introduction, String type, String username, String[] speciality, String[] specialityType, byte[] img) {
+    public DBCardDTO(String id, String title, String introduction, String type, String username, String[] speciality, String[] specialityType, byte[] img) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
@@ -105,7 +105,7 @@ public class DBCardDto implements Serializable {
         } else {
             arr = null;
         }
-        return "DBCardDto{" +
+        return "DBCardDTO{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +

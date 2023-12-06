@@ -1,10 +1,9 @@
 package com.matdb.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.matdb.domain.dto.MatDto;
+import com.matdb.domain.dto.MatDTO;
 import com.matdb.domain.entity.MatEntity;
 import com.matdb.domain.vo.resp.Result;
-import com.matdb.enums.DBEnum;
 import com.matdb.enums.MatEnum;
 import com.matdb.mapper.repository.MatRepository;
 import com.matdb.domain.vo.req.FileReq;
@@ -25,15 +24,15 @@ public class MatServiceImpl implements MatService {
     MatRepository matRepository;
 
     @Override
-    public List<MatDto> findAll(String uid){
+    public List<MatDTO> findAll(String uid){
         List<MatEntity> mats = matRepository.findAllByUid(uid);
-        List<MatDto> matDtos = new ArrayList<>();
+        List<MatDTO> matDTOS = new ArrayList<>();
         for (MatEntity mat : mats) {
-            MatDto matDto = new MatDto();
+            MatDTO matDto = new MatDTO();
             BeanUtil.copyProperties(mat, matDto);
-            matDtos.add(matDto);
+            matDTOS.add(matDto);
         }
-        return matDtos;
+        return matDTOS;
     }
 
     @Transactional
@@ -69,14 +68,14 @@ public class MatServiceImpl implements MatService {
     }
 
     @Override
-    public MatDto findByCid(String cid){
+    public MatDTO findByCid(String cid){
         Optional<MatEntity> matOption = matRepository.findById(cid);
         if (matOption.isEmpty()){
             System.out.println("\nfindByCid: null");
             return null;
         }
         MatEntity mat = matOption.get();
-        MatDto matDto = new MatDto();
+        MatDTO matDto = new MatDTO();
         BeanUtil.copyProperties(mat, matDto);
         return matDto;
     }

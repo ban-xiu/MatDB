@@ -1,6 +1,6 @@
 package com.matdb.controller;
 
-import com.matdb.domain.dto.MatDto;
+import com.matdb.domain.dto.MatDTO;
 import com.matdb.domain.vo.req.FileReq;
 import com.matdb.domain.vo.req.SaveReq;
 import com.matdb.domain.vo.req.UpdateReq;
@@ -17,9 +17,9 @@ public class MatController {
     @Autowired
     MatService matService;
     @GetMapping("/findAll")
-    public Result<List<MatDto>> findAll(@RequestParam String uid){
+    public Result<List<MatDTO>> findAll(@RequestParam String uid){
         System.out.println("\nfindAll:" + uid);
-        List<MatDto> mats = matService.findAll(uid);
+        List<MatDTO> mats = matService.findAll(uid);
         System.out.println("\nfindAll:" + mats.toString());
         return Result.success(mats);
     }
@@ -34,9 +34,9 @@ public class MatController {
         return matService.save(saveReq);
     }
     @GetMapping("/findByCid")
-    public Result<MatDto> findByCid(@RequestParam("cid") String cid){
+    public Result<MatDTO> findByCid(@RequestParam("cid") String cid){
         System.out.println("\nfindByCid:" + cid);
-        MatDto mat = matService.findByCid(cid);
+        MatDTO mat = matService.findByCid(cid);
         System.out.println("\nfindByCid:" + mat.toString());
         return Result.success(mat);
     }

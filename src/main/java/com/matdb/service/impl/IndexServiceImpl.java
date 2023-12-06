@@ -17,7 +17,7 @@ public class IndexServiceImpl implements IndexService {
     public UserEntity findUserByUsername(String username){
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (userOption.isEmpty()){
-            System.out.println("\nfindPassword: null");
+            System.out.println("\nfindUserByUsername: null");
             return null;
         }
         UserEntity user = userOption.get();

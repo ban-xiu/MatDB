@@ -1,8 +1,8 @@
 package com.matdb.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.matdb.domain.dto.DBCardDto;
-import com.matdb.domain.dto.DBInfoDto;
+import com.matdb.domain.dto.DBCardDTO;
+import com.matdb.domain.dto.DBInfoDTO;
 import com.matdb.domain.entity.DBEntity;
 import com.matdb.domain.vo.resp.Result;
 import com.matdb.enums.DBEnum;
@@ -45,11 +45,11 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public List<DBInfoDto> findDBInof(){
+    public List<DBInfoDTO> findDBInof(){
         List<DBEntity> dbs = dbRepository.findAll();
-        List<DBInfoDto> infos = new ArrayList<>();
+        List<DBInfoDTO> infos = new ArrayList<>();
         for (DBEntity db : dbs) {
-            DBInfoDto info = new DBInfoDto();
+            DBInfoDTO info = new DBInfoDTO();
             BeanUtil.copyProperties(db, info);
             infos.add(info);
         }
@@ -57,14 +57,14 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public DBCardDto findDBCard(String id){
+    public DBCardDTO findDBCard(String id){
         Optional<DBEntity> dbOption = dbRepository.findById(id);
         if (dbOption.isEmpty()){
             System.out.println("\nfindDBCard: null");
             return null;
         }
         DBEntity db = dbOption.get();
-        DBCardDto card = new DBCardDto();
+        DBCardDTO card = new DBCardDTO();
         BeanUtil.copyProperties(db, card);
         return card;
     }

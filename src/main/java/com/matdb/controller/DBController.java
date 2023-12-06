@@ -1,7 +1,7 @@
 package com.matdb.controller;
 
-import com.matdb.domain.dto.DBInfoDto;
-import com.matdb.domain.dto.DBCardDto;
+import com.matdb.domain.dto.DBCardDTO;
+import com.matdb.domain.dto.DBInfoDTO;
 import com.matdb.domain.vo.req.ChangeDBCardReq;
 import com.matdb.domain.vo.req.TemplateReq;
 import com.matdb.domain.vo.resp.Result;
@@ -25,15 +25,15 @@ public class DBController {
     }
 
     @GetMapping("/findDBInof")
-    public Result<List<DBInfoDto>> findDBInof(){
-        List<DBInfoDto> infos = dbService.findDBInof();
+    public Result<List<DBInfoDTO>> findDBInof(){
+        List<DBInfoDTO> infos = dbService.findDBInof();
         System.out.println("\nfindDBInof:" + infos.toString());
         return Result.success(infos);
     }
     @GetMapping("/findDBCard")
-    public Result<DBCardDto> findDBCard(@RequestParam("id") String id){
+    public Result<DBCardDTO> findDBCard(@RequestParam("id") String id){
         System.out.println("\nfindDBCard:" + id);
-        DBCardDto card = dbService.findDBCard(id);
+        DBCardDTO card = dbService.findDBCard(id);
         System.out.println("\nfindDBCard:" + card.toString());
         return Result.success(card);
     }

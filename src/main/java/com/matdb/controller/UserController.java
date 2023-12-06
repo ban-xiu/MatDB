@@ -1,6 +1,6 @@
 package com.matdb.controller;
 
-import com.matdb.domain.dto.UserDto;
+import com.matdb.domain.dto.UserDTO;
 import com.matdb.domain.vo.req.SignAboutReq;
 import com.matdb.domain.vo.resp.Result;
 import com.matdb.service.UserService;
@@ -14,9 +14,9 @@ public class UserController {
     UserService userService;
 
     @PostMapping("/signIn")
-    public Result<UserDto> signIn(@RequestBody SignAboutReq signInReq) {
+    public Result<UserDTO> signIn(@RequestBody SignAboutReq signInReq) {
         System.out.println(signInReq.toString());
-        UserDto userDto = userService.signIn(signInReq);
+        UserDTO userDto = userService.signIn(signInReq);
         return Result.success(userDto);
     }
 

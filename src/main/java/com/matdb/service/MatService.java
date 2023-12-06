@@ -1,6 +1,6 @@
 package com.matdb.service;
 
-import com.matdb.domain.dto.MatDto;
+import com.matdb.domain.dto.MatDTO;
 import com.matdb.domain.vo.req.FileReq;
 import com.matdb.domain.vo.req.SaveReq;
 import com.matdb.domain.vo.req.UpdateReq;
@@ -10,13 +10,13 @@ import java.util.List;
 
 public interface MatService {
 
-    List<MatDto> findAll(String uid);
+    List<MatDTO> findAll(String uid);
 
     Result<String> deleteById(String id);
 
     Result<String> save(SaveReq saveReq);
 
-    MatDto findByCid(String cid);
+    MatDTO findByCid(String cid);
 
     Result<String> update(UpdateReq updateReq);
 

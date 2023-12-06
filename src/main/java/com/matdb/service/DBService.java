@@ -1,7 +1,7 @@
 package com.matdb.service;
 
-import com.matdb.domain.dto.DBCardDto;
-import com.matdb.domain.dto.DBInfoDto;
+import com.matdb.domain.dto.DBCardDTO;
+import com.matdb.domain.dto.DBInfoDTO;
 import com.matdb.domain.vo.req.ChangeDBCardReq;
 
 import com.matdb.domain.vo.req.TemplateReq;
@@ -13,9 +13,9 @@ public interface DBService {
 
     Result<String> templateSave(TemplateReq templateReq);
 
-    List<DBInfoDto> findDBInof();
+    List<DBInfoDTO> findDBInof();
 
-    DBCardDto findDBCard(String id);
+    DBCardDTO findDBCard(String id);
 
     Result<String> changDBCard(ChangeDBCardReq changeDBCardReq);
 

@@ -3,7 +3,7 @@ package com.matdb.domain.dto;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class MatDto implements Serializable {
+public class MatDTO implements Serializable {
 
     private String id;
 
@@ -29,9 +29,9 @@ public class MatDto implements Serializable {
 
     private String[] speciality;
 
-    public MatDto(){}
+    public MatDTO(){}
 
-    public MatDto(String id, String structure, String formula, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
+    public MatDTO(String id, String structure, String formula, String name, String symmetry, String metal, String bandgappbe, String bandgaphse, String doi, String url, String publication, String[] speciality) {
         this.id = id;
         this.structure = structure;
         this.formula = formula;
@@ -144,7 +144,7 @@ public class MatDto implements Serializable {
 
     @Override
     public String toString() {
-        return "MatDto{" +
+        return "MatDTO{" +
                 "id='" + id + '\'' +
                 ", structure='" + structure + '\'' +
                 ", formula='" + formula + '\'' +

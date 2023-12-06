@@ -586,9 +586,9 @@
       location.replace('http://127.0.0.1:8080/');
     })
 
-    // 刷新页面
+    // 注册成功
     $("#ok,.close").click(function () {
-      if (msg == "The task has been submitted.") {
+      if (msg == "Sign up successful.") {
         location.replace('http://127.0.0.1:8080/');
       }
     })
@@ -685,17 +685,17 @@
                     <div>
                         <p class="text-head">Your username</p>
                         <input type="text" name="username" class="input" placeholder="" required=""
-                               title="Please fill in this field." />
+                               title="" />
                     </div>
                     <div>
                         <p class="text-head">Your password</p>
                         <input type="password" name="password1" class="input" placeholder="" required=""
-                               title="Please fill in this field." />
+                               title="" />
                     </div>
                     <div>
                         <p class="text-head">Your password again</p>
                         <input type="password" name="password2" class="input" placeholder="" required=""
-                               title="Please fill in this field." />
+                               title="" />
                     </div>
 
                     <button type="submit" class="signinbutton btn" id="sign">register</button>

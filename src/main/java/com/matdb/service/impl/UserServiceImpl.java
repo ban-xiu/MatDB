@@ -1,7 +1,7 @@
 package com.matdb.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import com.matdb.domain.dto.UserDto;
+import com.matdb.domain.dto.UserDTO;
 import com.matdb.domain.entity.UserEntity;
 import com.matdb.domain.vo.resp.Result;
 import com.matdb.enums.UserEnum;
@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
     private static int keyLength = 30;
 
     @Override
-    public UserDto signIn(SignAboutReq signInReq) {
+    public UserDTO signIn(SignAboutReq signInReq) {
 
         String username = signInReq.getUsername();
         String password = signInReq.getPassword();
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
 
         String msg;
-        UserDto userDto = new UserDto();
+        UserDTO userDto = new UserDTO();
         if (userOption.isEmpty()) {
             msg = UserEnum.USER_NOT_FOUND.getMessage();
             userDto.setMsg(msg);

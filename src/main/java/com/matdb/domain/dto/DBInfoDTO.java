@@ -3,7 +3,7 @@ package com.matdb.domain.dto;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class DBInfoDto implements Serializable {
+public class DBInfoDTO implements Serializable {
     private String id;
 
     private String title;
@@ -16,9 +16,9 @@ public class DBInfoDto implements Serializable {
 
     private byte[] img;
 
-    public DBInfoDto(){}
+    public DBInfoDTO(){}
 
-    public DBInfoDto(String id, String title, String introduction, String type, String username, byte[] img) {
+    public DBInfoDTO(String id, String title, String introduction, String type, String username, byte[] img) {
         this.id = id;
         this.title = title;
         this.introduction = introduction;
@@ -83,7 +83,7 @@ public class DBInfoDto implements Serializable {
         } else {
             arr = null;
         }
-        return "DBInfoDto{" +
+        return "DBInfoDTO{" +
                 "id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", introduction='" + introduction + '\'' +
