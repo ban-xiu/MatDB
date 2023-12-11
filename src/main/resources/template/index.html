@@ -771,7 +771,7 @@
     // 页面刷新方法
     $('#tipOk,#tipNo,.tipClose,.detailClose').click(function () {
       if (msg2 === "Burn out.") {
-        location.replace(`http://127.0.0.1:8080/admin?username=${username}`)
+        location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`)
       }else {
         location.reload();
       }
