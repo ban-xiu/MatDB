@@ -3,7 +3,7 @@
 ## 一个快速构建的材料模板数据库。
 
 ### 前端基于：jQuery Bootstrap Axios JSmol Tensorflow.js等。
-### 后端基于：Springboot MongoDB等。
+### 后端基于：SpringBoot MongoDB等。
 
 ## 1.创建数据库
 
