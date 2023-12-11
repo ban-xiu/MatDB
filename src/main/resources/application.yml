@@ -9,8 +9,3 @@ spring:
       database: admin
       username: root
       password: root
-  thymeleaf:
-    prefix: classpath:/template/
-    suffix: .html
-    cache: false
-    mode: HTML
