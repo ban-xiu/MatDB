@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MatDB</title>
-    <link rel="icon" href="imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
-    <link rel="icon" href="imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
-    <link href="admin/bootstrap.min.css" rel="stylesheet">
-    <link href="admin/animate.css" rel="stylesheet">
-    <link href="admin/style.css" rel="stylesheet">
-    <script src="admin/jquery-2.1.1.js"></script>
-    <script src="admin/bootstrap.min.js"></script>
-    <script src="admin/jquery.metisMenu.js"></script>
-    <script src="admin/jquery.slimscroll.min.js"></script>
-    <script src="admin/inspinia.js"></script>
-    <script src="admin/jquery-ui.min.js"></script>
-    <script src="axios/axios.min.js"></script>
+    <link rel="icon" href="./static/imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
+    <link rel="icon" href="./static/imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
+    <link href="./static/admin/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/admin/animate.css" rel="stylesheet">
+    <link href="./static/admin/style.css" rel="stylesheet">
+    <script src="./static/admin/jquery-2.1.1.js"></script>
+    <script src="./static/admin/bootstrap.min.js"></script>
+    <script src="./static/admin/jquery.metisMenu.js"></script>
+    <script src="./static/admin/jquery.slimscroll.min.js"></script>
+    <script src="./static/admin/inspinia.js"></script>
+    <script src="./static/admin/jquery-ui.min.js"></script>
+    <script src="./static/axios/axios.min.js"></script>
 </head>
 
 <style>
@@ -292,298 +292,342 @@
     *::-ms-scrollbar-thumb:hover {
         background-color: #555;
     }
-
 </style>
 
 <body>
 
-<div id="wrapper">
+    <div id="wrapper">
 
-    <nav class="navbar-default navbar-static-side" role="navigation">
-        <div class="sidebar-collapse">
-            <ul class="nav metismenu" id="side-menu">
-                <li class="nav-header">
-                    <div class="dropdown profile-element">
-                        <a><i class="fa" th:text="${username}"></i></a>
-                    </div>
-                </li>
-
-                <li id="info">
-                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">user information</span></a>
-                </li>
-
-                <li id="change">
-                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">change password</span></a>
-                </li>
-                <li id="new">
-                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">new database</span></a>
-                </li>
-                <li id="about">
-                    <a class="menu-item"><i class="fa"></i> <span class="nav-label">about</span></a>
-                </li>
-
-            </ul>
-
-        </div>
-    </nav>
-
-    <div id="page-wrapper" class="gray-bg">
-        <div class="row border-bottom">
-            <nav class="navbar navbar-static-top" role="navigation">
-                <ul class="nav navbar-top-links navbar-left">
-                    <li id="li1">
-                        <input type="text" id="search" class="form-control-lg">
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <a><i class="fa" id="user"></i></a>
+                        </div>
                     </li>
+
+                    <li id="info">
+                        <a class="menu-item"><i class="fa"></i> <span class="nav-label">user information</span></a>
+                    </li>
+
+                    <li id="change">
+                        <a class="menu-item"><i class="fa"></i> <span class="nav-label">change password</span></a>
+                    </li>
+                    <li id="new">
+                        <a class="menu-item"><i class="fa"></i> <span class="nav-label">new database</span></a>
+                    </li>
+                    <li id="about">
+                        <a class="menu-item"><i class="fa"></i> <span class="nav-label">about</span></a>
+                    </li>
+
                 </ul>
-                <ul class="nav navbar-top-links navbar-right" style="display: flex;">
-                    <li id="li2">
+
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation">
+                    <ul class="nav navbar-top-links navbar-left">
+                        <li id="li1">
+                            <input type="text" id="search" class="form-control-lg">
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-top-links navbar-right" style="display: flex;">
+                        <li id="li2">
                             <span class="m-r-sm text-muted welcome-message">Welcome
                                 to the admin.</span>
-                    </li>
-                    <li id="li3">
-                        <a href="/">
-                            <i class="fa"></i> Log out
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-        <div class="row wrapper border-bottom white-bg page-heading">
-            <div class="col-lg-10">
-                <h1>My databases</h1>
+                        </li>
+                        <li id="li3">
+                            <a href="/">
+                                <i class="fa"></i> Log out
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
-        </div>
-        <div class="wrapper wrapper-content  animated fadeInRight">
-            <div class="row" id="sortable-view">
+            <div class="row wrapper border-bottom white-bg page-heading">
+                <div class="col-lg-10">
+                    <h1>My databases</h1>
+                </div>
+            </div>
+            <div class="wrapper wrapper-content  animated fadeInRight">
+                <div class="row" id="sortable-view">
 
+                </div>
             </div>
-        </div>
-        <div class="footer">
-            <div class="pull-right">
-                A tool for quickly building template databases.
+            <div class="footer">
+                <div class="pull-right">
+                    A tool for quickly building template databases.
+                </div>
+                <div>
+                    <strong>MatDB</strong>
+                </div>
             </div>
-            <div>
-                <strong>MatDB</strong>
-            </div>
-        </div>
 
-    </div>
-</div>
-
-<!--Inof弹窗-->
-<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                    &times;
-                </button>
-                <h4 class="modal-title">
-                    Info
-                </h4>
-            </div>
-            <div class="modal-body" id="userInof">
-                <p>username:&emsp;<span th:text="${username}" id="username"></span></p>
-                <p>password:&emsp;<span th:text="${password}" id="password"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
         </div>
     </div>
-</div>
 
-<!--Change弹窗-->
-<div class="modal fade" id="changeModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
-                                                                                                  id="changeClose1">&times;</span></button>
-                <h4 class="modal-title">Change</h4>
+    <!--Inof弹窗-->
+    <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title">
+                        Info
+                    </h4>
+                </div>
+                <div class="modal-body" id="userInof">
+                    <p>username:&emsp;<span id="username"></span></p>
+                    <p>password:&emsp;<span id="password"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
             </div>
-            <div class="modal-body">
-                <form>
+        </div>
+    </div>
+
+    <!--Change弹窗-->
+    <div class="modal fade" id="changeModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                            id="changeClose1">&times;</span></button>
+                    <h4 class="modal-title">Change</h4>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="newPassword1" class="control-label">New Password:</label>
+                            <input type="password" class="form-control" id="newPassword1">
+                            <label for="newPassword1" class="control-label">New Password Again:</label>
+                            <input type="password" class="form-control" id="newPassword2">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="changeSubmit">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="changeClose2">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--About弹窗-->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">MatDB</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="aboutText"> A database built with materials science
+                        data sourced from available datasets & research papers.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--New弹窗-->
+    <div class="modal fade" id="newModal" tabindex="-1" role="dialog">
+
+        <div class="modal-dialog" role="document">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">New</h4>
+                    <button type="button" class="close" data-dismiss="modal" id="newClose1">&times;</button>
+                </div>
+
+                <div class="modal-body row_Y">
+
                     <div class="form-group">
-                        <label for="newPassword1" class="control-label">New Password:</label>
-                        <input type="password" class="form-control" id="newPassword1">
-                        <label for="newPassword1" class="control-label">New Password Again:</label>
-                        <input type="password" class="form-control" id="newPassword2">
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" id="title">
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="changeSubmit">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="changeClose2">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!--About弹窗-->
-<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">MatDB</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p id="aboutText"> A database built with materials science
-                    data sourced from available datasets & research papers.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
+                    <div class="form-group">
+                        <label for="intro">Introduction</label>
+                        <textarea class="form-control" id="intro"></textarea>
+                    </div>
 
-<!--New弹窗-->
-<div class="modal fade" id="newModal" tabindex="-1" role="dialog">
+                    <div class="form-group">
+                        <label for="dbType">Type</label>
+                        <select class="form-control selectType" id="dbType">
+                            <option value="2D FEM">2D FEM</option>
+                            <option value="2D NPB">2D NPB</option>
+                            <option value="BMS">BMS</option>
+                            <option value="Penta">Penta</option>
+                            <option value="2D-Carbon">2D-Carbon</option>
+                            <option value="Self-defined">Self-defined</option>
+                        </select>
 
-    <div class="modal-dialog" role="document">
+                    </div>
 
-        <div class="modal-content">
+                    <div id="typeInput" style="display:none;">
+                        <label for="typeName">Type name</label>
+                        <input type="text" class="form-control" id="typeName">
+                    </div>
 
-            <div class="modal-header">
-                <h4 class="modal-title">New</h4>
-                <button type="button" class="close" data-dismiss="modal" id="newClose1">&times;</button>
-            </div>
-
-            <div class="modal-body row_Y">
-
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title">
-                </div>
-
-                <div class="form-group">
-                    <label for="intro">Introduction</label>
-                    <textarea class="form-control" id="intro"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="dbType">Type</label>
-                    <select class="form-control selectType" id="dbType">
-                        <option value="2D FEM">2D FEM</option>
-                        <option value="2D NPB">2D NPB</option>
-                        <option value="BMS">BMS</option>
-                        <option value="Penta">Penta</option>
-                        <option value="2D-Carbon">2D-Carbon</option>
-                        <option value="Self-defined">Self-defined</option>
-                    </select>
+                    <label>Proprietary attribute</label>
+                    <div id="dbInfo"></div>
+                    </br>
+                    <button class="btn btn-primary" id="add">Add</button>
 
                 </div>
 
-                <div id="typeInput" style="display:none;">
-                    <label for="typeName">Type name</label>
-                    <input type="text" class="form-control" id="typeName">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="create">Create</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="newClose2">Close</button>
                 </div>
 
-                <label>Proprietary attribute</label>
-                <div id="dbInfo"></div>
-                </br>
-                <button class="btn btn-primary" id="add">Add</button>
-
-            </div>
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="create">Create</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="newClose2">Close</button>
             </div>
 
         </div>
 
     </div>
 
-</div>
-
-<!--Add弹窗-->
-<div class="modal" id="addModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add</h4>
-                <button type="button" class="close" data-dismiss="modal" id="addClose1">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="addInput">
-                    <label for="addOne">New proprietary attribute</label>
-                    <input type="text" class="form-control" id="addOne">
+    <!--Add弹窗-->
+    <div class="modal" id="addModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Add</h4>
+                    <button type="button" class="close" data-dismiss="modal" id="addClose1">&times;</button>
                 </div>
-                <div class="form-group">
-                    <label for="addType">New proprietary attribute type</label>
-                    <select class="form-control selectType" id="addType">
-                        <option value="Scalar">Scalar</option>
-                        <option value="Vector">Vector</option>
-                        <option value="Tensor">Tensor</option>
-                    </select>
+                <div class="modal-body">
+                    <div id="addInput">
+                        <label for="addOne">New proprietary attribute</label>
+                        <input type="text" class="form-control" id="addOne">
+                    </div>
+                    <div class="form-group">
+                        <label for="addType">New proprietary attribute type</label>
+                        <select class="form-control selectType" id="addType">
+                            <option value="Scalar">Scalar</option>
+                            <option value="Vector">Vector</option>
+                            <option value="Tensor">Tensor</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="addSubmit" data-dismiss="modal">Add</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="addClose2">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="addSubmit" data-dismiss="modal">Add</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="addClose2">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!--Edit弹窗-->
-<div class="modal" id="editModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit</h4>
-                <button type="button" class="close" data-dismiss="modal" id="editClose1">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div id="editInput">
-                    <label for="editOne">proprietary attribute</label>
-                    <input type="text" class="form-control" id="editOne">
+    <!--Edit弹窗-->
+    <div class="modal" id="editModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Edit</h4>
+                    <button type="button" class="close" data-dismiss="modal" id="editClose1">&times;</button>
                 </div>
-                <div class="form-group">
-                    <label for="editType">proprietary attribute type</label>
-                    <select class="form-control selectType" id="editType">
-                        <option value="Scalar">Scalar</option>
-                        <option value="Vector">Vector</option>
-                        <option value="Tensor">Tensor</option>
-                    </select>
+                <div class="modal-body">
+                    <div id="editInput">
+                        <label for="editOne">proprietary attribute</label>
+                        <input type="text" class="form-control" id="editOne">
+                    </div>
+                    <div class="form-group">
+                        <label for="editType">proprietary attribute type</label>
+                        <select class="form-control selectType" id="editType">
+                            <option value="Scalar">Scalar</option>
+                            <option value="Vector">Vector</option>
+                            <option value="Tensor">Tensor</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="editSubmit" data-dismiss="modal">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal" id="editClose2">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-info" id="editSubmit" data-dismiss="modal">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="editClose2">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<!--Tip弹窗-->
-<div class="modal" id="tipModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tip</h4>
-                <button type="button" class="close" data-dismiss="modal" id="tipClose">&times;</button>
-            </div>
-            <div class="modal-body tipBody">
-                <p></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
+    <!--Tip弹窗-->
+    <div class="modal" id="tipModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Tip</h4>
+                    <button type="button" class="close" data-dismiss="modal" id="tipClose">&times;</button>
+                </div>
+                <div class="modal-body tipBody">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<script>
+    <script>
+
+        // 获取URL中的查询字符串
+        var queryString = window.location.search;
+
+        // 解析查询字符串，获取参数对象
+        var params = {};
+        if (queryString) {
+            // 去掉问号，然后用"&"分割查询字符串
+            queryString = queryString.substring(1);
+            var paramList = queryString.split("&");
+
+            // 遍历参数列表，将参数名和参数值以键值对的形式存储到params对象中
+            for (var i = 0; i < paramList.length; i++) {
+                var pair = paramList[i].split("=");
+                var paramName = decodeURIComponent(pair[0]);
+                var paramValue = decodeURIComponent(pair[1]);
+
+                // 将参数名和参数值存储到params对象中
+                params[paramName] = paramValue;
+            }
+        }
+
+        var username = params.username;
+        var key = params.key;
+        var password;
+
+        axios.get("http://127.0.0.1:8080/getPassword",{
+            params:{ "username":username }
+        }).then(res => {
+            console.log(res);
+            password = res.data.data;
+
+            // 初始化用户信息
+            $("#user").text(username);
+            $("#username").text(username);
+            $("#password").text(password);
+            
+        }).catch(err => {
+            console.error(err);
+            msg = "Error."
+            openTipModal();
+        })
+            
+
+    </script>
+
+    <script>
 
         var newPassword1;
         var newPassword2;
-        var username = $("#username").text();
-        var password = $("#password").text();
         var msg;
         var title;
         var type = "2D FEM";
@@ -717,7 +761,7 @@
                     html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('${imgUrl}')">`
                 } else {
                     imgUrl = types.includes(obj.type) ? obj.type : "Self-defined";
-                    html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('imgs/jpg/${imgUrl}.jpg')">`
+                    html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('./static/imgs/jpg/${imgUrl}.jpg')">`
                 }
                 html += `<a class="toIndex">${obj.id}</a>
                     <div class="ibox">
@@ -762,7 +806,7 @@
         // 刷新页面
         $("#ok,#tipClose").click(function () {
             if (msg == "Password changed successfully.") {
-                location.replace("http://127.0.0.1:8080");
+                location.replace("http://127.0.0.1:8083/");
                 return;
             }
             if (msg == "The template is saved successfully.") {
@@ -850,40 +894,40 @@
 
             // 渲染数据库信息卡片
             axios.get("http://127.0.0.1:8080/findDBInof")
-            .then(res => {
-                console.log(res)
-                let html = createDBCard(res.data.data)
-                $("#sortable-view").append(html);
+                .then(res => {
+                    console.log(res)
+                    let html = createDBCard(res.data.data)
+                    $("#sortable-view").append(html);
 
-                $(".col-lg-6.card").on("click", function () {
-                    const uid = $(this).find('.toIndex').text();
-                    location.replace(`http://127.0.0.1:8080/index?uid=${uid}&username=${username}`);
-                })
+                    $(".col-lg-6.card").on("click", function () {
+                        const uid = $(this).find('.toIndex').text();
+                        location.replace(`http://127.0.0.1:8080/index?uid=${uid}&username=${username}`);
+                    })
 
-                // 获取每张卡片的信息并拼接为长字符串
-                let sl = [];
-                for (let i = 0; i < res.data.length; i++) {
-                    sl.push(deal(i))
-                }
-
-                // 监听Search输入框，匹配指定的卡片
-                let str;
-                const $search = $("#search");
-                $search.on("input", function () {
-                    $(".card").show();
-                    str = $search.val().toLowerCase();
-                    for (let j = 0; j < sl.length; j++) {
-                        if (!sl[j].includes(str)) {
-                            $(`#card${j}`).css("display", "none")
-                        }
+                    // 获取每张卡片的信息并拼接为长字符串
+                    let sl = [];
+                    for (let i = 0; i < res.data.length; i++) {
+                        sl.push(deal(i))
                     }
-                })
 
-            }).catch(err => {
-                msg = "Error."
-                openTipModal();
-                console.error(err)
-            })
+                    // 监听Search输入框，匹配指定的卡片
+                    let str;
+                    const $search = $("#search");
+                    $search.on("input", function () {
+                        $(".card").show();
+                        str = $search.val().toLowerCase();
+                        for (let j = 0; j < sl.length; j++) {
+                            if (!sl[j].includes(str)) {
+                                $(`#card${j}`).css("display", "none")
+                            }
+                        }
+                    })
+
+                }).catch(err => {
+                    msg = "Error."
+                    openTipModal();
+                    console.error(err)
+                })
 
             // 获取新密码
             $('#newPassword1').change(function () {

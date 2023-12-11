@@ -32,4 +32,18 @@ public class UserController {
         return userService.changePassword(changPwdReq);
     }
 
+    @GetMapping("/getKey")
+    public Result<String> getKeyByUsername(@RequestParam("username") String username){
+        System.out.println(username);
+        String key = userService.getKeyByUsername(username);
+        return Result.success(key);
+    }
+
+    @GetMapping("/getPassword")
+    public Result<String> getPasswordByUsername(@RequestParam("username") String username){
+        System.out.println(username);
+        String password = userService.getPasswordByUsername(username);
+        return Result.success(password);
+    }
+
 }

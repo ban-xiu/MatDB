@@ -1,0 +1,14 @@
+# 指定基础镜像
+FROM nginx:1.25.3
+
+# 将本地的静态文件复制到容器中的指定路径
+COPY ./html /usr/share/nginx/html
+
+# 将自定义的 Nginx 配置文件复制到容器中
+COPY ./nginx.conf /etc/nginx/nginx.conf
+
+# 暴露容器的端口
+EXPOSE 80
+
+# 容器启动时执行的命令
+CMD ["nginx", "-g", "daemon off;"]

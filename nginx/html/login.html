@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MatDB</title>
-    <link rel="icon" href="imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
-    <link rel="icon" href="imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
-    <script src="jquery/jquery.min.js"></script>
-    <script src="axios/axios.min.js"></script>
-    <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
-    <script src="bootstrap/popper.min.js"></script>
-    <script src="bootstrap/bootstrap.min.js"></script>
+    <link rel="icon" href="./static/imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
+    <link rel="icon" href="./static/imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
+    <script src="./static/jquery/jquery.min.js"></script>
+    <script src="./static/axios/axios.min.js"></script>
+    <link href="./static/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <script src="./static/bootstrap/popper.min.js"></script>
+    <script src="./static/bootstrap/bootstrap.min.js"></script>
 </head>
 <style>
     :root {
@@ -546,7 +546,6 @@
     *::-ms-scrollbar-thumb:hover {
         background-color: #555;
     }
-
 </style>
 
 <script>
@@ -565,7 +564,7 @@
     $(document).ready(function () {
         // 前往注册
         $("#a").click(function () {
-            location.replace('http://127.0.0.1:8080/register');
+            location.replace('http://127.0.0.1:8083/register');
         })
 
         // 获取输入框内容
@@ -620,64 +619,64 @@
 </script>
 
 <body>
-<section class="signin-form">
-    <div class="overlay">
-        <div class="wrapper">
-            <div class="logo text-center top-bottom-gap">
-                <h5 class="mat show">MatDB</h5>
+    <section class="signin-form">
+        <div class="overlay">
+            <div class="wrapper">
+                <div class="logo text-center top-bottom-gap">
+                    <h5 class="mat show">MatDB</h5>
 
-            </div>
-            <div class="form34">
-                <h4 class="form-head">Login now</h4>
-                <p class="form-para">Quick access database</p>
+                </div>
+                <div class="form34">
+                    <h4 class="form-head">Login now</h4>
+                    <p class="form-para">Quick access database</p>
 
-                <div class="form-34or">
+                    <div class="form-34or">
                         <span class="pros">
                             <span>input</span>
                         </span>
+                    </div>
+                    <form>
+                        <div>
+                            <p class="text-head">Username</p>
+                            <input type="text" name="username" class="input" placeholder="" required=""
+                                title="" />
+                        </div>
+                        <div>
+                            <p class="text-head">Password</p>
+                            <input type="password" name="password" class="input" placeholder="" required=""
+                                title="" />
+                        </div>
+                        <button class="signinbutton btn" id="sign">Login</button>
+                        <p class="signup">Have not an account yet?<a id="a" class="signuplink">Register</a>
+                        </p>
+                    </form>
+
                 </div>
-                <form>
-                    <div>
-                        <p class="text-head">Username</p>
-                        <input type="text" name="username" class="input" placeholder="" required=""
-                               title="" />
-                    </div>
-                    <div>
-                        <p class="text-head">Password</p>
-                        <input type="password" name="password" class="input" placeholder="" required=""
-                               title="" />
-                    </div>
-                    <button class="signinbutton btn" id="sign">Login</button>
-                    <p class="signup">Have not an account yet?<a id="a" class="signuplink">Register</a>
-                    </p>
-                </form>
-
             </div>
+
+            <div class="copyright text-center">
+                <p>A tool for quickly building template databases.</p>
+            </div>
+
         </div>
+    </section>
 
-        <div class="copyright text-center">
-            <p>A tool for quickly building template databases.</p>
-        </div>
-
-    </div>
-</section>
-
-<div class="modal" id="tipModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Tip</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
+    <div class="modal" id="tipModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Tip</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 
 </body>

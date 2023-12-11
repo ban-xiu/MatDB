@@ -1,31 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MatDB</title>
-  <link rel="icon" href="imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
-  <link rel="icon" href="imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
-  <script type="text/javascript" src="jsmol/JSmol.min.js"></script>
-  <script src="jquery/jquery.min.js"></script>
-  <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
-  <script src="bootstrap/popper.min.js"></script>
-  <script src="bootstrap/bootstrap.min.js"></script>
-  <link href="bootstrap/fileinput.min.css" rel="stylesheet">
-  <script src="bootstrap/fileinput.min.js"></script>
-  <script src="datatables.net/jquery.dataTables.js"></script>
-  <link rel="stylesheet" href="datatables.net/jquery.dataTables.css">
-  <script src="axios/axios.min.js"></script>
-  <script src="xlsx/xlsx.full.min.js"></script>
-  <script src="filesaver/FileSaver.min.js"></script>
-  <script src="tensorflow/tf.min.js"></script>
+  <link rel="icon" href="./static/imgs/ico/mat32×32.png" type="image/png" sizes="32×32">
+  <link rel="icon" href="./static/imgs/ico/mat16×16.png" type="image/png" sizes="16×16">
+  <script type="text/javascript" src="./static/jsmol/JSmol.min.js"></script>
+  <script src="./static/jquery/jquery.min.js"></script>
+  <link href="./static/bootstrap/bootstrap.min.css" rel="stylesheet">
+  <script src="./static/bootstrap/popper.min.js"></script>
+  <script src="./static/bootstrap/bootstrap.min.js"></script>
+  <link href="./static/bootstrap/fileinput.min.css" rel="stylesheet">
+  <script src="./static/bootstrap/fileinput.min.js"></script>
+  <script src="./static/datatables.net/jquery.dataTables.js"></script>
+  <link rel="stylesheet" href="./static/datatables.net/jquery.dataTables.css">
+  <script src="./static/axios/axios.min.js"></script>
+  <script src="./static/xlsx/xlsx.full.min.js"></script>
+  <script src="./static/filesaver/FileSaver.min.js"></script>
+  <script src="./static/tensorflow/tf.min.js"></script>
 </head>
-
-<i class="fa" th:text="${uid}" id="uid" hidden></i>
-<i class="fa" th:text="${username}" id="username" hidden></i>
-<i class="fa" th:text="${password}" id="password" hidden></i>
-<i class="fa" th:text="${key}" id="key" hidden></i>
 
 <style>
   body {
@@ -355,7 +350,6 @@
   .custom-file-upload:hover {
     background-color: #0069d9;
   }
-
 </style>
 
 <script>
@@ -663,10 +657,31 @@
     var cardImg;
     var cardUser;
 
-    var uid = $("#uid").text();
-    var username = $("#username").text();
-    var password = $("#password").text();
-    var key = $("#key").text();
+    // 获取URL中的查询字符串
+    var queryString = window.location.search;
+
+    // 解析查询字符串，获取参数对象
+    var params = {};
+    if (queryString) {
+      // 去掉问号，然后用"&"分割查询字符串
+      queryString = queryString.substring(1);
+      var paramList = queryString.split("&");
+
+      // 遍历参数列表，将参数名和参数值以键值对的形式存储到params对象中
+      for (var i = 0; i < paramList.length; i++) {
+        var pair = paramList[i].split("=");
+        var paramName = decodeURIComponent(pair[0]);
+        var paramValue = decodeURIComponent(pair[1]);
+
+        // 将参数名和参数值存储到params对象中
+        params[paramName] = paramValue;
+      }
+    }
+
+
+    var uid = params.uid;
+    var username = params.username;
+    var key;
 
     // user用户不能操作数据库
     if (username == "user") {
@@ -769,17 +784,37 @@
     })
 
     // 页面刷新方法
-    $('#tipOk,#tipNo,.tipClose,.detailClose').click(function () {
+    $('#tipOk,#tipNo,.tipClose,.detailClose').click(async function () {
       if (msg2 === "Burn out.") {
-        location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`)
-      }else {
+        axios.get("http://127.0.0.1:8080/getKey", {
+          params: { "username": username }
+        }).then(res => {
+          console.log(res);
+          key = res.data.data;
+          location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`)
+        }).catch(err => {
+          console.error(err);
+          msg = "Error."
+          openTipModal2();
+        })
+      } else {
         location.reload();
       }
     });
 
     // Back返回
-    $("#back").click(function () {
-      location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`);
+    $("#back").click(async function () {
+      axios.get("http://127.0.0.1:8080/getKey", {
+        params: { "username": username }
+      }).then(res => {
+        console.log(res);
+        key = res.data.data;
+        location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`)
+      }).catch(err => {
+        console.error(err);
+        msg = "Error."
+        openTipModal2();
+      })
     })
 
     // Add提示
@@ -868,7 +903,7 @@
         const types = ["2D FEM", "2D NPB", "BMS", "Penta", "2D-Carbon"];
         const cardType = cont.type;
         const imageUrl = types.includes(cardType) ? cardType : "Self-defined";
-        $(".card").css("background-image", `url('imgs/jpg/${imageUrl}.jpg')`);
+        $(".card").css("background-image", `url('./static/imgs/jpg/${imageUrl}.jpg')`);
       }
 
       // 创建卡片
@@ -1342,7 +1377,7 @@
         debug: false,
         color: "0xFFFFF1",
         use: "HTML5",
-        j2sPath: "jsmol/j2s",
+        j2sPath: "./static/jsmol/j2s",
         isSigned: true,
         script: "set zoomlarge false;set antialiasDisplay;load DATA 'model' vasp " + mat.structure + "\nEND 'model'",
         disableJ2SLoadMonitor: true,
@@ -1764,388 +1799,388 @@
 
 <body>
 
-<!--卡片弹窗-->
-<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cardModalLabel">Card</h5>
-        <button type="button" class="close cardClose" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <label for="title">New title</label>
-          <textarea class="form-control" id="title"></textarea>
+  <!--卡片弹窗-->
+  <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="cardModalLabel">Card</h5>
+          <button type="button" class="close cardClose" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <div class="form-group">
-          <label for="intro">New introduction</label>
-          <textarea class="form-control" id="intro"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="imgFile" class="custom-file-upload">image</label>
-          <input type="file" id="imgFile" accept=".jpg,.jpeg,.png,.webp">
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
-                id="cardSubmit">Submit</button>
-        <button type="button" class="btn btn-secondary cardClose" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--Add弹窗-->
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="addModalLabel">Add</h5>
-        <button type="button" class="close addClose" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body row_Y">
-        <div class="form-row" id="addArea">
-          <div class="form-group col-6">
-            <label for="addStructure">Structure</label>
-            <textarea class="form-control" id="addStructure"></textarea>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="title">New title</label>
+            <textarea class="form-control" id="title"></textarea>
           </div>
-          <div class="form-group col-6">
-            <label for="addFormula">Formula</label>
-            <textarea class="form-control" id="addFormula"></textarea>
+          <div class="form-group">
+            <label for="intro">New introduction</label>
+            <textarea class="form-control" id="intro"></textarea>
           </div>
-          <div class="form-group col-6">
-            <label for="addName">Name</label>
-            <textarea class="form-control" id="addName"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addSymmetry">Symmetry</label>
-            <textarea class="form-control" id="addSymmetry"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addMetal">Metal</label>
-            <textarea class="form-control" id="addMetal"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addBandgap-PBE">Bandgap-PBE(ev)</label>
-            <textarea class="form-control" id="addBandgap-PBE"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addBandgap-HSE">Bandgap-HSE(ev)</label>
-            <textarea class="form-control" id="addBandgap-HSE"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addDOI">DOI</label>
-            <textarea class="form-control" id="addDOI"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addURL">URL</label>
-            <textarea class="form-control" id="addURL"></textarea>
-          </div>
-          <div class="form-group col-6">
-            <label for="addPublication">Publication</label>
-            <textarea class="form-control" id="addPublication"></textarea>
+          <div class="form-group">
+            <label for="imgFile" class="custom-file-upload">image</label>
+            <input type="file" id="imgFile" accept=".jpg,.jpeg,.png,.webp">
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal"
-                data-dismiss="modal">File</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
-                id="addSubmit">Submit</button>
-        <button type="button" class="btn btn-secondary addClose" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--File弹窗-->
-<div class="modal" id="fileModal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">File</h4>
-        <button type="button" class="close fileClose" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body row_Y">
-        <div id="fileText">
-          <P>Only XLSX or JSON file containing the following table headers can be accepted:</P>
-          <span>Structure</span>
-          <span>Formula</span>
-          <span>Name</span>
-          <span>Symmetry</span>
-          <span>Metal</span>
-          <span>Bandgap-PBE(ev)</span>
-          <span>Bandgap-HSE(ev)</span>
-          <span>DOI</span>
-          <span>URL</span>
-          <span>Publication</span>
-        </div>
-        </br>
-        <div class="file-loading">
-          <input id="file" type="file" accept=".xlsx,.json" title="">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+            id="cardSubmit">Submit</button>
+          <button type="button" class="btn btn-secondary cardClose" data-dismiss="modal">Close</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id="fileSubmit">Submit</button>
-        <button class="btn btn-secondary fileClose" data-dismiss="modal">Close</button>
-      </div>
     </div>
   </div>
-</div>
 
-<!--Show弹窗-->
-<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="showModalLabel">Show</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body row_Y">
-        <form>
-          <div class="form-row" id="showChoose">
-
+  <!--Add弹窗-->
+  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addModalLabel">Add</h5>
+          <button type="button" class="close addClose" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body row_Y">
+          <div class="form-row" id="addArea">
+            <div class="form-group col-6">
+              <label for="addStructure">Structure</label>
+              <textarea class="form-control" id="addStructure"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addFormula">Formula</label>
+              <textarea class="form-control" id="addFormula"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addName">Name</label>
+              <textarea class="form-control" id="addName"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addSymmetry">Symmetry</label>
+              <textarea class="form-control" id="addSymmetry"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addMetal">Metal</label>
+              <textarea class="form-control" id="addMetal"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addBandgap-PBE">Bandgap-PBE(ev)</label>
+              <textarea class="form-control" id="addBandgap-PBE"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addBandgap-HSE">Bandgap-HSE(ev)</label>
+              <textarea class="form-control" id="addBandgap-HSE"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addDOI">DOI</label>
+              <textarea class="form-control" id="addDOI"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addURL">URL</label>
+              <textarea class="form-control" id="addURL"></textarea>
+            </div>
+            <div class="form-group col-6">
+              <label for="addPublication">Publication</label>
+              <textarea class="form-control" id="addPublication"></textarea>
+            </div>
           </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--表格弹窗-->
-<div class="modal fade" id="rowModal" tabindex="-1" role="dialog" aria-labelledby="rowModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="rowModalLabel">Operations</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span>&times;</span>
-        </button>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal"
-                data-dismiss="modal" id="detail">Detail</button>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal"
-                data-dismiss="modal" id="update">Update</button>
-        <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
-                id="delete">Delete</button>
-        <button type="button" class="btn btn-secondary" id="rowClose" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--Detail弹窗-->
-<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content" style="position: absolute; left: -25vw; width: 85vw; height: 90vh;">
-      <div class="modal-header">
-        <h4 class="modal-title" id="detailModalLabel">Detail</h4>
-        <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body row_Y" style="position: relative;">
-        <!--渲染jsmol图像-->
-        <div id="appdiv" style="position: absolute; width: 42.5vw; height: 65vh;"></div>
-        <div id="infos" style="position: absolute; left: 45vw;">
-          <small id="scalar">Scalar</small>
-          <hr />
-          <p class="infop scalar">Structure:&emsp;<span id="structureInfo"></span></p>
-          <p class="infop scalar">Formula:&emsp;<span id="formulaInfo"></span></p>
-          <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
-          <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
-          <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
-          <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
-          <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
-          <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
-          <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
-          <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
-          <br />
-          <hr /><small id="vector">Vector</small>
-          <hr />
-          <p class="infop vector">Null</p>
-          <br />
-          <hr /><small id="tensor">Tensor</small>
-          <hr />
-          <p class="infop tensor">Null</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal"
+            data-dismiss="modal">File</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+            id="addSubmit">Submit</button>
+          <button type="button" class="btn btn-secondary addClose" data-dismiss="modal">Close</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="exportJSON">Export JSON</button>
-        <button type="button" class="btn btn-primary" id="exportVASP">Export VASP</button>
-        <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
+    </div>
+  </div>
+
+  <!--File弹窗-->
+  <div class="modal" id="fileModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">File</h4>
+          <button type="button" class="close fileClose" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body row_Y">
+          <div id="fileText">
+            <P>Only XLSX or JSON file containing the following table headers can be accepted:</P>
+            <span>Structure</span>
+            <span>Formula</span>
+            <span>Name</span>
+            <span>Symmetry</span>
+            <span>Metal</span>
+            <span>Bandgap-PBE(ev)</span>
+            <span>Bandgap-HSE(ev)</span>
+            <span>DOI</span>
+            <span>URL</span>
+            <span>Publication</span>
+          </div>
+          </br>
+          <div class="file-loading">
+            <input id="file" type="file" accept=".xlsx,.json" title="">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="fileSubmit">Submit</button>
+          <button class="btn btn-secondary fileClose" data-dismiss="modal">Close</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!--Update弹窗-->
-<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="updateModalLabel">Update</h5>
-        <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">×</button>
+  <!--Show弹窗-->
+  <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="showModalLabel">Show</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body row_Y">
+          <form>
+            <div class="form-row" id="showChoose">
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
       </div>
+    </div>
+  </div>
 
-      <div class="modal-body row_Y">
+  <!--表格弹窗-->
+  <div class="modal fade" id="rowModal" tabindex="-1" role="dialog" aria-labelledby="rowModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rowModalLabel">Operations</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal"
+            data-dismiss="modal" id="detail">Detail</button>
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal"
+            data-dismiss="modal" id="update">Update</button>
+          <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
+            id="delete">Delete</button>
+          <button type="button" class="btn btn-secondary" id="rowClose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <div class="form-row" id="updateArea">
-
-          <div class="form-group col-6">
-            <label for="updateStructure">Structure</label>
-            <textarea class="form-control" id="updateStructure"></textarea>
+  <!--Detail弹窗-->
+  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="position: absolute; left: -25vw; width: 85vw; height: 90vh;">
+        <div class="modal-header">
+          <h4 class="modal-title" id="detailModalLabel">Detail</h4>
+          <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body row_Y" style="position: relative;">
+          <!--渲染jsmol图像-->
+          <div id="appdiv" style="position: absolute; width: 42.5vw; height: 65vh;"></div>
+          <div id="infos" style="position: absolute; left: 45vw;">
+            <small id="scalar">Scalar</small>
+            <hr />
+            <p class="infop scalar">Structure:&emsp;<span id="structureInfo"></span></p>
+            <p class="infop scalar">Formula:&emsp;<span id="formulaInfo"></span></p>
+            <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
+            <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
+            <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
+            <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
+            <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
+            <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
+            <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
+            <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
+            <br />
+            <hr /><small id="vector">Vector</small>
+            <hr />
+            <p class="infop vector">Null</p>
+            <br />
+            <hr /><small id="tensor">Tensor</small>
+            <hr />
+            <p class="infop tensor">Null</p>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="exportJSON">Export JSON</button>
+          <button type="button" class="btn btn-primary" id="exportVASP">Export VASP</button>
+          <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-          <div class="form-group col-6">
-            <label for="updateFormula">Formula</label>
-            <textarea class="form-control" id="updateFormula"></textarea>
-          </div>
+  <!--Update弹窗-->
+  <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="updateModalLabel">Update</h5>
+          <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">×</button>
+        </div>
 
-          <div class="form-group col-6">
-            <label for="updateName">Name</label>
-            <textarea class="form-control" id="updateName"></textarea>
-          </div>
+        <div class="modal-body row_Y">
 
-          <div class="form-group col-6">
-            <label for="updateSymmetry">Symmetry</label>
-            <textarea class="form-control" id="updateSymmetry"></textarea>
-          </div>
+          <div class="form-row" id="updateArea">
 
-          <div class="form-group col-6">
-            <label for="updateMetal">Metal</label>
-            <textarea class="form-control" id="updateMetal"></textarea>
-          </div>
+            <div class="form-group col-6">
+              <label for="updateStructure">Structure</label>
+              <textarea class="form-control" id="updateStructure"></textarea>
+            </div>
 
-          <div class="form-group col-6">
-            <label for="updateBandgap-PBE">Bandgap-PBE(ev)</label>
-            <textarea class="form-control" id="updateBandgap-PBE"></textarea>
-          </div>
+            <div class="form-group col-6">
+              <label for="updateFormula">Formula</label>
+              <textarea class="form-control" id="updateFormula"></textarea>
+            </div>
 
-          <div class="form-group col-6">
-            <label for="updateBandgap-HSE">Bandgap-HSE(ev)</label>
-            <textarea class="form-control" id="updateBandgap-HSE"></textarea>
-          </div>
+            <div class="form-group col-6">
+              <label for="updateName">Name</label>
+              <textarea class="form-control" id="updateName"></textarea>
+            </div>
 
-          <div class="form-group col-6">
-            <label for="updateDOI">DOI</label>
-            <textarea class="form-control" id="updateDOI"></textarea>
-          </div>
+            <div class="form-group col-6">
+              <label for="updateSymmetry">Symmetry</label>
+              <textarea class="form-control" id="updateSymmetry"></textarea>
+            </div>
 
-          <div class="form-group col-6">
-            <label for="updateURL">URL</label>
-            <textarea class="form-control" id="updateURL"></textarea>
-          </div>
+            <div class="form-group col-6">
+              <label for="updateMetal">Metal</label>
+              <textarea class="form-control" id="updateMetal"></textarea>
+            </div>
 
-          <div class="form-group col-6">
-            <label for="updatePublication">Publication</label>
-            <textarea class="form-control" id="updatePublication"></textarea>
+            <div class="form-group col-6">
+              <label for="updateBandgap-PBE">Bandgap-PBE(ev)</label>
+              <textarea class="form-control" id="updateBandgap-PBE"></textarea>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="updateBandgap-HSE">Bandgap-HSE(ev)</label>
+              <textarea class="form-control" id="updateBandgap-HSE"></textarea>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="updateDOI">DOI</label>
+              <textarea class="form-control" id="updateDOI"></textarea>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="updateURL">URL</label>
+              <textarea class="form-control" id="updateURL"></textarea>
+            </div>
+
+            <div class="form-group col-6">
+              <label for="updatePublication">Publication</label>
+              <textarea class="form-control" id="updatePublication"></textarea>
+            </div>
+
           </div>
 
         </div>
 
-      </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+            id="updateSubmit">Submit</button>
+          <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
+        </div>
 
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
-                id="updateSubmit">Submit</button>
-        <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
-      </div>
-
-    </div>
-  </div>
-</div>
-
-<!--Tip1弹窗-->
-<div class="modal" id="tipModal1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Tip</h4>
-        <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body tipBody1">
-        <p></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipYes">Yes</button>
-        <button class="btn btn-secondary" data-dismiss="modal" id="tipNo">No</button>
       </div>
     </div>
   </div>
-</div>
 
-<!--Tip2弹窗-->
-<div class="modal" id="tipModal2">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Tip</h4>
-        <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
-      </div>
-      <div class="modal-body tipBody2">
-        <p></p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipOk">OK</button>
+  <!--Tip1弹窗-->
+  <div class="modal" id="tipModal1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Tip</h4>
+          <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body tipBody1">
+          <p></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipYes">Yes</button>
+          <button class="btn btn-secondary" data-dismiss="modal" id="tipNo">No</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!--介绍卡片-->
-<div class="card">
-
-</div>
-
-<div class="container">
-  <!--按钮-->
-  </br></br>
-  <div class="col-md-12 btns">
-    <button class="btn btn-primary operation" type="button" data-toggle="modal" id="back">Back</button>
-    <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#addModal"
-            id="add">Add</button>
-    <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#showModal"
-            id="show">Show</button>
-    <button class="btn btn-danger operation" type="button" data-toggle="modal" id="burn">Burn</button>
-  </div>
-  <!--表格-->
-  <div class="row">
-    <div class="col-md-12 mt-2">
-      <table id="myTable" class="table table-striped">
-        <thead>
-        <tr id="tr">
-          <th scope="col">ID</th>
-          <th scope="col">Structure</th>
-          <th scope="col">Formula</th>
-          <th scope="col">Name</th>
-          <th scope="col">Symmetry</th>
-          <th scope="col">Metal</th>
-          <th scope="col">Bandgap-PBE(ev)</th>
-          <th scope="col">Bandgap-HSE(ev)</th>
-          <th scope="col">DOI</th>
-          <th scope="col">URL</th>
-          <th scope="col">Publication</th>
-        </tr>
-        </thead>
-        <tbody id="tbody">
-
-        </tbody>
-      </table>
+  <!--Tip2弹窗-->
+  <div class="modal" id="tipModal2">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Tip</h4>
+          <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body tipBody2">
+          <p></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipOk">OK</button>
+        </div>
+      </div>
     </div>
   </div>
-</div>
+
+  <!--介绍卡片-->
+  <div class="card">
+
+  </div>
+
+  <div class="container">
+    <!--按钮-->
+    </br></br>
+    <div class="col-md-12 btns">
+      <button class="btn btn-primary operation" type="button" data-toggle="modal" id="back">Back</button>
+      <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#addModal"
+        id="add">Add</button>
+      <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#showModal"
+        id="show">Show</button>
+      <button class="btn btn-danger operation" type="button" data-toggle="modal" id="burn">Burn</button>
+    </div>
+    <!--表格-->
+    <div class="row">
+      <div class="col-md-12 mt-2">
+        <table id="myTable" class="table table-striped">
+          <thead>
+            <tr id="tr">
+              <th scope="col">ID</th>
+              <th scope="col">Structure</th>
+              <th scope="col">Formula</th>
+              <th scope="col">Name</th>
+              <th scope="col">Symmetry</th>
+              <th scope="col">Metal</th>
+              <th scope="col">Bandgap-PBE(ev)</th>
+              <th scope="col">Bandgap-HSE(ev)</th>
+              <th scope="col">DOI</th>
+              <th scope="col">URL</th>
+              <th scope="col">Publication</th>
+            </tr>
+          </thead>
+          <tbody id="tbody">
+
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

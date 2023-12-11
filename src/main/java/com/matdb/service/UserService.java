@@ -15,4 +15,7 @@ public interface UserService {
 
     Result<String> changePassword(SignAboutReq changPwdReq);
 
+    String getKeyByUsername(String username);
+
+    String getPasswordByUsername(String username);
 }

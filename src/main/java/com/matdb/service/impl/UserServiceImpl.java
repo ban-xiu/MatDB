@@ -104,4 +104,29 @@ public class UserServiceImpl implements UserService {
             return Result.error(msg);
         }
     }
+
+    @Override
+    public String getKeyByUsername(String username) {
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
+        if (userOption.isEmpty()){
+            System.out.println("\ngetKeyByUsername: null");
+            return null;
+        }
+        UserEntity user = userOption.get();
+        String key = user.getKey();
+        return key;
+    }
+
+    @Override
+    public String getPasswordByUsername(String username) {
+        Optional<UserEntity> userOption = userRepository.findByUsername(username);
+        if (userOption.isEmpty()){
+            System.out.println("\ngetPasswordByUsername: null");
+            return null;
+        }
+        UserEntity user = userOption.get();
+        String password = user.getPassword();
+        return password;
+    }
+
 }

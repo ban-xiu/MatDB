@@ -1,0 +1,7 @@
+# 在 nginx 目录下执行以下命令以构建前端 docker 环境
+
+# 构建前端 nginx 镜像
+docker build -t nginx .
+
+# 构建并运行容器
+docker run -d -p 8083:80 --name nginx nginx
