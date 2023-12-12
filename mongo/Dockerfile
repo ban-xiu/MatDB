@@ -1,0 +1,21 @@
+# 设置基础镜像
+FROM mongo:6.0.8
+
+# 将数据库初始化脚本复制到容器中
+COPY init.js /docker-entrypoint-initdb.d/
+
+# 设置环境变量
+ENV MONGO_INITDB_ROOT_USERNAME=root
+ENV MONGO_INITDB_ROOT_PASSWORD=root
+
+# 设置工作目录
+WORKDIR /docker-entrypoint-initdb.d
+
+# 删除不需要的文件
+RUN rm init.js
+
+# 暴露 MongoDB 的默认端口
+EXPOSE 27017
+
+# 添加健康检查
+HEALTHCHECK --interval=30s --timeout=10s CMD mongo --eval "db.adminCommand('ping')" || exit 1

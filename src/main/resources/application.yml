@@ -1,6 +1,4 @@
 spring:
-  resources:
-    static-locations: classpath:/static/
   data:
     mongodb:
       host: localhost
