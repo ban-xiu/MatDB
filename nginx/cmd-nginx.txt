@@ -4,6 +4,10 @@
 
 docker build -t nginx .
 
-# 构建并运行容器
+# 构建并在自定义网络下运行容器
+
+docker run -d -p 8083:80 --network matdb --name nginx nginx
+
+# 如果只需要本地运行 APP.java 测试
 
 docker run -d -p 8083:80 --name nginx nginx

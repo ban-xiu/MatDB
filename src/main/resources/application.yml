@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      host: localhost
+      host: mongo # 此时为 docker-compose 与手动创建容器的配置；如果只需要本地运行 APP.java 测试，可以设置为 localhost
       port: 27017
       authentication-database: admin
       database: admin

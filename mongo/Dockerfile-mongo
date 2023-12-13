@@ -11,11 +11,8 @@ ENV MONGO_INITDB_ROOT_PASSWORD=root
 # 设置工作目录
 WORKDIR /docker-entrypoint-initdb.d
 
-# 删除不需要的文件
-RUN rm init.js
-
 # 暴露 MongoDB 的默认端口
 EXPOSE 27017
 
-# 添加健康检查
+# 健康检查
 HEALTHCHECK --interval=30s --timeout=10s CMD mongo --eval "db.adminCommand('ping')" || exit 1

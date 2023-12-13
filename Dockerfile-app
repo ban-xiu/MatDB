@@ -1,0 +1,31 @@
+# 阶段一：构建阶段
+FROM maven:3.8.4-openjdk-17-slim AS build
+
+WORKDIR /app
+
+# 只复制 pom.xml 并下载依赖，以便保持 Docker 缓存的有效性
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# 复制源代码并构建项目
+COPY src/main/java/com/matdb/ /app/src/main/java/com/matdb/
+COPY src/main/resources/ /app/src/main/resources/
+RUN mvn package -DskipTests
+
+# 阶段二：运行阶段
+FROM openjdk:17-slim
+
+WORKDIR /app
+
+# 复制编译好的 JAR 文件
+COPY --from=build /app/target/app.jar .
+
+# 暴露容器的端口
+EXPOSE 8080
+
+# 定义容器启动时运行的命令
+CMD ["java", "-jar", "app.jar"]
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1

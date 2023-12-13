@@ -1,9 +1,0 @@
-# 在 mongo 目录下执行以下命令以构建数据库 docker 环境
-
-# 构建 mongo 镜像
-
-docker build -t mongo .
-
-# 构建并运行容器
-
-docker run -d -p 27017:27017 --name mongo mongo

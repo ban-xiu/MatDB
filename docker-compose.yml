@@ -1,0 +1,41 @@
+version: '2.4'
+
+services:
+
+  mongo:
+    container_name: mongo
+    build:
+      context: ./mongo
+      dockerfile: Dockerfile-mongo
+    ports:
+      - 27017:27017
+    networks:
+      - matdb
+
+  app:
+    container_name: app
+    build:
+      context: ./
+      dockerfile: Dockerfile-app
+    ports:
+      - 8080:8080
+    depends_on:
+      - mongo
+    networks:
+      - matdb
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile-nginx
+    ports:
+      - 8083:80
+    depends_on:
+      - app
+    networks:
+      - matdb
+
+networks:
+  matdb:
+    driver: bridge
