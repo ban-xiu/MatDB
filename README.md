@@ -5,11 +5,11 @@
 - 前端基于：`jQuery` `Bootstrap` 等
 - 后端基于：`SpringBoot` `MongoDB` 等
 
-## 1.基于 `Docker-Compose` 快速创建服务
+## 1. 基于 `Docker-Compose` 快速创建服务
 
 在项目根目录下，按 [build.md](./build.md) 的要求操作即可
 
-## 2.测试与手动创建服务
+## 2. 测试与手动创建服务
 
 ### ① 创建数据库 `MongoDB` 服务
 
@@ -23,11 +23,11 @@
 
 在 `nginx` 目录下，按 [cmd-nginx](./nginx/cmd-nginx.md) 的要求操作即可
 
-## 3.开始使用
+## 3. 开始使用
 
 各服务运行成功后，访问 `127.0.0.1:8083` 即可
 
-## 4.开发环境
+## 4. 开发环境
 
 `Maven: 3.9.3`
 
