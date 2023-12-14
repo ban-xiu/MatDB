@@ -12,7 +12,7 @@ docker pull mongo:6.0.8
 docker run -d --name mongo -v 数据卷文件夹A路径:/data/db -v 数据卷文件夹B路径:/data/configdb -p 27017:27017 mongo:6.0.8 --auth
 ```
 
-容器名字为：mongo，同时配置了数据卷实现数据持久化，容器端口为：27017
+容器名字为：`mongo`，同时配置了数据卷实现数据持久化，容器端口为：`27017`。
 
 ### 或者不再配置数据卷
 
