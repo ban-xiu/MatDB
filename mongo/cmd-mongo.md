@@ -1,6 +1,6 @@
 ## 在 `mongo` 目录下执行以下命令以构建 `MongoDB` 数据库 `Docker` 环境
 
-初始化工作相当于 [init](./init.md) 中的内容
+初始化工作相当于 [init](./init.md) 中的内容。
 
 ### 构建 `mongo` 镜像
 
