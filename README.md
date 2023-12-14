@@ -7,13 +7,13 @@
 
 ## 1. 基于 `Docker-Compose` 快速创建服务
 
-在项目根目录下，按 [build.md](./build.md) 的要求操作即可
+在项目根目录下，按 [build](./build.md) 的要求操作即可
 
 ## 2. 测试与手动创建服务
 
 ### ① 创建数据库 `MongoDB` 服务
 
-在 `mongo` 目录下，按 [cmd-mongo.md](./mongo/cmd-mongo.md) 的要求操作即可
+在 `mongo` 目录下，按 [cmd-mongo](./mongo/cmd-mongo.md) 的要求操作即可
 
 ### ② 创建后端 `SpringBoot` 服务
 
