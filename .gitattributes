@@ -1,2 +1,2 @@
 # 排除 static 目录下所有文件
-nginx/html/static/* linguist-vendored
+nginx/html/static/** linguist-vendored
