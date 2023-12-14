@@ -5,7 +5,7 @@
 ### 前端基于：jQuery Bootstrap 等
 ### 后端基于：SpringBoot MongoDB 等
 
-## 1.基于 docker-compose 快速创建服务
+## 1.基于 Docker-Compose 快速创建服务
 在项目根目录下，按 build.txt 的要求操作即可。
 
 ## 2.测试与手动创建容器
@@ -23,9 +23,8 @@
 各服务运行成功后，访问 127.0.0.1:8083 即可。
 
 ## 4.开发环境
-IDEA: IntelliJ IDEA, Visual Studio Code
 Maven: 3.9.3
-docker: 23.0.5
-docker-compose: 2.17.3
+Docker: 23.0.5
+Docker-Compose: 2.17.3
 
 
