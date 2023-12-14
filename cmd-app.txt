@@ -2,7 +2,7 @@
 
 # 构建 app 镜像
 
-docker build -t app .
+docker build -f Dockerfile-app -t app .
 
 # 构建并在自定义网络下运行容器
 

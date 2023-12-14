@@ -4,7 +4,7 @@
 
 # 构建 mongo 镜像
 
-docker build -t mongo .
+docker build -f Dockerfile-mongo -t mongo .
 
 # 构建并在自定义网络下运行容器
 

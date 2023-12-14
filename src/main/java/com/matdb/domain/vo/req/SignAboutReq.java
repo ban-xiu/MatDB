@@ -5,14 +5,12 @@ import java.io.Serializable;
 public class SignAboutReq implements Serializable {
     private String username;
     private String password;
-    private String key;
 
     public SignAboutReq(){}
 
-    public SignAboutReq(String username, String password, String key) {
+    public SignAboutReq(String username, String password) {
         this.username = username;
         this.password = password;
-        this.key = key;
     }
 
     public String getUsername() {
@@ -31,20 +29,11 @@ public class SignAboutReq implements Serializable {
         this.password = password;
     }
 
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
     @Override
     public String toString() {
         return "SignAboutReq{" +
                 "username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", key='" + key + '\'' +
                 '}';
     }
 }

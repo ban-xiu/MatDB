@@ -2,7 +2,7 @@
 
 # 构建前端 nginx 镜像
 
-docker build -t nginx .
+docker build -f Dockerfile-nginx -t nginx .
 
 # 构建并在自定义网络下运行容器
 

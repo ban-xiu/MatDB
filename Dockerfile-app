@@ -27,5 +27,5 @@ EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
 
 # 健康检查
-HEALTHCHECK --interval=30s --timeout=3s \
+HEALTHCHECK --interval=30s --timeout=10s \
   CMD curl -f http://localhost:8080/actuator/health || exit 1

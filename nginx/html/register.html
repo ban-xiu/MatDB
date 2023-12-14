@@ -13,7 +13,9 @@
   <script src="./static/bootstrap/popper.min.js"></script>
   <script src="./static/bootstrap/bootstrap.min.js"></script>
 </head>
+
 <style>
+
   :root {
     --theme-color: #067ae6;
     --text-color: #666666;
@@ -497,8 +499,8 @@
     }
   }
 
-  /*滚动条效果*/
-  /*WebKit浏览器Chrome Safari*/
+  /* 滚动条效果 */
+  /* WebKit 浏览器 Chrome Safari */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -516,20 +518,20 @@
     background-color: #555;
   }
 
-  /*Firefox浏览器*/
-  /*Firefox 64及更早版本*/
+  /* Firefox 浏览器 */
+  /* Firefox 64 及更早版本 */
   * {
     scrollbar-width: thin;
     scrollbar-color: #888 #f5f5f5;
   }
 
-  /*Firefox 65+*/
+  /* Firefox 65+ */
   * {
     scrollbar-width: thin;
     scrollbar-color: #888 #f5f5f5;
   }
 
-  /*IE/Edge浏览器*/
+  /* IE/Edge 浏览器 */
   *::-ms-scrollbar {
     width: 8px;
   }
@@ -555,12 +557,12 @@
   var password2;
   var msg;
 
-  // 打开Tip弹窗
+  // 打开 Tip 弹窗
   function openTipModal() {
     $('#tipModal').modal('show');
     $('.modal-body p').text(`${msg}`);
   }
-  // 用户名长度必须在6-16位之间
+  // 用户名长度必须在 6-16 位之间
   function usernameLength(username) {
     return username.length >= 6 && username.length <= 16;
   }
@@ -569,7 +571,7 @@
     const reg = /^[a-zA-Z0-9_]+$/;
     return reg.test(username);
   }
-  // 密码必须大于等于6位
+  // 密码必须大于等于 6 位
   function passwordLength(password) {
     return password.length >= 6;
   }
@@ -667,66 +669,63 @@
 </script>
 
 <body>
-  <section class="signin-form">
-    <div class="overlay">
-      <div class="wrapper">
+<section class="signin-form">
+  <div class="overlay">
+    <div class="wrapper">
 
-        <div class="form34">
-          <h4 class="form-head">Register</h4>
-          <p class="form-para">Create an account</p>
+      <div class="form34">
+        <h4 class="form-head">Register</h4>
+        <p class="form-para">Create an account</p>
 
-          <div class="form-34or">
+        <div class="form-34or">
             <span class="pros">
               <span>input</span>
             </span>
+        </div>
+        <form>
+          <div>
+            <p class="text-head">Your username</p>
+            <input type="text" name="username" class="input" placeholder="" required="" title="" />
           </div>
-          <form>
-            <div>
-              <p class="text-head">Your username</p>
-              <input type="text" name="username" class="input" placeholder="" required=""
-                title="" />
-            </div>
-            <div>
-              <p class="text-head">Your password</p>
-              <input type="password" name="password1" class="input" placeholder="" required=""
-                title="" />
-            </div>
-            <div>
-              <p class="text-head">Your password again</p>
-              <input type="password" name="password2" class="input" placeholder="" required=""
-                title="" />
-            </div>
+          <div>
+            <p class="text-head">Your password</p>
+            <input type="password" name="password1" class="input" placeholder="" required="" title="" />
+          </div>
+          <div>
+            <p class="text-head">Your password again</p>
+            <input type="password" name="password2" class="input" placeholder="" required="" title="" />
+          </div>
 
-            <button type="submit" class="signinbutton btn" id="sign">register</button>
-            <p class="signup">Go to use now?<a id="a" class="signuplink">Login</a>
-            </p>
-          </form>
-        </div>
+          <button type="submit" class="signinbutton btn" id="sign">register</button>
+          <p class="signup">Go to use now?<a id="a" class="signuplink">Login</a>
+          </p>
+        </form>
       </div>
-
-      <div class="copyright text-center">
-        <p>A tool for quickly building template databases.</p>
-      </div>
-
     </div>
-  </section>
 
-  <div class="modal" id="tipModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Tip</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <p></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
-        </div>
+    <div class="copyright text-center">
+      <p>A tool for quickly building template databases.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="modal" id="tipModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tip</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="ok">OK</button>
       </div>
     </div>
   </div>
+</div>
 
 </body>
 

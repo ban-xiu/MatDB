@@ -1,9 +1,9 @@
 # MatDB
 
-## 一个快速构建的材料模板数据库。
+## 一个快速构建的材料模板数据库
 
-### 前端基于：jQuery Bootstrap 等。
-### 后端基于：SpringBoot MongoDB 等。
+### 前端基于：jQuery Bootstrap 等
+### 后端基于：SpringBoot MongoDB 等
 
 ## 1.基于 docker-compose 快速创建服务
 在项目根目录下，按 build.txt 的要求操作即可。

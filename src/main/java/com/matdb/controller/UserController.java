@@ -1,5 +1,6 @@
 package com.matdb.controller;
 
+import com.matdb.domain.dto.KeyAndPwdDTO;
 import com.matdb.domain.dto.UserDTO;
 import com.matdb.domain.vo.req.SignAboutReq;
 import com.matdb.domain.vo.resp.Result;
@@ -15,35 +16,42 @@ public class UserController {
 
     @PostMapping("/signIn")
     public Result<UserDTO> signIn(@RequestBody SignAboutReq signInReq) {
-        System.out.println(signInReq.toString());
+        System.out.println("\nsignIn:" + signInReq.toString());
         UserDTO userDto = userService.signIn(signInReq);
         return Result.success(userDto);
     }
 
     @PostMapping("/signUp")
     public Result<String> signUp(@RequestBody SignAboutReq signUpReq){
-        System.out.println(signUpReq.toString());
+        System.out.println("\nsignUp:" + signUpReq.toString());
         return userService.signUp(signUpReq);
     }
 
     @PutMapping("/changePassword")
     public Result<String> changePassword(@RequestBody SignAboutReq changPwdReq){
-        System.out.println(changPwdReq.toString());
+        System.out.println("\nchangePassword:" + changPwdReq.toString());
         return userService.changePassword(changPwdReq);
     }
 
     @GetMapping("/getKey")
     public Result<String> getKeyByUsername(@RequestParam("username") String username){
-        System.out.println(username);
+        System.out.println("\ngetKey:" + username);
         String key = userService.getKeyByUsername(username);
         return Result.success(key);
     }
 
-    @GetMapping("/getPassword")
-    public Result<String> getPasswordByUsername(@RequestParam("username") String username){
-        System.out.println(username);
-        String password = userService.getPasswordByUsername(username);
-        return Result.success(password);
+    @GetMapping("/getKeyAndPassword")
+    public Result<KeyAndPwdDTO> getKeyAndPasswordByUsername(@RequestParam("username") String username){
+        System.out.println("\ngetKeyAndPassword:" + username);
+        KeyAndPwdDTO keyAndPwdDTO = userService.getKeyAndPasswordByUsername(username);
+        return Result.success(keyAndPwdDTO);
+    }
+
+    @GetMapping("/isUid")
+    public Result<Boolean> isUid(@RequestParam("uid") String uid){
+        System.out.println("\nisUid:" + uid);
+        Boolean flag = userService.findUid(uid);
+        return Result.success(flag);
     }
 
 }

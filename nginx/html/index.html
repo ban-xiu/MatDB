@@ -22,13 +22,68 @@
   <script src="./static/tensorflow/tf.min.js"></script>
 </head>
 
+<script>
+
+  // 获取 URL 中的查询字符串
+  var queryString = window.location.search;
+
+  // 解析查询字符串，获取参数对象
+  var params = {};
+  if (queryString) {
+    // 去掉问号，然后用 "&" 分割查询字符串
+    queryString = queryString.substring(1);
+    var paramList = queryString.split("&");
+
+    // 遍历参数列表，将参数名和参数值以键值对的形式存储到 params 对象中
+    for (var i = 0; i < paramList.length; i++) {
+      var pair = paramList[i].split("=");
+      var paramName = decodeURIComponent(pair[0]);
+      var paramValue = decodeURIComponent(pair[1]);
+
+      // 将参数名和参数值存储到 params 对象中
+      params[paramName] = paramValue;
+    }
+  }
+
+  var uid = params.uid;
+  var username = params.username;
+  var isUid;
+
+  axios.get("http://127.0.0.1:8080/isUid", {
+    params: { "uid": uid }
+  }).then(res => {
+
+    console.log(res);
+    isUid = res.data.data;
+
+    // 如果 uid 不正确，直接返回错误页面
+    if (!isUid) {
+      location.replace("http://127.0.0.1:8083/error")
+    }
+
+  }).catch(err => {
+    // 发生网络错误也返回错误页面
+    console.error(err);
+    location.replace("http://127.0.0.1:8083/error")
+  })
+
+  // user 用户不能操作数据库
+  if (username == "user") {
+    $("#add").css("display", "none");
+    $("#burn").css("display", "none");
+    $("#update").css("display", "none");
+    $("#delete").css("display", "none");
+  }
+
+</script>
+
 <style>
   body {
     background-color: #EFEDE6;
     position: relative;
   }
 
-  /*卡片样式*/
+  /* 卡片样式 */
   .card {
     width: 1000px;
     margin: 50px auto 0;
@@ -96,7 +151,7 @@
     }
   }
 
-  /*按钮样式*/
+  /* 按钮样式 */
   .btns {
     text-align: center;
   }
@@ -117,7 +172,7 @@
     }
   }
 
-  /*表格样式*/
+  /* 表格样式 */
   .table {
     box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16);
   }
@@ -185,7 +240,7 @@
     text-align: center;
   }
 
-  /*输入区样式*/
+  /* 输入区样式 */
   textarea.form-control {
     height: 46px;
     border-radius: 25px;
@@ -206,15 +261,15 @@
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1), 0 0 0 0.2rem rgba(153, 153, 153, 0.25);
   }
 
-  /*设置弹窗滚动条*/
+  /* 设置弹窗滚动条 */
   .row_Y {
     max-height: 500px;
     overflow-y: auto;
   }
 
-  /*Detail弹窗效果*/
+  /* Detail 弹窗效果 */
 
-  /*取消jsmol右键菜单*/
+  /* 取消 jsmol 右键菜单 */
   [id^='jmolApplet0_popupMenu'] {
     display: none !important;
   }
@@ -254,7 +309,7 @@
     background-color: #14896F;
   }
 
-  /*File弹窗效果*/
+  /* File 弹窗效果 */
   input.file-caption-name.form-control.kv-fileinput-caption:focus {
     border: 1px solid #ced4da;
     box-shadow: 0 0 5px 2px #999;
@@ -279,8 +334,8 @@
     background-color: #777;
   }
 
-  /*滚动条效果*/
-  /*WebKit浏览器Chrome Safari*/
+  /* 滚动条效果 */
+  /* WebKit 浏览器 Chrome Safari */
   ::-webkit-scrollbar {
     width: 8px;
   }
@@ -298,20 +353,20 @@
     background-color: #555;
   }
 
-  /*Firefox浏览器*/
-  /*Firefox 64及更早版本*/
+  /* Firefox 浏览器 */
+  /* Firefox 64 及更早版本 */
   * {
     scrollbar-width: thin;
     scrollbar-color: #888 #f5f5f5;
   }
 
-  /*Firefox 65+*/
+  /* Firefox 65+ */
   * {
     scrollbar-width: thin;
     scrollbar-color: #888 #f5f5f5;
   }
 
-  /*IE/Edge浏览器*/
+  /* IE/Edge 浏览器 */
   *::-ms-scrollbar {
     width: 8px;
   }
@@ -329,12 +384,12 @@
     background-color: #555;
   }
 
-  /*image上传相关*/
+  /* image 上传相关 */
   #imgFile {
     display: none;
   }
 
-  /*image按钮*/
+  /* image 按钮 */
   .custom-file-upload {
     display: inline-block;
     padding: 8px 12px;
@@ -350,6 +405,7 @@
   .custom-file-upload:hover {
     background-color: #0069d9;
   }
+
 </style>
 
 <script>
@@ -377,7 +433,7 @@
     });
   }
 
-  // 设置File文本方法
+  // 设置 File 文本方法
   function createFile(speciality) {
     let str = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -388,7 +444,7 @@
     return str;
   }
 
-  // 创建Update输入框方法
+  // 创建 Update 输入框方法
   function createUpdate(speciality) {
     let html = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -402,7 +458,7 @@
     return html;
   }
 
-  // 创建Add输入框方法
+  // 创建 Add 输入框方法
   function createAdd(speciality) {
     let html = ``;
     for (let i = 0; i < speciality.length; i++) {
@@ -494,7 +550,7 @@
     return html;
   }
 
-  // 创建Show弹窗选项方法
+  // 创建 Show 弹窗选项方法
   function createShow(speciality) {
     let group = ["Structure", "Formula", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
     let html = ``;
@@ -627,14 +683,14 @@
     return title;
   }
 
-  // 打开Tip1弹窗方法
+  // 打开 Tip1 弹窗方法
   var msg1;
   function openTipModal1() {
     $('#tipModal1').modal('show');
     $('.tipBody1 p').text(`${msg1}`);
   }
 
-  // 打开Tip2弹窗方法
+  // 打开 Tip2 弹窗方法
   var msg2;
   function openTipModal2() {
     $('#tipModal2').modal('show');
@@ -656,42 +712,9 @@
     var table;
     var cardImg;
     var cardUser;
-
-    // 获取URL中的查询字符串
-    var queryString = window.location.search;
-
-    // 解析查询字符串，获取参数对象
-    var params = {};
-    if (queryString) {
-      // 去掉问号，然后用"&"分割查询字符串
-      queryString = queryString.substring(1);
-      var paramList = queryString.split("&");
-
-      // 遍历参数列表，将参数名和参数值以键值对的形式存储到params对象中
-      for (var i = 0; i < paramList.length; i++) {
-        var pair = paramList[i].split("=");
-        var paramName = decodeURIComponent(pair[0]);
-        var paramValue = decodeURIComponent(pair[1]);
-
-        // 将参数名和参数值存储到params对象中
-        params[paramName] = paramValue;
-      }
-    }
-
-
-    var uid = params.uid;
-    var username = params.username;
     var key;
 
-    // user用户不能操作数据库
-    if (username == "user") {
-      $("#add").css("display", "none");
-      $("#burn").css("display", "none");
-      $("#update").css("display", "none");
-      $("#delete").css("display", "none");
-    }
-
-    // 在Tip1弹窗中提交各种任务，并打开Tip2弹窗
+    // 在 Tip1 弹窗中提交各种任务，并打开 Tip2 弹窗
     $("#tipYes").click(function () {
       if (msg1 == "Are you sure to add it?") {
         axios.post("http://127.0.0.1:8080/save", {
@@ -802,7 +825,7 @@
       }
     });
 
-    // Back返回
+    // Back 返回
     $("#back").click(async function () {
       axios.get("http://127.0.0.1:8080/getKey", {
         params: { "username": username }
@@ -817,7 +840,7 @@
       })
     })
 
-    // Add提示
+    // Add 提示
     $("#addSubmit").click(function () {
       if (addFlag) {
         msg1 = "Are you sure to add it?";
@@ -829,7 +852,7 @@
       }
     })
 
-    // Update提示
+    // Update 提示
     $("#updateSubmit").click(function () {
       if (matFlag) {
         msg1 = "Are you sure to update it?";
@@ -841,25 +864,25 @@
       }
     })
 
-    // Delete提示
+    // Delete 提示
     $("#delete").click(function () {
       msg1 = "Are you sure to delete it?";
       openTipModal1();
     })
 
-    // Card提示
+    // Card 提示
     $("#cardSubmit").click(function () {
       msg1 = "Are you sure to change it?";
       openTipModal1();
     })
 
-    // Burn提示
+    // Burn 提示
     $("#burn").click(function () {
       msg1 = "Are you sure to burn this database all?";
       openTipModal1();
     })
 
-    // 创建介绍卡片Card,创建表头
+    // 创建介绍卡片 Card,创建表头
     axios.get("http://127.0.0.1:8080/findDBCard", {
       params: { "id": uid }
     }).then(res => {
@@ -886,7 +909,7 @@
       const backgroundImg = cont.img;
       if (backgroundImg) {
 
-        // 转换为Blob对象
+        // 转换为 Blob 对象
         const binaryData = atob(backgroundImg);
         // 将二进制数据转换为 Uint8Array
         const uint8Array = new Uint8Array(binaryData.length);
@@ -896,7 +919,7 @@
 
         const blob = new Blob([uint8Array], { type: 'image/jpg' });
 
-        // 创建URL对象
+        // 创建 URL 对象
         const imageUrl = URL.createObjectURL(blob);
         $('.card').css('background-image', `url(${imageUrl})`);
       } else {
@@ -936,7 +959,7 @@
           }
         });
 
-        // 创建Show选项
+        // 创建 Show 选项
         $("#showChoose").append(createShow(speciality));
 
         // 创建一个空数组用于存储选中的值
@@ -973,7 +996,7 @@
 
         });
 
-        // show展示初始化
+        // show 展示初始化
         hideOrShowChildElements(showOptions);
 
         // 显示或隐藏子元素方法
@@ -1016,20 +1039,20 @@
         console.error(err)
       })
 
-      // 创建Add输入框
+      // 创建 Add 输入框
       $("#addArea").append(createAdd(speciality))
 
-      // 创建File文本
+      // 创建 File 文本
       $("#fileText").append(createFile(speciality))
 
-      // 创建Update输入框
+      // 创建 Update 输入框
       $("#updateArea").append(createUpdate(speciality))
 
-      // add初始化
+      // add 初始化
       add.uid = uid;
       add.speciality = [];
 
-      // 获取Add输入框内容
+      // 获取 Add 输入框内容
       const $saveStructure = $('#addStructure');
       $saveStructure.on('change', function () {
         add.structure = $saveStructure.val();
@@ -1104,7 +1127,7 @@
         });
       }
 
-      // 关闭Add弹窗清空输入内容
+      // 关闭 Add 弹窗清空输入内容
       $(".addClose").click(function () {
         add = {};
         add.uid = uid;
@@ -1125,7 +1148,7 @@
         }
       })
 
-      // 获取所点击的表格内容,为Update输入框设置默认值，并获取修改的数据
+      // 获取所点击的表格内容,为 Update 输入框设置默认值，并获取修改的数据
       $("#myTable").on("click", "tbody tr", function () {
 
         // 获取所点击的数据信息
@@ -1152,7 +1175,7 @@
 
             const cont = res.data.data;
 
-            // 使用当前uid
+            // 使用当前 uid
             mat.uid = uid;
 
             mat.id = cont.id;
@@ -1229,7 +1252,7 @@
               mat.publication = $inputPublication.val();
             })
 
-            // 当专有属性为空时输出一个元素都是null的数组
+            // 当专有属性为空时输出一个元素都是 null 的数组
             if (!mat.speciality) {
               let ls = [];
               for (let i = 0; i < speciality.length; i++) {
@@ -1238,7 +1261,7 @@
               mat.speciality = ls;
             }
 
-            // 当专有属性数组元素为空时用null替代
+            // 当专有属性数组元素为空时用 null 替代
             for (let i = 0; i < mat.speciality.length; i++) {
               if (!mat.speciality[i]) {
                 mat.speciality[i] = null;
@@ -1272,7 +1295,7 @@
               })
             }
 
-            // 关闭Update弹窗清空输入内容
+            // 关闭 Update 弹窗清空输入内容
             $(".updateClose").click(function () {
               mat = {};
               matFlag = true;
@@ -1312,7 +1335,7 @@
         return;
       }
 
-      // user用户不能操作且普通用户只能操作自己的数据
+      // user 用户不能操作且普通用户只能操作自己的数据
       if ((username !== "root" && username !== cardUser) || username === "user") {
         return;
       }
@@ -1357,9 +1380,9 @@
       cardImg = undefined;
     })
 
-    // Detail弹窗相关
+    // Detail 弹窗相关
 
-    // jsmol交互图像
+    // jsmol 交互图像
     $('#detailModal').on('shown.bs.modal', function () {
 
       Jmol._isAsync = false;
@@ -1390,7 +1413,7 @@
 
       $("#appdiv").html(Jmol.getAppletHtml("jmolApplet0", Info));
 
-      // 创建Detail文本
+      // 创建 Detail 文本
       for (let i = 0; i < speciality.length; i++) {
         if (speciality[i] != "") {
           let str;
@@ -1437,7 +1460,7 @@
         }
       }
 
-      // Detail文本内容
+      // Detail 文本内容
 
       // 设置内容与标题
       $("#formulaInfo").text(mat.formula ? mat.formula : "Null").parent().attr('title', mat.formula ? mat.formula : "Null");
@@ -1449,10 +1472,10 @@
       $("#doiInfo").text(mat.doi ? mat.doi : "Null").parent().attr('title', mat.doi ? mat.doi : "Null");
       $("#publicationInfo").text(mat.publication ? mat.publication : "Null").parent().attr('title', mat.publication ? mat.publication : "Null");
 
-      // 关于VASP
+      // 关于 VASP
       $("#structureInfo").text(mat.structure ? "VASP" : "Null").parent().attr('title', mat.structure ? mat.structure : "Null");
 
-      // 关于Link
+      // 关于 Link
       $("#urlInfo").html(mat.url ? `<a href="${mat.url}" target="_blank" style="color: white;">Link</a>` : "Null").parent().attr('title', mat.url ? mat.url : "Null");
 
       // 关于其他
@@ -1460,7 +1483,7 @@
         $(`#Info${i}`).text(mat.speciality[i] ? mat.speciality[i] : "Null").parent().attr('title', mat.speciality[i] ? mat.speciality[i] : "Null");
       }
 
-      // 导出JSON文件功能
+      // 导出 JSON 文件功能
       $("#exportJSON").click(function () {
         function formatSpeciality(keys, values) {
           if (keys.length !== values.length) {
@@ -1521,7 +1544,7 @@
       });
 
 
-      // 导出VASP文件功能
+      // 导出 VASP 文件功能
       $("#exportVASP").click(function () {
         const content = mat.structure;
         const nodeName = mat.name;
@@ -1540,7 +1563,7 @@
     // 初始化文件上传组件
     $("#file").fileinput({ showUpload: false, showCancel: false });
 
-    // 关闭File弹窗清除上传文件
+    // 关闭 File 弹窗清除上传文件
     $(".fileClose").click(function () {
       $('#file').fileinput('clear');
     })
@@ -1579,7 +1602,7 @@
 
         console.log('rows:', rows);
 
-        // 表头设置为json
+        // 表头设置为 json
         let headers = "json";
 
         // 检查并绑定上传点击事件
@@ -1624,7 +1647,7 @@
 
         console.log('headers:', headers)
 
-        // 将表格数据转换为JSON数组
+        // 将表格数据转换为 JSON 数组
         rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
 
         console.log('rows:', rows);
@@ -1640,7 +1663,7 @@
 
     }
 
-    // 格式化rows
+    // 格式化 rows
     function formatRows(rows) {
       // 遍历数组中的每个对象
       rows.forEach(function (obj) {
@@ -1728,7 +1751,7 @@
         return isValid;
       }
 
-      // 判断headers包含需要的字段
+      // 判断 headers 包含需要的字段
       let requiredHeaders = ["Structure", "Formula", "Name", "Symmetry", "Metal", "Bandgap-PBE(ev)", "Bandgap-HSE(ev)", "DOI", "URL", "Publication"].concat(speciality);
 
       requiredHeaders.forEach(header => {
@@ -1799,388 +1822,388 @@
 
 <body>
 
-  <!--卡片弹窗-->
-  <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="cardModalLabel">Card</h5>
-          <button type="button" class="close cardClose" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<!--卡片弹窗-->
+<div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cardModalLabel">Card</h5>
+        <button type="button" class="close cardClose" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="title">New title</label>
+          <textarea class="form-control" id="title"></textarea>
         </div>
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="title">New title</label>
-            <textarea class="form-control" id="title"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="intro">New introduction</label>
-            <textarea class="form-control" id="intro"></textarea>
-          </div>
-          <div class="form-group">
-            <label for="imgFile" class="custom-file-upload">image</label>
-            <input type="file" id="imgFile" accept=".jpg,.jpeg,.png,.webp">
-          </div>
+        <div class="form-group">
+          <label for="intro">New introduction</label>
+          <textarea class="form-control" id="intro"></textarea>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
-            id="cardSubmit">Submit</button>
-          <button type="button" class="btn btn-secondary cardClose" data-dismiss="modal">Close</button>
+        <div class="form-group">
+          <label for="imgFile" class="custom-file-upload">image</label>
+          <input type="file" id="imgFile" accept=".jpg,.jpeg,.png,.webp">
         </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+                id="cardSubmit">Submit</button>
+        <button type="button" class="btn btn-secondary cardClose" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--Add弹窗-->
-  <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="addModalLabel">Add</h5>
-          <button type="button" class="close addClose" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body row_Y">
-          <div class="form-row" id="addArea">
-            <div class="form-group col-6">
-              <label for="addStructure">Structure</label>
-              <textarea class="form-control" id="addStructure"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addFormula">Formula</label>
-              <textarea class="form-control" id="addFormula"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addName">Name</label>
-              <textarea class="form-control" id="addName"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addSymmetry">Symmetry</label>
-              <textarea class="form-control" id="addSymmetry"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addMetal">Metal</label>
-              <textarea class="form-control" id="addMetal"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addBandgap-PBE">Bandgap-PBE(ev)</label>
-              <textarea class="form-control" id="addBandgap-PBE"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addBandgap-HSE">Bandgap-HSE(ev)</label>
-              <textarea class="form-control" id="addBandgap-HSE"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addDOI">DOI</label>
-              <textarea class="form-control" id="addDOI"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addURL">URL</label>
-              <textarea class="form-control" id="addURL"></textarea>
-            </div>
-            <div class="form-group col-6">
-              <label for="addPublication">Publication</label>
-              <textarea class="form-control" id="addPublication"></textarea>
-            </div>
+<!--Add弹窗-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addModalLabel">Add</h5>
+        <button type="button" class="close addClose" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row_Y">
+        <div class="form-row" id="addArea">
+          <div class="form-group col-6">
+            <label for="addStructure">Structure</label>
+            <textarea class="form-control" id="addStructure"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addFormula">Formula</label>
+            <textarea class="form-control" id="addFormula"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addName">Name</label>
+            <textarea class="form-control" id="addName"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addSymmetry">Symmetry</label>
+            <textarea class="form-control" id="addSymmetry"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addMetal">Metal</label>
+            <textarea class="form-control" id="addMetal"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addBandgap-PBE">Bandgap-PBE(ev)</label>
+            <textarea class="form-control" id="addBandgap-PBE"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addBandgap-HSE">Bandgap-HSE(ev)</label>
+            <textarea class="form-control" id="addBandgap-HSE"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addDOI">DOI</label>
+            <textarea class="form-control" id="addDOI"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addURL">URL</label>
+            <textarea class="form-control" id="addURL"></textarea>
+          </div>
+          <div class="form-group col-6">
+            <label for="addPublication">Publication</label>
+            <textarea class="form-control" id="addPublication"></textarea>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal"
-            data-dismiss="modal">File</button>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
-            id="addSubmit">Submit</button>
-          <button type="button" class="btn btn-secondary addClose" data-dismiss="modal">Close</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal"
+                data-dismiss="modal">File</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+                id="addSubmit">Submit</button>
+        <button type="button" class="btn btn-secondary addClose" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--File弹窗-->
-  <div class="modal" id="fileModal">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">File</h4>
-          <button type="button" class="close fileClose" data-dismiss="modal">&times;</button>
+<!--File弹窗-->
+<div class="modal" id="fileModal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">File</h4>
+        <button type="button" class="close fileClose" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body row_Y">
+        <div id="fileText">
+          <P>Only XLSX or JSON file containing the following table headers can be accepted:</P>
+          <span>Structure</span>
+          <span>Formula</span>
+          <span>Name</span>
+          <span>Symmetry</span>
+          <span>Metal</span>
+          <span>Bandgap-PBE(ev)</span>
+          <span>Bandgap-HSE(ev)</span>
+          <span>DOI</span>
+          <span>URL</span>
+          <span>Publication</span>
         </div>
-        <div class="modal-body row_Y">
-          <div id="fileText">
-            <P>Only XLSX or JSON file containing the following table headers can be accepted:</P>
-            <span>Structure</span>
-            <span>Formula</span>
-            <span>Name</span>
-            <span>Symmetry</span>
-            <span>Metal</span>
-            <span>Bandgap-PBE(ev)</span>
-            <span>Bandgap-HSE(ev)</span>
-            <span>DOI</span>
-            <span>URL</span>
-            <span>Publication</span>
+        </br>
+        <div class="file-loading">
+          <input id="file" type="file" accept=".xlsx,.json" title="">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="fileSubmit">Submit</button>
+        <button class="btn btn-secondary fileClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Show弹窗-->
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="showModalLabel">Show</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body row_Y">
+        <form>
+          <div class="form-row" id="showChoose">
+
           </div>
-          </br>
-          <div class="file-loading">
-            <input id="file" type="file" accept=".xlsx,.json" title="">
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--表格弹窗-->
+<div class="modal fade" id="rowModal" tabindex="-1" role="dialog" aria-labelledby="rowModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="rowModalLabel">Operations</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal"
+                data-dismiss="modal" id="detail">Detail</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal"
+                data-dismiss="modal" id="update">Update</button>
+        <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
+                id="delete">Delete</button>
+        <button type="button" class="btn btn-secondary" id="rowClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Detail弹窗-->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" style="position: absolute; left: -25vw; width: 85vw; height: 90vh;">
+      <div class="modal-header">
+        <h4 class="modal-title" id="detailModalLabel">Detail</h4>
+        <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body row_Y" style="position: relative;">
+        <!--渲染jsmol图像-->
+        <div id="appdiv" style="position: absolute; width: 42.5vw; height: 65vh;"></div>
+        <div id="infos" style="position: absolute; left: 45vw;">
+          <small id="scalar">Scalar</small>
+          <hr />
+          <p class="infop scalar">Structure:&emsp;<span id="structureInfo"></span></p>
+          <p class="infop scalar">Formula:&emsp;<span id="formulaInfo"></span></p>
+          <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
+          <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
+          <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
+          <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
+          <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
+          <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
+          <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
+          <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
+          <br />
+          <hr /><small id="vector">Vector</small>
+          <hr />
+          <p class="infop vector">Null</p>
+          <br />
+          <hr /><small id="tensor">Tensor</small>
+          <hr />
+          <p class="infop tensor">Null</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="exportJSON">Export JSON</button>
+        <button type="button" class="btn btn-primary" id="exportVASP">Export VASP</button>
+        <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Update弹窗-->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateModalLabel">Update</h5>
+        <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">×</button>
+      </div>
+
+      <div class="modal-body row_Y">
+
+        <div class="form-row" id="updateArea">
+
+          <div class="form-group col-6">
+            <label for="updateStructure">Structure</label>
+            <textarea class="form-control" id="updateStructure"></textarea>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="fileSubmit">Submit</button>
-          <button class="btn btn-secondary fileClose" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!--Show弹窗-->
-  <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="showModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="showModalLabel">Show</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body row_Y">
-          <form>
-            <div class="form-row" id="showChoose">
-
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--表格弹窗-->
-  <div class="modal fade" id="rowModal" tabindex="-1" role="dialog" aria-labelledby="rowModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="rowModalLabel">Operations</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span>&times;</span>
-          </button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#detailModal"
-            data-dismiss="modal" id="detail">Detail</button>
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#updateModal"
-            data-dismiss="modal" id="update">Update</button>
-          <button type="button" class="btn btn-danger" data-toggle="modal" data-dismiss="modal"
-            id="delete">Delete</button>
-          <button type="button" class="btn btn-secondary" id="rowClose" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!--Detail弹窗-->
-  <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content" style="position: absolute; left: -25vw; width: 85vw; height: 90vh;">
-        <div class="modal-header">
-          <h4 class="modal-title" id="detailModalLabel">Detail</h4>
-          <button type="button" class="close detailClose" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body row_Y" style="position: relative;">
-          <!--渲染jsmol图像-->
-          <div id="appdiv" style="position: absolute; width: 42.5vw; height: 65vh;"></div>
-          <div id="infos" style="position: absolute; left: 45vw;">
-            <small id="scalar">Scalar</small>
-            <hr />
-            <p class="infop scalar">Structure:&emsp;<span id="structureInfo"></span></p>
-            <p class="infop scalar">Formula:&emsp;<span id="formulaInfo"></span></p>
-            <p class="infop scalar">Name:&emsp;<span id="nameInfo"></span></p>
-            <p class="infop scalar">Symmetry:&emsp;<span id="symmetryInfo"></span></p>
-            <p class="infop scalar">Metal:&emsp;<span id="metalInfo"></span></p>
-            <p class="infop scalar">Bandgap-PBE(ev):&emsp;<span id="PBEInfo"></span></p>
-            <p class="infop scalar">Bandgap-HSE(ev):&emsp;<span id="HSEInfo"></span></p>
-            <p class="infop scalar">DOI:&emsp;<span id="doiInfo"></span></p>
-            <p class="infop scalar">URL:&emsp;<span id="urlInfo"></span></p>
-            <p class="infop scalar">Publication:&emsp;<span id="publicationInfo"></span></p>
-            <br />
-            <hr /><small id="vector">Vector</small>
-            <hr />
-            <p class="infop vector">Null</p>
-            <br />
-            <hr /><small id="tensor">Tensor</small>
-            <hr />
-            <p class="infop tensor">Null</p>
+          <div class="form-group col-6">
+            <label for="updateFormula">Formula</label>
+            <textarea class="form-control" id="updateFormula"></textarea>
           </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="exportJSON">Export JSON</button>
-          <button type="button" class="btn btn-primary" id="exportVASP">Export VASP</button>
-          <button type="button" class="btn btn-secondary detailClose" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <!--Update弹窗-->
-  <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="updateModalLabel">Update</h5>
-          <button type="button" class="close updateClose" data-dismiss="modal" aria-label="Close">×</button>
-        </div>
+          <div class="form-group col-6">
+            <label for="updateName">Name</label>
+            <textarea class="form-control" id="updateName"></textarea>
+          </div>
 
-        <div class="modal-body row_Y">
+          <div class="form-group col-6">
+            <label for="updateSymmetry">Symmetry</label>
+            <textarea class="form-control" id="updateSymmetry"></textarea>
+          </div>
 
-          <div class="form-row" id="updateArea">
+          <div class="form-group col-6">
+            <label for="updateMetal">Metal</label>
+            <textarea class="form-control" id="updateMetal"></textarea>
+          </div>
 
-            <div class="form-group col-6">
-              <label for="updateStructure">Structure</label>
-              <textarea class="form-control" id="updateStructure"></textarea>
-            </div>
+          <div class="form-group col-6">
+            <label for="updateBandgap-PBE">Bandgap-PBE(ev)</label>
+            <textarea class="form-control" id="updateBandgap-PBE"></textarea>
+          </div>
 
-            <div class="form-group col-6">
-              <label for="updateFormula">Formula</label>
-              <textarea class="form-control" id="updateFormula"></textarea>
-            </div>
+          <div class="form-group col-6">
+            <label for="updateBandgap-HSE">Bandgap-HSE(ev)</label>
+            <textarea class="form-control" id="updateBandgap-HSE"></textarea>
+          </div>
 
-            <div class="form-group col-6">
-              <label for="updateName">Name</label>
-              <textarea class="form-control" id="updateName"></textarea>
-            </div>
+          <div class="form-group col-6">
+            <label for="updateDOI">DOI</label>
+            <textarea class="form-control" id="updateDOI"></textarea>
+          </div>
 
-            <div class="form-group col-6">
-              <label for="updateSymmetry">Symmetry</label>
-              <textarea class="form-control" id="updateSymmetry"></textarea>
-            </div>
+          <div class="form-group col-6">
+            <label for="updateURL">URL</label>
+            <textarea class="form-control" id="updateURL"></textarea>
+          </div>
 
-            <div class="form-group col-6">
-              <label for="updateMetal">Metal</label>
-              <textarea class="form-control" id="updateMetal"></textarea>
-            </div>
-
-            <div class="form-group col-6">
-              <label for="updateBandgap-PBE">Bandgap-PBE(ev)</label>
-              <textarea class="form-control" id="updateBandgap-PBE"></textarea>
-            </div>
-
-            <div class="form-group col-6">
-              <label for="updateBandgap-HSE">Bandgap-HSE(ev)</label>
-              <textarea class="form-control" id="updateBandgap-HSE"></textarea>
-            </div>
-
-            <div class="form-group col-6">
-              <label for="updateDOI">DOI</label>
-              <textarea class="form-control" id="updateDOI"></textarea>
-            </div>
-
-            <div class="form-group col-6">
-              <label for="updateURL">URL</label>
-              <textarea class="form-control" id="updateURL"></textarea>
-            </div>
-
-            <div class="form-group col-6">
-              <label for="updatePublication">Publication</label>
-              <textarea class="form-control" id="updatePublication"></textarea>
-            </div>
-
+          <div class="form-group col-6">
+            <label for="updatePublication">Publication</label>
+            <textarea class="form-control" id="updatePublication"></textarea>
           </div>
 
         </div>
 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
-            id="updateSubmit">Submit</button>
-          <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
-        </div>
+      </div>
 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal"
+                id="updateSubmit">Submit</button>
+        <button type="button" class="btn btn-secondary updateClose" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!--Tip1弹窗-->
+<div class="modal" id="tipModal1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tip</h4>
+        <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body tipBody1">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipYes">Yes</button>
+        <button class="btn btn-secondary" data-dismiss="modal" id="tipNo">No</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--Tip1弹窗-->
-  <div class="modal" id="tipModal1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Tip</h4>
-          <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body tipBody1">
-          <p></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipYes">Yes</button>
-          <button class="btn btn-secondary" data-dismiss="modal" id="tipNo">No</button>
-        </div>
+<!--Tip2弹窗-->
+<div class="modal" id="tipModal2">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Tip</h4>
+        <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body tipBody2">
+        <p></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipOk">OK</button>
       </div>
     </div>
   </div>
+</div>
 
-  <!--Tip2弹窗-->
-  <div class="modal" id="tipModal2">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title">Tip</h4>
-          <button type="button" class="close tipClose" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body tipBody2">
-          <p></p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" id="tipOk">OK</button>
-        </div>
-      </div>
+<!--介绍卡片-->
+<div class="card">
+
+</div>
+
+<div class="container">
+  <!--按钮-->
+  </br></br>
+  <div class="col-md-12 btns">
+    <button class="btn btn-primary operation" type="button" data-toggle="modal" id="back">Back</button>
+    <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#addModal"
+            id="add">Add</button>
+    <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#showModal"
+            id="show">Show</button>
+    <button class="btn btn-danger operation" type="button" data-toggle="modal" id="burn">Burn</button>
+  </div>
+  <!--表格-->
+  <div class="row">
+    <div class="col-md-12 mt-2">
+      <table id="myTable" class="table table-striped">
+        <thead>
+        <tr id="tr">
+          <th scope="col">ID</th>
+          <th scope="col">Structure</th>
+          <th scope="col">Formula</th>
+          <th scope="col">Name</th>
+          <th scope="col">Symmetry</th>
+          <th scope="col">Metal</th>
+          <th scope="col">Bandgap-PBE(ev)</th>
+          <th scope="col">Bandgap-HSE(ev)</th>
+          <th scope="col">DOI</th>
+          <th scope="col">URL</th>
+          <th scope="col">Publication</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+
+        </tbody>
+      </table>
     </div>
   </div>
-
-  <!--介绍卡片-->
-  <div class="card">
-
-  </div>
-
-  <div class="container">
-    <!--按钮-->
-    </br></br>
-    <div class="col-md-12 btns">
-      <button class="btn btn-primary operation" type="button" data-toggle="modal" id="back">Back</button>
-      <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#addModal"
-        id="add">Add</button>
-      <button class="btn btn-primary operation" type="button" data-toggle="modal" data-target="#showModal"
-        id="show">Show</button>
-      <button class="btn btn-danger operation" type="button" data-toggle="modal" id="burn">Burn</button>
-    </div>
-    <!--表格-->
-    <div class="row">
-      <div class="col-md-12 mt-2">
-        <table id="myTable" class="table table-striped">
-          <thead>
-            <tr id="tr">
-              <th scope="col">ID</th>
-              <th scope="col">Structure</th>
-              <th scope="col">Formula</th>
-              <th scope="col">Name</th>
-              <th scope="col">Symmetry</th>
-              <th scope="col">Metal</th>
-              <th scope="col">Bandgap-PBE(ev)</th>
-              <th scope="col">Bandgap-HSE(ev)</th>
-              <th scope="col">DOI</th>
-              <th scope="col">URL</th>
-              <th scope="col">Publication</th>
-            </tr>
-          </thead>
-          <tbody id="tbody">
-
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+</div>
 </body>
 
 </html>

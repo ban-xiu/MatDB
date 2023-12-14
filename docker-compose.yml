@@ -1,7 +1,9 @@
+# 设置文件版本
 version: '2.4'
 
 services:
 
+  # MongoDB 容器
   mongo:
     container_name: mongo
     build:
@@ -11,7 +13,9 @@ services:
       - 27017:27017
     networks:
       - matdb
+    restart: on-failure
 
+  # SpringBoot 容器
   app:
     container_name: app
     build:
@@ -23,7 +27,9 @@ services:
       - mongo
     networks:
       - matdb
+    restart: on-failure
 
+  # Nginx 容器
   nginx:
     container_name: nginx
     build:
@@ -35,7 +41,9 @@ services:
       - app
     networks:
       - matdb
+    restart: on-failure
 
 networks:
+  # 设置 MatDB 桥式网络
   matdb:
     driver: bridge

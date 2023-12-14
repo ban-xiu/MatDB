@@ -1,10 +1,14 @@
 package com.matdb.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
+import com.matdb.domain.dto.KeyAndPwdDTO;
 import com.matdb.domain.dto.UserDTO;
+import com.matdb.domain.entity.DBEntity;
 import com.matdb.domain.entity.UserEntity;
 import com.matdb.domain.vo.resp.Result;
 import com.matdb.enums.UserEnum;
+import com.matdb.mapper.repository.DBRepository;
 import com.matdb.mapper.repository.UserRepository;
 import com.matdb.domain.vo.req.SignAboutReq;
 import com.matdb.service.UserService;
@@ -18,6 +22,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    DBRepository dbRepository;
 
     private static int keyLength = 30;
 
@@ -118,15 +125,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String getPasswordByUsername(String username) {
+    public KeyAndPwdDTO getKeyAndPasswordByUsername(String username) {
         Optional<UserEntity> userOption = userRepository.findByUsername(username);
         if (userOption.isEmpty()){
-            System.out.println("\ngetPasswordByUsername: null");
+            System.out.println("\ngetKeyAndPasswordByUsername: null");
             return null;
         }
         UserEntity user = userOption.get();
-        String password = user.getPassword();
-        return password;
+        KeyAndPwdDTO keyAndPwdDTO = new KeyAndPwdDTO();
+        BeanUtil.copyProperties(user,keyAndPwdDTO);
+        return keyAndPwdDTO;
+    }
+
+    @Override
+    public Boolean findUid(String uid) {
+        Optional<DBEntity> dbOption = dbRepository.findById(uid);
+        if (dbOption.isEmpty()) {
+            System.out.println("\nfindUid: null");
+            return false;
+        }
+        return true;
     }
 
 }
