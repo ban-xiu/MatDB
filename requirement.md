@@ -18,5 +18,8 @@
 如 `pom.xml` 所示：
 
 - 基础环境： `Spring`  `SpringMVC` `SpringBoot`
-- 数据库连接： `MongoRepository`
 - 工具包： `Hutool`
+- 数据库连接： `MongoRepository`
+- 数据库： `MongoDB: 6.0.8`
+
+  
