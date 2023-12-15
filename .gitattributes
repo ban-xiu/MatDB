@@ -1,4 +1,4 @@
-# 排除 static 目录下所有文件
+# 排除 static 目录下的所有文件
 nginx/html/static/** linguist-vendored
 # 由于项目 .html 文件中 JavaScript 部分多于 HTML 部分，所以将 .html 文件视为 .js 文件
 *.html linguist-language=JavaScript
