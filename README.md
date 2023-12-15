@@ -29,14 +29,14 @@
 
 这里 [use](./use.md) 是详细的使用说明。
 
-这里 [requirement](./requirement.md) 是项目的依赖说明。
-
-## 4. 开发环境
+## 4. 开发环境与依赖
 
 `Maven: 3.9.3`
 
 `Docker: 23.0.5`
 
 `Docker-Compose: 2.17.3`
+
+这里 [requirement](./requirement.md) 是项目的依赖说明。
 
 
