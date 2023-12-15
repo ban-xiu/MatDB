@@ -15,7 +15,7 @@
 
 ### 后端依赖
 
-如 `pom.xml` 文件所示：
+如 `pom.xml` 所示：
 
 - 基础环境： `Spring`  `SpringMVC` `SpringBoot`
 - 数据库连接： `MongoRepository`
