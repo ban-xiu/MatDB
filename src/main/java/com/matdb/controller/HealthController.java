@@ -8,7 +8,7 @@ public class HealthController {
 
     @GetMapping("/health")
     public void healthCheck(){
-        System.out.println("\nHealth checking.");
+        System.out.println("\nhealth checking");
     }
 
 }
