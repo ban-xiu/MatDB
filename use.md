@@ -31,7 +31,7 @@
 数据库的 `共有属性` 有：
 
 - 数据编号 `ID`
-- VASP 结构`Structure`
+- VASP 结构 `Structure`
 - 结构公式 `Formula`
 - 结构名称 `Name`
 - 对称性 `Symmetry`
