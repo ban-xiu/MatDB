@@ -2,6 +2,8 @@
 
 初始化工作相当于 [init](./init.md) 中的内容。
 
+由于默认会在容器内自动配置数据卷： `/data/db` 和 `/data/configdb` ，这里不考虑再配置数据卷。
+
 ### 构建 `mongo` 镜像
 
 ```Swift

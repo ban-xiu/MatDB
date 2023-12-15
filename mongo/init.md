@@ -8,11 +8,15 @@ docker pull mongo:6.0.8
 
 ### 初始化
 
+手动配置了新的数据卷。
+
 ```Swift
 docker run -d --name mongo -v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb -p 27017:27017 mongo:6.0.8 --auth
 ```
 
 ### 或者不再配置数据卷
+
+默认会在容器内自动配置数据卷： `/data/db` 和 `/data/configdb` 。
 
 ```Swift
 docker run -d --name mongo -p 27017:27017 mongo:6.0.8 --auth
