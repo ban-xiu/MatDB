@@ -29,6 +29,8 @@
 
 这里 [use](./use.md) 是详细的使用说明。
 
+这里 [requirement](./requirement.md) 是项目的依赖说明。
+
 ## 4. 开发环境
 
 `Maven: 3.9.3`
