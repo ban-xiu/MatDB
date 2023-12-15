@@ -46,4 +46,5 @@ services:
 networks:
   # 设置 MatDB 桥式网络
   matdb:
+    name: matdb
     driver: bridge

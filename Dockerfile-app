@@ -17,15 +17,12 @@ FROM openjdk:17-slim
 
 WORKDIR /app
 
-# 复制编译好的 JAR 文件
+# 复制编译好的 jar 包
 COPY --from=build /app/target/app.jar .
 
 # 暴露容器的端口
 EXPOSE 8080
 
-# 定义容器启动时运行的命令
-CMD ["java", "-jar", "app.jar"]
-
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s \
-  CMD curl -f http://localhost:8080/actuator/health || exit 1
+  CMD curl -f http://localhost:8080/health || (echo "Health check failed!" && exit 1)
