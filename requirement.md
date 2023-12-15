@@ -7,7 +7,7 @@
 - 页面逻辑： `jQuery`
 - 页面样式： `Bootstrap`
 - 网络请求： `Axios`
-- 数据校验： `Tensorflow.js`
+- 数据校验： `TensorFlow.js`
 - 图像渲染： `JSmol`
 - 生成表格： `DataTables`
 - 文件导出： `FileSaver.js`
