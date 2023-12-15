@@ -12,4 +12,4 @@ docker build -f Dockerfile-app -t app .
 docker run -d -p 8080:8080 --network matdb --name app app
 ```
 
-如果只需要本地运行 `APP.java` 测试，或者运行项目 `jar` 包，注意修改 `application.yml` 文件的 `host` 即可
+如果只需要本地运行 `APP.java` 测试，或者运行项目 `jar` 包，注意修改 `application.yml` 文件的 `host` 即可。

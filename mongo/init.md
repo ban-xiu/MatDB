@@ -9,10 +9,8 @@ docker pull mongo:6.0.8
 ### 初始化
 
 ```Swift
-docker run -d --name mongo -v 数据卷文件夹A路径:/data/db -v 数据卷文件夹B路径:/data/configdb -p 27017:27017 mongo:6.0.8 --auth
+docker run -d --name mongo -v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb -p 27017:27017 mongo:6.0.8 --auth
 ```
-
-容器名字为：`mongo`，同时配置了数据卷实现数据持久化，容器端口为：`27017`。
 
 ### 或者不再配置数据卷
 
@@ -44,9 +42,9 @@ db
 show users
 ```
 
-### 创建 `root` 用户
+### 创建 `root` 管理员
 
-进入容器的 `admin` 数据库后，如果没有 `root` 用户：
+进入容器的 `admin` 数据库后，如果没有 `root` 管理员：
 
 ```Swift
 db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"admin"}]})
@@ -100,7 +98,7 @@ db.matUsers.find()
 
 ### 创建 `root` 账户
 
-如果 `matUsers` 集合中不存在 `root` 账户：
+如果 `matUsers` 集合中不存在 `root` 用户：
 
 ```Swift
 db.matUsers.insertOne({username:"root", password:"root"})
@@ -108,7 +106,7 @@ db.matUsers.insertOne({username:"root", password:"root"})
 
 ### 创建 `user` 账户
 
-如果 `matUsers` 集合中不存在 `user` 账户：
+如果 `matUsers` 集合中不存在 `user` 用户：
 
 ```Swift
 db.matUsers.insertOne({username:"user", password:"user"})

@@ -18,8 +18,8 @@ docker run -d -p 8083:80 --network matdb --name nginx nginx
 docker run -d -p 8083:80 --name nginx nginx
 ```
 
-### 此时可以选择配置数据卷方便调试
+### 此时可以选择加上数据卷配置方便调试
 
 ```Swift
--v 数据卷文件夹A路径:/usr/share/nginx/html -v 数据卷文件夹B路径:/etc/nginx/nginx.conf
+-v 数据卷文件夹 A 路径:/usr/share/nginx/html -v 数据卷文件夹 B 路径:/etc/nginx/nginx.conf
 ```
