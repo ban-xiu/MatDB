@@ -20,6 +20,6 @@
 - 基础环境： `Spring`  `SpringMVC` `SpringBoot`
 - 工具包： `Hutool`
 - 数据库连接： `MongoRepository`
-- 数据库： `MongoDB: 6.0.8`
+- 数据库： `MongoDB`
 
   
