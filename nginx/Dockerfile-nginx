@@ -17,5 +17,5 @@ EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
 
 # 健康检查
-HEALTHCHECK --interval=30s --timeout=10s \
-  CMD curl -f http://localhost || (echo "Health check failed!" && exit 1)
+HEALTHCHECK --interval=86400s --timeout=10s \
+  CMD curl -f http://localhost/health || exit 1
