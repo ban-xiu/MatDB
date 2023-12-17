@@ -2,7 +2,7 @@
 FROM mongo:6.0.8
 
 # 将数据库初始化脚本复制到容器中
-COPY init.js /docker-entrypoint-initdb.d/
+COPY init-mongo.js /docker-entrypoint-initdb.d/
 
 # 设置环境变量，相当于设置 root 管理员
 ENV MONGO_INITDB_ROOT_USERNAME=root

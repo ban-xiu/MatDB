@@ -1,6 +1,6 @@
 ## 在 `mongo` 目录下执行以下命令以构建 `MongoDB` 数据库 `Docker` 环境
 
-初始化工作相当于 [init](./init.md) 中的内容。
+初始化工作相当于 [init-mongo](init-mongo.md) 中的内容。
 
 ### 构建 `mongo` 镜像
 
@@ -22,7 +22,9 @@ docker run -d -p 27017:27017 --name mongo mongo
 
 ### 配置数据卷
 
-如果要配置数据卷需要加上：
+数据卷挂载点 `/data/db` 包含了数据库内容与日志， `/data/configdb` 是数据库配置文件夹。
+
+如果需要配置数据卷，应该加上：
 
 ```Swift
 -v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb

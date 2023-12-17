@@ -1,6 +1,6 @@
-## 在 `nginx` 目录下执行以下命令以构建前端 `Docker` 环境
+## 在 `nginx` 目录下执行以下命令以构建 `Nginx` 前端 `Docker` 环境
 
-### 构建前端 `nginx` 镜像
+### 构建 `nginx` 镜像
 
 ```Swift
 docker build -f Dockerfile-nginx -t nginx .
@@ -18,9 +18,11 @@ docker run -d -p 8083:80 --network matdb --name nginx nginx
 docker run -d -p 8083:80 --name nginx nginx
 ```
 
-### 此时可以选择加上数据卷配置方便调试
+### 配置数据卷
 
-容器内的数据卷挂载点包含了前端页面与 `nginx.conf` 文件。 
+如 `Dockerfile-nginx` 所示，数据卷挂载点 `/usr/share/nginx` 包含了前端页面与 `nginx.conf` 配置文件。 
+
+为了方便调试，可以配置数据卷：
 
 ```Swift
 -v 数据卷文件夹路径:/usr/share/nginx

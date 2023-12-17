@@ -8,9 +8,9 @@ docker pull mongo:6.0.8
 
 ### 初始化
 
-默认会在容器内自动配置数据卷挂载点： `/data/db` 和 `/data/configdb` 。
+容器内默认有数据卷挂载点： `/data/db` 包含了数据库内容与日志， `/data/configdb` 是数据库配置文件夹。
 
-配置数据卷：
+创建并运行容器，同时配置了数据卷：
 
 ```Swift
 docker run -d --name mongo -v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb -p 27017:27017 mongo:6.0.8 --auth
@@ -22,7 +22,7 @@ docker run -d --name mongo -v 数据卷文件夹 A 路径:/data/db -v 数据卷�
 docker run -d --name mongo -p 27017:27017 mongo:6.0.8 --auth
 ```
 
-若要使用自定义网络需要加上:
+使用自定义网络需要加上:
 
 ```Swift
 --network matdb
