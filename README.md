@@ -31,14 +31,6 @@
 
 ## 4. 开发环境与依赖说明
 
-开发环境如下：
-
-`Maven: 3.9.3`
-
-`Docker: 23.0.5`
-
-`Docker-Compose: 2.17.3`
-
-这里 [requirement](docs/requirement.md) 是项目的依赖说明。
+这里 [requirement](docs/requirement.md) 是项目的开发环境与依赖说明。
 
 
