@@ -8,7 +8,7 @@
 docker build -f Dockerfile-mongo -t mongo .
 ```
 
-### 构建并在自定义网络下运行容器
+### 构建容器并在自定义网络下运行
 
 ```Swift
 docker run -d -p 27017:27017 --network matdb --name mongo mongo

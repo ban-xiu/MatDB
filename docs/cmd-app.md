@@ -6,7 +6,7 @@
 docker build -f Dockerfile-app -t app .
 ```
 
-### 构建并在自定义网络下运行容器
+### 构建容器并在自定义网络下运行
 
 ```Swift
 docker run -d -p 8080:8080 --network matdb --name app app
