@@ -2,8 +2,6 @@
 
 初始化工作相当于 [init](./init.md) 中的内容。
 
-由于默认会在容器内自动配置数据卷： `/data/db` 和 `/data/configdb` ，这里不考虑再配置数据卷。
-
 ### 构建 `mongo` 镜像
 
 ```Swift
@@ -20,4 +18,12 @@ docker run -d -p 27017:27017 --network matdb --name mongo mongo
 
 ```Swift
 docker run -d -p 27017:27017 --name mongo mongo
+```
+
+### 配置数据卷
+
+如果要配置数据卷需要加上：
+
+```Swift
+-v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb
 ```

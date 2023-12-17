@@ -832,7 +832,7 @@
       }).then(res => {
         console.log(res);
         key = res.data.data;
-        location.replace(`http://127.0.0.1:8080/admin?username=${username}&key=${key}`)
+        location.replace(`http://127.0.0.1:8083/admin?username=${username}&key=${key}`)
       }).catch(err => {
         console.error(err);
         msg = "Error."
