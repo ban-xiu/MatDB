@@ -22,7 +22,7 @@ docker run -d -p 27017:27017 --name mongo mongo
 
 ### 配置数据卷
 
-数据卷挂载点 `/data/db` 包含了数据库内容与日志， `/data/configdb` 是数据库配置文件夹。
+数据卷挂载点 `/data/db` 用于存储数据信息与日志信息， `/data/configdb` 用于存储副本集和分片集群的配置信息。
 
 如果需要配置数据卷，应该加上：
 

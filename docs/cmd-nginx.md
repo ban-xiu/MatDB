@@ -6,7 +6,7 @@
 docker build -f Dockerfile-nginx -t nginx .
 ```
 
-### 构建容器并在自定义网络下运行
+### 构建容器并在自定义网络下运行r
 
 ```Swift
 docker run -d -p 8083:80 --network matdb --name nginx nginx
@@ -20,10 +20,10 @@ docker run -d -p 8083:80 --name nginx nginx
 
 ### 配置数据卷
 
-如 `Dockerfile-nginx` 所示，数据卷挂载点 `/usr/share/nginx` 包含了前端页面与 `nginx.conf` 配置文件。 
+如 `Dockerfile-nginx` 所示，数据卷挂载点 `/usr/share/nginx/html` 包含了前端页面， `/etc/nginx` 包含了 `nginx.conf` 配置文件。 
 
 为了方便调试，可以配置数据卷：
 
 ```Swift
--v 数据卷文件夹路径:/usr/share/nginx
+-v 数据卷文件夹 A 路径: /usr/share/nginx -v 数据卷文件夹 B 路径: /etc/nginx
 ```
