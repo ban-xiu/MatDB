@@ -19,4 +19,4 @@ CMD ["nginx", "-g", "daemon off;"]
 
 # 健康检查
 HEALTHCHECK --interval=86400s --timeout=10s \
-  CMD curl -f http://localhost/health || exit 1
+  CMD curl -f http://localhost || exit 1

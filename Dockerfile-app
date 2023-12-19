@@ -33,4 +33,4 @@ CMD ["java", "-jar", "app.jar"]
 
 # 健康检查
 HEALTHCHECK --interval=86400s --timeout=10s \
-  CMD curl -f http://localhost:8080/health || exit 1
+  CMD curl -f http://localhost:8080 || exit 1
