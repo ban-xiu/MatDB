@@ -2,19 +2,19 @@
 
 ### 构建 `nginx` 镜像
 
-```Swift
+```Shell
 docker build -f Dockerfile-nginx -t nginx .
 ```
 
-### 构建容器并在自定义网络下运行r
+### 构建容器并在自定义网络下运行
 
-```Swift
+```Shell
 docker run -d -p 8083:80 --network matdb --name nginx nginx
 ```
 
 ### 如果只需要本地运行 `APP.java` 测试，或者运行项目 `jar` 包
 
-```Swift
+```Shell
 docker run -d -p 8083:80 --name nginx nginx
 ```
 
@@ -24,6 +24,6 @@ docker run -d -p 8083:80 --name nginx nginx
 
 为了方便调试，可以配置数据卷：
 
-```Swift
+```
 -v 数据卷文件夹 A 路径: /usr/share/nginx -v 数据卷文件夹 B 路径: /etc/nginx
 ```

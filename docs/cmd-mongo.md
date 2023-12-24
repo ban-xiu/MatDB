@@ -4,19 +4,19 @@
 
 ### 构建 `mongo` 镜像
 
-```Swift
+```Shell
 docker build -f Dockerfile-mongo -t mongo .
 ```
 
 ### 构建容器并在自定义网络下运行
 
-```Swift
+```Shell
 docker run -d -p 27017:27017 --network matdb --name mongo mongo
 ```
 
 ### 如果只需要本地运行 `APP.java` 测试，或者运行项目 `jar` 包
 
-```Swift
+```Shell
 docker run -d -p 27017:27017 --name mongo mongo
 ```
 
@@ -26,6 +26,6 @@ docker run -d -p 27017:27017 --name mongo mongo
 
 如果需要配置数据卷，应该加上：
 
-```Swift
+```
 -v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb
 ```

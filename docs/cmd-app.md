@@ -2,13 +2,13 @@
 
 ### 构建 `app` 镜像
 
-```Swift
+```Shell
 docker build -f Dockerfile-app -t app .
 ```
 
 ### 构建容器并在自定义网络下运行
 
-```Swift
+```Shell
 docker run -d -p 8080:8080 --network matdb --name app app
 ```
 
