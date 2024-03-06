@@ -2,19 +2,19 @@
 
 ### 构建 `nginx` 镜像
 
-```Shell
+```
 docker build -f Dockerfile-nginx -t nginx .
 ```
 
 ### 构建容器并在自定义网络下运行
 
-```Shell
+```
 docker run -d -p 8083:80 --network matdb --name nginx nginx
 ```
 
 ### 如果只需要本地运行 `APP.java` 测试，或者运行项目 `jar` 包
 
-```Shell
+```
 docker run -d -p 8083:80 --name nginx nginx
 ```
 

@@ -23,7 +23,7 @@
 
 如 `pom.xml` 所示：
 
-- 基础环境： `Spring`  `SpringMVC` `SpringBoot`
+- 基础环境： `SpringBoot`
 - 工具包： `Hutool`
 - 数据库连接： `MongoRepository`
 - 数据库： `MongoDB`

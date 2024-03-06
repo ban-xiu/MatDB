@@ -2,7 +2,7 @@
 
 ### 拉取镜像
 
-```Shell
+```
 docker pull mongo:6.0.8
 ```
 
@@ -12,13 +12,13 @@ docker pull mongo:6.0.8
 
 创建并运行容器，同时配置了数据卷：
 
-```Shell
+```
 docker run -d --name mongo -v 数据卷文件夹 A 路径:/data/db -v 数据卷文件夹 B 路径:/data/configdb -p 27017:27017 mongo:6.0.8 --auth
 ```
 
 或者不配置数据卷：
 
-```Shell
+```
 docker run -d --name mongo -p 27017:27017 mongo:6.0.8 --auth
 ```
 
@@ -30,19 +30,19 @@ docker run -d --name mongo -p 27017:27017 mongo:6.0.8 --auth
 
 ### 进入容器中的 `admin` 数据库
 
-```Shell
+```
 docker exec -it mongo mongosh admin
 ```
 
 ### 查看当前数据库
 
-```Shell
+```
 db
 ```
 
 ### 查看用户信息
 
-```Shell
+```
 show users
 ```
 
@@ -50,7 +50,7 @@ show users
 
 进入容器的 `admin` 数据库后，如果没有 `root` 管理员：
 
-```Shell
+```
 db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"admin"}]})
 ```
 
@@ -58,7 +58,7 @@ db.createUser({user:"root",pwd:"root",roles:[{role:"root",db:"admin"}]})
 
 进入容器的 `admin` 数据库后：
 
-```Shell
+```
 db.auth("root","root")
 ```
 
@@ -66,7 +66,7 @@ db.auth("root","root")
 
 登录成功后：
 
-```Shell
+```
 show collections
 ```
 
@@ -74,7 +74,7 @@ show collections
 
 如果 `admin` 数据库中不存在 `matData` 集合：
 
-```Shell
+```
 db.createCollection("matData")
 ```
 
@@ -82,7 +82,7 @@ db.createCollection("matData")
 
 如果 `admin` 数据库中不存在 `matTemplates` 集合：
 
-```Shell
+```
 db.createCollection("matTemplates")
 ```
 
@@ -90,13 +90,13 @@ db.createCollection("matTemplates")
 
 如果 `admin` 数据库中不存在 `matUsers` 集合：
 
-```Shell
+```
 db.createCollection("matUsers")
 ```
 
 ### 查看 `matUsers` 集合中的所有内容
 
-```Shell
+```
 db.matUsers.find()
 ```
 
@@ -104,7 +104,7 @@ db.matUsers.find()
 
 如果 `matUsers` 集合中不存在 `root` 用户：
 
-```Shell
+```
 db.matUsers.insertOne({username:"root", password:"root"})
 ```
 
@@ -112,6 +112,6 @@ db.matUsers.insertOne({username:"root", password:"root"})
 
 如果 `matUsers` 集合中不存在 `user` 用户：
 
-```Shell
+```
 db.matUsers.insertOne({username:"user", password:"user"})
 ```

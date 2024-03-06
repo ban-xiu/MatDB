@@ -770,7 +770,8 @@
                     html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('${imgUrl}')">`
                 } else {
                     imgUrl = types.includes(obj.type) ? obj.type : "Self-defined";
-                    html += ` <div class="col-lg-6 card" id="card${i}" style="background-image: url('./static/imgs/jpg/${imgUrl}.jpg')">`
+                    html += ` <div class="col-lg-6 card" id="card${i}"
+                    style = "background-image: no-repeat;background-image: url('./static/imgs/jpg/${imgUrl}.jpg')">`
                 }
                 html += `<a class="toIndex">${obj.id}</a>
                     <div class="ibox">

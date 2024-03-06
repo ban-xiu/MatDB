@@ -926,7 +926,7 @@
         const types = ["2D FEM", "2D NPB", "BMS", "Penta", "2D-Carbon"];
         const cardType = cont.type;
         const imageUrl = types.includes(cardType) ? cardType : "Self-defined";
-        $(".card").css("background-image", `url('./static/imgs/jpg/${imageUrl}.jpg')`);
+        $(".card").css({"background-image": "no-repeat", "background-image": `url('./static/imgs/jpg/${imageUrl}.jpg')`});
       }
 
       // 创建卡片
